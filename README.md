@@ -331,7 +331,7 @@ And [**Upstream**](https://evora.st) itself, our AI image and video studio for a
 
 ## Star history
 
-[![Star History Chart](https://api.star-history.com/svg?repos=tazerty/evovector&type=Date&legend=top-left)](https://www.star-history.com/?repos=storytold%2Fevovector&type=date&legend=top-left)
+[![Star History Chart](https://api.star-history.com/svg?repos=tazerty/evovector&type=Date&legend=top-left)](https://www.star-history.com/?repos=tazerty%2Fevovector&type=date&legend=top-left)
 
 ## License and credits
 

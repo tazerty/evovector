@@ -14,7 +14,7 @@ pub const APP_ID: &str = "evovector";
 
 /// This app's source repository.
 pub fn github_url() -> String {
-    format!("https://github.com/storytold/{APP_ID}")
+    format!("https://github.com/tazerty/{APP_ID}")
 }
 
 pub fn specs() -> Vec<CommandSpec> {
