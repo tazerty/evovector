@@ -357,7 +357,7 @@ fn read_image(f: &mut Found, base: &LinkInfo) -> Result<FileRead> {
 /// A linked file read for the objects that show it.
 enum Read {
     Image(FileRead),
-    /// A EvoVector document read for placed documents: the link to it and what they show.
+    /// An EvoVector document read for placed documents: the link to it and what they show.
     Document(LinkInfo, super::place::document::Source),
 }
 

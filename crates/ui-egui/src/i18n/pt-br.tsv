@@ -3337,8 +3337,8 @@ axis	Both	Ambos
 @msg	no user workspace `{from}`	nenhum espaço de trabalho do usuário `{from}`
 @msg	node {_1} is not text	o nó {_1} não é texto
 @msg	not a DXF drawing	não é um desenho DXF
-@msg	not a EvoVector file: {0}	não é um arquivo do EvoVector: {0}
-@msg	not a EvoVector shortcut set (missing `overrides`)	não é um conjunto de atalhos do EvoVector (falta `overrides`)
+@msg	not an EvoVector file: {0}	não é um arquivo do EvoVector: {0}
+@msg	not an EvoVector shortcut set (missing `overrides`)	não é um conjunto de atalhos do EvoVector (falta `overrides`)
 @msg	not a graphic style library (format `{_1}`)	não é uma biblioteca de estilos gráficos (formato `{_1}`)
 @msg	not a stored central record	não é um registro central armazenado
 @msg	not a valid plug-in module: {0}	não é um módulo de plug-in válido: {0}

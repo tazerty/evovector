@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Repackage a EvoVector Linux tarball as a single-file Flatpak bundle:
+# Repackage an EvoVector Linux tarball as a single-file Flatpak bundle:
 #
 #   $DIST/evovector-<version>-linux-<arch>.flatpak
 #

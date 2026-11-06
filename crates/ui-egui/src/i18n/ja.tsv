@@ -3710,7 +3710,7 @@ theme	Appearance	外観
 @msg	can't save version {0}: EvoVector writes versions {MIN_VERSION} to {VERSION}	バージョン {0} では保存できません: EvoVector で保存できるのはバージョン {MIN_VERSION} から {VERSION} までです
 @msg	file version {0} is newer than this EvoVector supports ({VERSION})	ファイルのバージョン {0} は、この EvoVector が対応するバージョン ({VERSION}) より新しいものです
 @msg	invalid image data for `{0}`	`{0}` の画像データが正しくありません
-@msg	not a EvoVector file: {0}	EvoVector ファイルではありません: {0}
+@msg	not an EvoVector file: {0}	EvoVector ファイルではありません: {0}
 @msg	the compressed file unpacks to more than {_1} MB	圧縮ファイルを展開すると {_1} MB を超えます
 @msg	version {0} files can't be compressed: only version {COMPRESSED_SINCE} and later open compressed files	バージョン {0} のファイルは圧縮できません: 圧縮ファイルを開けるのはバージョン {COMPRESSED_SINCE} 以降のみです
 @msg	a bitmap is empty	ビットマップが空です
@@ -3933,7 +3933,7 @@ theme	Appearance	外観
 @msg	no dialog open	ダイアログが開かれていません
 @msg	no file reader	ファイルの読み込み機能がありません
 @msg	no file writer	ファイルの書き込み機能がありません
-@msg	not a EvoVector shortcut set (missing `overrides`)	EvoVector のショートカットセットではありません (`overrides` がありません)
+@msg	not an EvoVector shortcut set (missing `overrides`)	EvoVector のショートカットセットではありません (`overrides` がありません)
 @msg	shortcut for `{k}` must be a string	`{k}` のショートカットは文字列で指定してください
 @msg	tool shortcuts must be a single key (optionally with Shift)	ツールのショートカットには 1 つのキーを指定してください (Shift との組み合わせも可)
 @msg	unknown preset (one of {_1})	不明なプリセットです ({_1} のいずれかを指定してください)

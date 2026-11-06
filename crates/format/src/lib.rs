@@ -88,7 +88,7 @@ pub fn is_native_name(name: &str) -> bool {
 
 #[derive(Debug, thiserror::Error)]
 pub enum FormatError {
-    #[error("not a EvoVector file: {0}")]
+    #[error("not an EvoVector file: {0}")]
     NotEvoVector(String),
     #[error("file version {0} is newer than this EvoVector supports ({VERSION})")]
     TooNew(u32),

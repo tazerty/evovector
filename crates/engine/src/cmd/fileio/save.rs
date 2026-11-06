@@ -278,7 +278,7 @@ fn doc_to_save(st: &DocState, f: &Format) -> Arc<Document> {
 fn fidelity_warning(f: &Format) -> Option<String> {
     (!is_native(f)).then(|| {
         format!(
-            "{} keeps the artwork but not everything a EvoVector document holds (editable effects, symbols, swatches, styles): save as EvoVector to keep it all editable",
+            "{} keeps the artwork but not everything an EvoVector document holds (editable effects, symbols, swatches, styles): save as EvoVector to keep it all editable",
             f.label
         )
     })

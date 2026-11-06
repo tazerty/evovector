@@ -3688,7 +3688,7 @@ theme	Appearance	외관
 @msg	can't save version {0}: EvoVector writes versions {MIN_VERSION} to {VERSION}	버전 {0}(으)로 저장할 수 없습니다: EvoVector는 버전 {MIN_VERSION}~{VERSION}을(를) 기록합니다
 @msg	file version {0} is newer than this EvoVector supports ({VERSION})	파일 버전 {0}은(는) 이 EvoVector가 지원하는 버전({VERSION})보다 높습니다
 @msg	invalid image data for `{0}`	`{0}`의 이미지 데이터가 올바르지 않습니다
-@msg	not a EvoVector file: {0}	EvoVector 파일이 아닙니다: {0}
+@msg	not an EvoVector file: {0}	EvoVector 파일이 아닙니다: {0}
 @msg	the compressed file unpacks to more than {_1} MB	압축된 파일의 압축을 풀면 {_1}MB를 넘습니다
 @msg	version {0} files can't be compressed: only version {COMPRESSED_SINCE} and later open compressed files	버전 {0} 파일은 압축할 수 없습니다: 버전 {COMPRESSED_SINCE} 이상만 압축 파일을 엽니다
 @msg	a bitmap is empty	비트맵이 비어 있습니다
@@ -3911,7 +3911,7 @@ theme	Appearance	외관
 @msg	no dialog open	열린 대화상자가 없습니다
 @msg	no file reader	파일 판독기가 없습니다
 @msg	no file writer	파일 기록기가 없습니다
-@msg	not a EvoVector shortcut set (missing `overrides`)	EvoVector 단축키 세트가 아닙니다(`overrides`가 없음)
+@msg	not an EvoVector shortcut set (missing `overrides`)	EvoVector 단축키 세트가 아닙니다(`overrides`가 없음)
 @msg	shortcut for `{k}` must be a string	`{k}`의 단축키는 문자열이어야 합니다
 @msg	tool shortcuts must be a single key (optionally with Shift)	도구 단축키는 키 하나여야 합니다(Shift 포함 가능)
 @msg	unknown preset (one of {_1})	알 수 없는 프리셋({_1} 중 하나)

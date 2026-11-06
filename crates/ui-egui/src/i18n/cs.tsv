@@ -3866,8 +3866,8 @@ effect	Regular	Pravidelný
 @msg	no user workspace `{from}`	uživatelský pracovní prostor `{from}` neexistuje
 @msg	node {_1} is not text	uzel {_1} není text
 @msg	not a DXF drawing	nejde o výkres DXF
-@msg	not a EvoVector file: {0}	nejde o soubor EvoVector: {0}
-@msg	not a EvoVector shortcut set (missing `overrides`)	nejde o sadu klávesových zkratek EvoVector (chybí `overrides`)
+@msg	not an EvoVector file: {0}	nejde o soubor EvoVector: {0}
+@msg	not an EvoVector shortcut set (missing `overrides`)	nejde o sadu klávesových zkratek EvoVector (chybí `overrides`)
 @msg	not a graphic style library (format `{_1}`)	nejde o knihovnu grafických stylů (formát `{_1}`)
 @msg	not a stored central record	nejde o uložený centrální záznam
 @msg	not a valid plug-in module: {0}	neplatný modul zásuvného modulu: {0}

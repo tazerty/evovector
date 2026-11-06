@@ -1,4 +1,4 @@
-//! PDF → Document (hayro-interpret device that builds a EvoVector node tree).
+//! PDF → Document (hayro-interpret device that builds an EvoVector node tree).
 
 use std::collections::{HashMap, HashSet};
 use std::sync::{Arc, Mutex};
@@ -1156,7 +1156,7 @@ impl<'p> Builder<'p> {
         self.push_node(n);
     }
 
-    /// Convert a hayro paint to a EvoVector paint and opacity (`stroke`: for a stroke).
+    /// Convert a hayro paint to an EvoVector paint and opacity (`stroke`: for a stroke).
     fn paint(&mut self, p: &hayro_interpret::Paint<'_>, stroke: bool) -> (Paint, f32) {
         match p {
             hayro_interpret::Paint::Color(c) => {

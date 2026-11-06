@@ -3676,8 +3676,8 @@ axis	Both	Оба
 @msg	no user workspace `{from}`	нет пользовательской рабочей среды `{from}`
 @msg	node {_1} is not text	узел {_1} не является текстом
 @msg	not a DXF drawing	не является чертежом DXF
-@msg	not a EvoVector file: {0}	не является файлом EvoVector: {0}
-@msg	not a EvoVector shortcut set (missing `overrides`)	не является набором сочетаний клавиш EvoVector (отсутствует `overrides`)
+@msg	not an EvoVector file: {0}	не является файлом EvoVector: {0}
+@msg	not an EvoVector shortcut set (missing `overrides`)	не является набором сочетаний клавиш EvoVector (отсутствует `overrides`)
 @msg	not a graphic style library (format `{_1}`)	не является библиотекой графических стилей (формат `{_1}`)
 @msg	not a stored central record	не является сохранённой центральной записью
 @msg	not a valid plug-in module: {0}	не является допустимым модулем: {0}

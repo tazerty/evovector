@@ -168,7 +168,7 @@ fn open_dialog(app: &mut EvoVectorApp, files: Vec<Value>) {
     ));
 }
 
-/// Is dialog file entry `file` a EvoVector document on disk (what Link places as one locked
+/// Is dialog file entry `file` an EvoVector document on disk (what Link places as one locked
 /// object)?
 fn is_evovector_file(file: &Value) -> bool {
     let native = ["evovector", evovector_format::LEGACY_EXTENSION, "evovectortemplate"];

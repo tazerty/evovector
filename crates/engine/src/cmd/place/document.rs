@@ -1,4 +1,4 @@
-//! Placed documents (`file.place` of a EvoVector document from a file, with `link`): one
+//! Placed documents (`file.place` of an EvoVector document from a file, with `link`): one
 //! locked object showing an artboard of the document, a [`PlacedDocument`].
 //!
 //! The object keeps the file's bytes (in the document's images, like image data) and the link; the
@@ -32,12 +32,12 @@ const NATIVE: [&str; 2] = ["evovector", "template"];
 /// The type a placed file's bytes are stored with.
 const MIME: &str = "application/json";
 
-/// Is `name` with `bytes` a EvoVector document?
+/// Is `name` with `bytes` an EvoVector document?
 pub(crate) fn is_native(name: &str, bytes: &[u8]) -> bool {
     fileio::detect(name, bytes).is_some_and(|f| NATIVE.contains(&f.id))
 }
 
-/// An artboard of a EvoVector document, read as art to place.
+/// An artboard of an EvoVector document, read as art to place.
 pub(crate) struct DocumentArt {
     /// The document, its layers taken: the art's resources.
     pub doc: Document,
@@ -55,7 +55,7 @@ pub(crate) struct DocumentArt {
 pub(crate) fn document_art(name: &str, bytes: &[u8], path: Option<&str>, page: u32, bounding: bool, cmd: &str) -> Result<DocumentArt> {
     let file = fileio::file_name(name);
     if !is_native(name, bytes) {
-        return Err(bad(cmd, format!("`{file}` isn't a EvoVector document")));
+        return Err(bad(cmd, format!("`{file}` isn't an EvoVector document")));
     }
     if bytes.len() > MAX_FILE {
         return Err(bad(cmd, format!("`{file}` is over {} MB", MAX_FILE >> 20)));
@@ -100,7 +100,7 @@ pub(crate) fn read_file_again(p: &PlacedDocument) -> Option<Vec<u8>> {
     Some(bytes)
 }
 
-/// A EvoVector document read for placing linked.
+/// An EvoVector document read for placing linked.
 #[derive(Clone)]
 pub(crate) struct Source {
     /// The file's bytes, with their preview.

@@ -187,7 +187,7 @@ fn opening_a_saved_ai_with_several_artboards_restores_it_without_asking() {
     assert!(doc.layers.iter().any(|l| l.name.as_deref() == Some("Front")), "layers come back");
 }
 
-/// A PDF without a EvoVector document still asks, and placing a saved `.ai` still asks for the page.
+/// A PDF without an EvoVector document still asks, and placing a saved `.ai` still asks for the page.
 #[test]
 fn placing_a_saved_ai_still_asks_for_the_page() {
     let mut app = app();

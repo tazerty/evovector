@@ -1,4 +1,4 @@
-//! Placed documents: a EvoVector document placed linked (`file.place`'s default for one read
+//! Placed documents: an EvoVector document placed linked (`file.place`'s default for one read
 //! from a file), drawn and output as vectors, saved with its preview, checked, updated and
 //! relinked when the file changes, and turned into an editable copy (Break Link, Expand).
 
@@ -10,7 +10,7 @@ use evovector_geom::{Rect, shapes};
 use super::tests_links::{BLUE, Folder, RED, centre_colour, near, open, save, session, write};
 use super::*;
 
-/// A EvoVector document at `path`: one `w`×`h` artboard filled with `rgb` (and `extra` more
+/// An EvoVector document at `path`: one `w`×`h` artboard filled with `rgb` (and `extra` more
 /// rectangles, which change the file's size).
 fn source(path: &str, w: f64, h: f64, rgb: [u8; 3], extra: usize) {
     let mut d = Document::new(w, h);
