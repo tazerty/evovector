@@ -3,8 +3,8 @@
 use std::collections::BTreeSet;
 
 use serde_json::{Value, json};
-use vectorcraft_doc::{NodeId, NodeKind, Scaling};
-use vectorcraft_geom::{AnchorKind, PathData, Point, SubPath, Vec2};
+use evovector_doc::{NodeId, NodeKind, Scaling};
+use evovector_geom::{AnchorKind, PathData, Point, SubPath, Vec2};
 
 use super::create::anchor_from_json;
 use super::*;
@@ -116,7 +116,7 @@ pub fn specs() -> Vec<CommandSpec> {
     ]
 }
 
-pub(super) fn path_mut(d: &mut vectorcraft_doc::Document, id: NodeId) -> Result<&mut PathData> {
+pub(super) fn path_mut(d: &mut evovector_doc::Document, id: NodeId) -> Result<&mut PathData> {
     let n = d.node_mut(id).ok_or(EngineError::NoNode(id))?;
     match &mut n.kind {
         NodeKind::Path { path, live, .. } => {
@@ -189,7 +189,7 @@ pub(crate) fn move_anchors(s: &mut Session, p: &Value) -> Result<Value> {
                 }
                 None => {
                     if let Some(n) = doc.node_mut(*id) {
-                        n.transform(vectorcraft_geom::Affine::translate(d), sc);
+                        n.transform(evovector_geom::Affine::translate(d), sc);
                     }
                 }
             }
@@ -250,7 +250,7 @@ fn selected_paths(s: &Session) -> Result<Vec<NodeId>> {
 }
 
 /// The paths in the subtrees of `ids` (in groups and compound paths too), each once.
-pub(super) fn paths_in(d: &vectorcraft_doc::Document, ids: &[NodeId]) -> Vec<NodeId> {
+pub(super) fn paths_in(d: &evovector_doc::Document, ids: &[NodeId]) -> Vec<NodeId> {
     let mut out = BTreeSet::new();
     for n in ids.iter().filter_map(|id| d.node(*id)) {
         n.walk(&mut |c| {
@@ -529,7 +529,7 @@ fn without_segments(sp: SubPath, removed: &BTreeSet<usize>) -> Vec<SubPath> {
     result
 }
 
-fn open_run(mut anchors: Vec<vectorcraft_geom::Anchor>) -> Option<SubPath> {
+fn open_run(mut anchors: Vec<evovector_geom::Anchor>) -> Option<SubPath> {
     if anchors.len() < 2 {
         return None;
     }
@@ -559,9 +559,9 @@ fn reshape(s: &mut Session, p: &Value) -> Result<Value> {
         };
         let origin = sp.anchors[grabbed].p;
         let r = radius.unwrap_or_else(|| {
-            let mut bp = vectorcraft_geom::BezPath::new();
+            let mut bp = evovector_geom::BezPath::new();
             sp.to_bezpath_into(&mut bp);
-            let b = vectorcraft_geom::Shape::bounding_box(&bp);
+            let b = evovector_geom::Shape::bounding_box(&bp);
             (b.width().hypot(b.height()) / 2.0).max(1.0)
         });
         for (i, a) in sp.anchors.iter_mut().enumerate() {

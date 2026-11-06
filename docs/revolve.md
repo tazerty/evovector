@@ -1,6 +1,6 @@
 # Revolve
 
-This initial implementation follows the scope agreed in [issue #605](https://github.com/storytold/vectorcraft/issues/605#issuecomment-6070543567).
+This initial implementation follows the scope agreed in [issue #605](https://github.com/tazerty/evovector/issues/605#issuecomment-6070543567).
 
 Draw an open profile with the Pen tool, select it, then choose **Effect > 3D and Materials > Revolve**.
 The profile's horizontal distance from a vertical axis is its radius. **Axis side** chooses the left or right
@@ -69,9 +69,9 @@ its approximation for intersecting surfaces. Expansion changes are undoable with
 
 ## Architecture
 
-`vectorcraft-three-d` depends only on `vectorcraft-geom`. It creates a surface of revolution,
+`evovector-three-d` depends only on `evovector-geom`. It creates a surface of revolution,
 applies Euler view rotation, projects it, shades faces and sorts their depth. It has no UI or GPU dependency.
-`vectorcraft-effects` turns those faces into document art. The renderer, export baking and
+`evovector-effects` turns those faces into document art. The renderer, export baking and
 Expand Appearance use the same evaluator. The standard `effect.apply`, `effect.setParams`,
 `effect.remove` and `effect.expandAppearance` commands expose it to the CLI, control channel and MCP.
 

@@ -2,7 +2,7 @@
 //! and the typed parameter editor of the command and effect dialogs.
 
 use serde_json::{Value, json};
-use vectorcraft_doc::Unit;
+use evovector_doc::Unit;
 
 use crate::state::Dialog;
 use crate::theme::Tokens;
@@ -311,8 +311,8 @@ fn typed_number(x: f64) -> Value {
 /// within their range, whole numbers, checkboxes and dropdowns, in declaration order. Returns
 /// true when a value changed. The labels (from the parameter keys) and choices are the plug-in's
 /// text, shown as they are.
-pub(super) fn schema_fields(ui: &mut egui::Ui, d: &mut Dialog, specs: &[(String, vectorcraft_plugins::ParamSpec)]) -> bool {
-    use vectorcraft_plugins::ParamSpec;
+pub(super) fn schema_fields(ui: &mut egui::Ui, d: &mut Dialog, specs: &[(String, evovector_plugins::ParamSpec)]) -> bool {
+    use evovector_plugins::ParamSpec;
     let t = Tokens::get(ui.ctx());
     let mut changed = false;
     egui::Grid::new("plugin-grid").num_columns(2).spacing([12.0, 8.0]).show(ui, |ui| {
@@ -482,14 +482,14 @@ pub(super) const PREVIEWED: &str = "__previewed";
 /// The Preview checkbox of a dialog that previews `cmd` on the canvas: while it is on, `params` run
 /// again on the interaction's snapshot whenever they differ from the last preview (whether a widget
 /// or `ui.dialog.set` changed them); turning it off rolls back.
-pub(super) fn preview(app: &mut crate::VectorcraftApp, ui: &mut egui::Ui, d: &mut Dialog, label: &str, cmd: &str, params: Value) {
+pub(super) fn preview(app: &mut crate::EvoVectorApp, ui: &mut egui::Ui, d: &mut Dialog, label: &str, cmd: &str, params: Value) {
     let _ = preview_result(app, ui, d, label, cmd, params);
 }
 
 /// As [`preview`], returning the command's result only when a new preview succeeds.
 /// A dialog can retain a small summary (such as point counts) in its private fields.
 pub(super) fn preview_result(
-    app: &mut crate::VectorcraftApp,
+    app: &mut crate::EvoVectorApp,
     ui: &mut egui::Ui,
     d: &mut Dialog,
     label: &str,
@@ -523,7 +523,7 @@ pub(super) fn preview_result(
 
 /// OK of a dialog using [`preview`]: keep the previewed `cmd` as one undo step (or run it when no
 /// preview runs) and close. On an error the dialog stays open.
-pub(super) fn commit_preview(app: &mut crate::VectorcraftApp, cmd: &str, params: Value) -> Result<Value, String> {
+pub(super) fn commit_preview(app: &mut crate::EvoVectorApp, cmd: &str, params: Value) -> Result<Value, String> {
     let r = if app.session.in_interaction() {
         match app.session.preview(cmd, &params) {
             Ok(_) => app.session.commit_interaction().map(|_| Value::Null).map_err(|e| e.to_string()),
@@ -552,7 +552,7 @@ pub(super) fn bleed_values(d: &Dialog) -> [f64; 4] {
 /// Bleed fields (Document Setup, New Document): Top, Bottom, Left and Right shown in `unit`, each
 /// `width` wide with a caption above, and a link toggle (`bleedLinked`, on by default) that keeps
 /// them equal. Values are clamped to 0–72 pt.
-pub(super) fn bleed(ui: &mut egui::Ui, d: &mut Dialog, unit: vectorcraft_doc::Unit, width: f32) {
+pub(super) fn bleed(ui: &mut egui::Ui, d: &mut Dialog, unit: evovector_doc::Unit, width: f32) {
     let t = Tokens::get(ui.ctx());
     let mut b = bleed_values(d);
     let linked = d.fields.get("bleedLinked").and_then(Value::as_bool).unwrap_or(true);
@@ -563,7 +563,7 @@ pub(super) fn bleed(ui: &mut egui::Ui, d: &mut Dialog, unit: vectorcraft_doc::Un
             ui.vertical(|ui| {
                 ui.label(egui::RichText::new(tl!(side)).size(11.0).color(t.text_dim));
                 if let Some(v) = crate::widgets::num_field(ui, ("bleed", i), Some(b[i]), unit, width) {
-                    changed = Some((i, v.clamp(0.0, vectorcraft_doc::setup::MAX_BLEED)));
+                    changed = Some((i, v.clamp(0.0, evovector_doc::setup::MAX_BLEED)));
                 }
             });
         }

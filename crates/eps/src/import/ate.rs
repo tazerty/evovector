@@ -21,9 +21,9 @@
 use std::collections::BTreeMap;
 
 use kurbo::{BezPath, CubicBez, ParamCurve, ParamCurveArclen};
-use vectorcraft_color::{Color, Paint};
-use vectorcraft_doc::{CharStyle, Justify, Node, NodeId, NodeKind, ParaStyle, TextKind, TextObject, TextRun};
-use vectorcraft_geom::{Affine, PathData, Point, Rect};
+use evovector_color::{Color, Paint};
+use evovector_doc::{CharStyle, Justify, Node, NodeId, NodeKind, ParaStyle, TextKind, TextObject, TextRun};
+use evovector_geom::{Affine, PathData, Point, Rect};
 
 /// Longest story read (bytes).
 const MAX_STORY: usize = 1 << 20;
@@ -751,7 +751,7 @@ fn para_style(p: &Para, scale: f64) -> ParaStyle {
 
 fn char_style(s: &Style, scale: f64, leading: Option<f64>) -> CharStyle {
     let (family, style) = s.font.as_deref().map_or_else(|| (CharStyle::default().font_family, "Regular".to_string()), crate::family_style);
-    let family = vectorcraft_text::FontDb::global().find_family(&family).unwrap_or(family);
+    let family = evovector_text::FontDb::global().find_family(&family).unwrap_or(family);
     CharStyle {
         font_family: family,
         font_style: style,

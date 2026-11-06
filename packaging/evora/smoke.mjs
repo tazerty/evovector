@@ -87,8 +87,8 @@ if (SMOKE_LANG) QUERY_PARTS.push(`lang=${encodeURIComponent(SMOKE_LANG)}`);
 if (SMOKE_HOST) QUERY_PARTS.push(`host=${encodeURIComponent(SMOKE_HOST)}`);
 if (SMOKE_THEME) QUERY_PARTS.push(`theme=${encodeURIComponent(SMOKE_THEME)}`);
 const ENGINE_QUERY = QUERY_PARTS.length ? `?${QUERY_PARTS.join('&')}` : '';
-const SEED_RECOVERY_KEY = 'vectorcraft-recovery/temoin-zone/temoin.vectorcraft';
-const SEED_LATE_KEY = 'vectorcraft-recovery/autre-compte/copie.vectorcraft';
+const SEED_RECOVERY_KEY = 'evovector-recovery/temoin-zone/temoin.evovector';
+const SEED_LATE_KEY = 'evovector-recovery/autre-compte/copie.evovector';
 const SEED_WITNESS_KEY = 'evora-temoin-intact';
 const SEED_HTML = `<!doctype html><meta charset="utf-8"><title>semis</title><script>
 localStorage.setItem(${JSON.stringify(SEED_RECOVERY_KEY)}, 'QUJD');
@@ -696,8 +696,8 @@ function pixelStats(png, rect) {
 // ---- déroulé ----------------------------------------------------------------------------------
 
 const PROBE = `(() => {
-  const l = document.getElementById('vectorcraft_loading');
-  const c = document.getElementById('vectorcraft_canvas');
+  const l = document.getElementById('evovector_loading');
+  const c = document.getElementById('evovector_canvas');
   return JSON.stringify({
     ready: !l && !!c,
     loading: l ? l.textContent : null,
@@ -854,7 +854,7 @@ async function ehpScenario() {
   if (!step('evora:init acquitté', ackIs(initAck, true), J(initAck))) return finishEhp(ehp);
   keys = await engineKeys();
   ehp.storage.afterInit = keys;
-  step('evora:init : restes des sessions antérieures purgés, témoin intact', !keys.some((k) => k.startsWith('vectorcraft-recovery/')) && keys.includes(SEED_WITNESS_KEY), J(keys));
+  step('evora:init : restes des sessions antérieures purgés, témoin intact', !keys.some((k) => k.startsWith('evovector-recovery/')) && keys.includes(SEED_WITNESS_KEY), J(keys));
   let htmlLang = null;
   for (let i = 0; i < 50 && htmlLang !== 'fr'; i += 1) {
     htmlLang = await engineEval('document.documentElement.lang').catch(() => null);
@@ -881,7 +881,7 @@ async function ehpScenario() {
 
   // 5. Refus codés : url (media.ranges non déclarée), plafond + 1 octet.
   const refusals = [
-    ['url', 'capability', `__ehp.post('evora:open', { docRef: __ehp.ulid(), name: 'x.vectorcraft', url: 'https://medias.invalid/x' })`],
+    ['url', 'capability', `__ehp.post('evora:open', { docRef: __ehp.ulid(), name: 'x.evovector', url: 'https://medias.invalid/x' })`],
     ['plafond + 1 octet', 'too_large', `(() => { const b = new ArrayBuffer(${MAX_DOC + 1}); return __ehp.post('evora:open', { docRef: __ehp.ulid(), name: 'x.svg', bytes: b }, { transfer: [b] }); })()`],
   ];
   for (const [what, code, expr] of refusals) {
@@ -894,7 +894,7 @@ async function ehpScenario() {
   //    sans octets : evora:open {new: true}, HOST-PROTOCOL §7.1), puis dirty false.
   const docRef = await parentEval('__ehp.ulid()');
   const docName = SMOKE_EHP_NEW ? 'evora-neuf' : 'evora-smoke.svg';
-  const savedName = SMOKE_EHP_NEW ? 'evora-neuf.vectorcraft' : 'evora-smoke.vectorcraft';
+  const savedName = SMOKE_EHP_NEW ? 'evora-neuf.evovector' : 'evora-smoke.evovector';
   const openId = SMOKE_EHP_NEW
     ? await parentEval(`__ehp.post('evora:open', { docRef: ${J(docRef)}, name: ${J(docName)}, new: true })`)
     : await parentEval(`(() => { const b = __ehp.text(${J(SMOKE_SVG)}); return __ehp.post('evora:open', { docRef: ${J(docRef)}, name: ${J(docName)}, bytes: b }, { transfer: [b] }); })()`);

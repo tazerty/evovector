@@ -1,15 +1,15 @@
-//! Help → About VectorCraft.
+//! Help → About EvoVector.
 
-use crate::VectorcraftApp;
+use crate::EvoVectorApp;
 use crate::theme;
 
 /// The About window, while `UiState::about` is set.
-pub(super) fn show(app: &mut VectorcraftApp, ctx: &egui::Context) {
+pub(super) fn show(app: &mut EvoVectorApp, ctx: &egui::Context) {
     if !app.ui.about {
         return;
     }
     let mut open = true;
-    egui::Window::new(tl!("About VectorCraft"))
+    egui::Window::new(tl!("About EvoVector"))
         .collapsible(false)
         .resizable(false)
         .open(&mut open)
@@ -45,16 +45,16 @@ pub(super) fn show(app: &mut VectorcraftApp, ctx: &egui::Context) {
     app.ui.about = open;
 }
 
-/// The About tab: mark, version, licences and the GPU in use. Evora (E1, E7): no ArtCraft
+/// The About tab: mark, version, licences and the GPU in use. Evora (E1, E7): no Upstream
 /// mention and no links here; the plain-text credit lives in the licence notices shipped beside
 /// the app.
-fn about_tab(app: &mut VectorcraftApp, ui: &mut egui::Ui) {
+fn about_tab(app: &mut EvoVectorApp, ui: &mut egui::Ui) {
     ui.set_width(380.0);
     ui.horizontal(|ui| {
         let (r, _) = ui.allocate_exact_size(egui::vec2(44.0, 44.0), egui::Sense::hover());
         crate::brand::paint_mark(ui, r);
         ui.vertical(|ui| {
-            ui.label(egui::RichText::new("VectorCraft").font(theme::semibold(22.0)));
+            ui.label(egui::RichText::new("EvoVector").font(theme::semibold(22.0)));
             ui.label(crate::i18n::fmt(
                 tl!("Version {version} — open-source vector illustration in pure Rust."),
                 &[("version", env!("CARGO_PKG_VERSION"))],
@@ -65,7 +65,7 @@ fn about_tab(app: &mut VectorcraftApp, ui: &mut egui::Ui) {
     ui.add_space(12.0);
     ui.label(
         egui::RichText::new(tl!(
-            "MIT OR Apache-2.0. Fonts: Source Sans 3, Inter, JetBrains Mono (OFL). Icons: Lucide (ISC) + VectorCraft."
+            "MIT OR Apache-2.0. Fonts: Source Sans 3, Inter, JetBrains Mono (OFL). Icons: Lucide (ISC) + EvoVector."
         ))
         .size(11.0),
     );

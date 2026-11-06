@@ -2,7 +2,7 @@
 
 > **Last reviewed:** 2026-10-10 · **Last updated:** 2026-10-12 · **Change:** minor (Korean catalog added, complete under the tests; 12-language score 54% → 63%; Hungarian catalog added; Czech render-site localization follow-up; scores and estimates unchanged) · **Target:** Adobe Illustrator 2026 (30.x)
 
-Per-language status of VectorCraft's interface. How the catalogs work and how to add a language:
+Per-language status of EvoVector's interface. How the catalogs work and how to add a language:
 [`development.md` › Localisation](development.md#localisation). Part of
 [target-app-parity.md](target-app-parity.md).
 
@@ -24,7 +24,7 @@ Chinese by `imachus`). None is recorded as reviewed by a native speaker; the cat
 | Language | Code | UI strings translated | Dialogs / tooltips / messages | Script support | Native review | Status | To `full` (h) |
 |---|---|---|---|---|---|---|---|
 | English | `en` | source, 100% | all | Latin | — | full | — |
-| Simplified Chinese (Mandarin) | `zh-hans` | 3,647 rows; menus, panels, dialogs complete (tests); 85% overall | messages in English (1 of 604) | CJK UI font from craft-fonts (BIZ UDPGothic) when embedded, else a system font; IME with marked text at the caret; vertical type partial ([type-parity.md](type-parity.md)) | no | partial | 2–3 |
+| Simplified Chinese (Mandarin) | `zh-hans` | 3,647 rows; menus, panels, dialogs complete (tests); 85% overall | messages in English (1 of 604) | CJK UI font from evo-fonts (BIZ UDPGothic) when embedded, else a system font; IME with marked text at the caret; vertical type partial ([type-parity.md](type-parity.md)) | no | partial | 2–3 |
 | Spanish | `es` | 4,009 / 4,020 (99.7%) | all (604 messages) | Latin | no | full | — (review) |
 | Hindi | `hi` | 0 | none | Devanagari: the document's text shapes (HarfRust), untested for Devanagari, but the egui interface does no complex shaping | no | none | 20–30 |
 | Arabic | `ar` | 0 | none | document text: bidi layout and Paragraph Direction; interface: no right-to-left layout, no Arabic shaping in egui | no | none | 25–40 |
@@ -33,7 +33,7 @@ Chinese by `imachus`). None is recorded as reviewed by a native speaker; the cat
 | Indonesian | `id` | 0 | none | Latin | no | none | 5–8 |
 | Japanese | `ja` | 4,004 / 4,020 (99.6%) | all | CJK UI font as above; Japanese IME; vertical type partial; Japanese crop marks and composition settings | no | full | — (review) |
 | German | `de` | 3,952 / 4,020 (98%; tests hold menus, literals and messages complete) | all (602 of 604 message rows; landed 2026-10-10) | Latin | contributor-written, not reviewed | full | — (review) |
-| Korean | `ko` | 4,151 rows: menus, `tl!` literals and messages complete (tests); one plural form | all | Hangul from an installed system font on the desktop (Apple SD Gothic Neo, Malgun Gothic, Noto Sans CJK KR…); the web build has no Korean UI font yet (craft-fonts); IME path exists | no (AI-drafted) | full | — (review; web font) |
+| Korean | `ko` | 4,151 rows: menus, `tl!` literals and messages complete (tests); one plural form | all | Hangul from an installed system font on the desktop (Apple SD Gothic Neo, Malgun Gothic, Noto Sans CJK KR…); the web build has no Korean UI font yet (evo-fonts); IME path exists | no (AI-drafted) | full | — (review; web font) |
 | Vietnamese | `vi` | 0 | none | Latin with stacked diacritics (precomposed forms render) | no | none | 5–8 |
 
 **12-language score: ~63%** (equal weights: 100 + 85 + 100 + 0 + 0 + 100 + 68 + 0 + 100 + 98 + 100 + 0, over 12).

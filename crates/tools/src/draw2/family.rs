@@ -7,7 +7,7 @@
 //! change grid columns / radial dividers.
 
 use serde_json::{Value, json};
-use vectorcraft_geom::Point;
+use evovector_geom::Point;
 
 use crate::guides::{DrawSnap, Leave, square};
 use crate::shape::drag_rect;
@@ -228,7 +228,7 @@ impl Tool for FamilyTool {
 mod tests {
     use super::*;
     use crate::testutil::*;
-    use vectorcraft_doc::Selection;
+    use evovector_doc::Selection;
 
     #[test]
     fn grid_drag_and_arrows() {

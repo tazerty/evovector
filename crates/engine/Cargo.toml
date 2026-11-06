@@ -1,31 +1,31 @@
 [package]
-name = "vectorcraft-engine"
+name = "evovector-engine"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
-description = "VectorCraft engine: sessions, history, selection, the command registry"
+description = "EvoVector engine: sessions, history, selection, the command registry"
 
 [lints]
 workspace = true
 
 [dependencies]
-vectorcraft-geom = { workspace = true }
-vectorcraft-color = { workspace = true }
-vectorcraft-doc = { workspace = true }
-vectorcraft-tools = { workspace = true }
-vectorcraft-text = { workspace = true }
-vectorcraft-render = { workspace = true }
-vectorcraft-pathops = { workspace = true }
-vectorcraft-brush = { workspace = true }
-vectorcraft-trace = { workspace = true }
-vectorcraft-svg = { workspace = true }
-vectorcraft-format = { workspace = true }
-vectorcraft-pdf = { workspace = true }
-vectorcraft-cad = { workspace = true }
-vectorcraft-eps = { workspace = true }
-vectorcraft-metafile = { workspace = true }
-vectorcraft-plugins = { workspace = true }
-vectorcraft-affinity = { workspace = true }
+evovector-geom = { workspace = true }
+evovector-color = { workspace = true }
+evovector-doc = { workspace = true }
+evovector-tools = { workspace = true }
+evovector-text = { workspace = true }
+evovector-render = { workspace = true }
+evovector-pathops = { workspace = true }
+evovector-brush = { workspace = true }
+evovector-trace = { workspace = true }
+evovector-svg = { workspace = true }
+evovector-format = { workspace = true }
+evovector-pdf = { workspace = true }
+evovector-cad = { workspace = true }
+evovector-eps = { workspace = true }
+evovector-metafile = { workspace = true }
+evovector-plugins = { workspace = true }
+evovector-affinity = { workspace = true }
 image = { workspace = true }
 flate2 = { workspace = true }
 kurbo = { workspace = true }
@@ -35,9 +35,9 @@ thiserror = { workspace = true }
 log = { workspace = true }
 
 [dev-dependencies]
-vectorcraft-affinity = { workspace = true, features = ["synth"] }
+evovector-affinity = { workspace = true, features = ["synth"] }
 crc32fast = { workspace = true }
-vectorcraft-testkit = { workspace = true }
+evovector-testkit = { workspace = true }
 proptest = { workspace = true }
 wat = { workspace = true }
 # Zstandard streams for the Illustrator editing data fuzz tests.

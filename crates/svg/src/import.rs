@@ -6,12 +6,12 @@ use std::str::FromStr;
 use std::sync::Arc;
 
 use usvg::roxmltree;
-use vectorcraft_color::{BlendMode, Color, Gradient, GradientGeom, GradientKind, GradientPaint, GradientStop, Paint};
-use vectorcraft_doc::{
+use evovector_color::{BlendMode, Color, Gradient, GradientGeom, GradientKind, GradientPaint, GradientStop, Paint};
+use evovector_doc::{
     Appearance, AppearanceItem, Dash, Document, FillLayer, ImageBlob, ImageObject, LayerColor, LineCap, LineJoin, Node, NodeId, NodeKind, PatternDef,
     StrokeLayer, Unit,
 };
-use vectorcraft_geom::{Affine, BezPath, FillRule, PathData, Point, Rect, Vec2, shapes};
+use evovector_geom::{Affine, BezPath, FillRule, PathData, Point, Rect, Vec2, shapes};
 
 use crate::export::Reuse;
 use crate::{ImportOptions, SvgError, fnv1a};
@@ -130,7 +130,7 @@ pub(crate) fn import(svg: &str, opts: &ImportOptions) -> Result<(Document, Vec<S
                 None => false,
             };
             let id = im.doc.alloc_id();
-            let preset = (im.doc.layers.len() % vectorcraft_doc::LAYER_COLORS.len()) as u8;
+            let preset = (im.doc.layers.len() % evovector_doc::LAYER_COLORS.len()) as u8;
             let mut l = Node::layer(id, &name, LayerColor::Preset(preset));
             l.set_clips(clip);
             if let Some(ch) = l.children_mut() {
@@ -300,7 +300,7 @@ struct SymbolMade {
 /// `n` with every object id (its descendants' and its mask art's too) zeroed, to compare art.
 fn without_ids(n: &Node) -> Node {
     let mut n = n.clone();
-    n.id = vectorcraft_doc::NodeId(0);
+    n.id = evovector_doc::NodeId(0);
     if let Some(m) = n.extras_if_any().and_then(|e| e.mask.as_deref_mut()) {
         m.art = Arc::new(without_ids(&m.art));
     }
@@ -369,7 +369,7 @@ fn mask_flags(xml: &roxmltree::Document) -> HashMap<String, (bool, bool)> {
 }
 
 /// Prefix of the ids [`prepass`] gives the elements it has to find again that have none.
-const MADE_UP_ID: &str = "vectorcraft-id-";
+const MADE_UP_ID: &str = "evovector-id-";
 
 /// Is `id` one [`prepass`] made up (not a name)?
 fn made_up(id: &str) -> bool {
@@ -785,7 +785,7 @@ impl Importer {
                 let name = unique_name(self.name_of(&sym), |n| self.doc.symbols.iter().any(|s| s.name == n));
                 let reuse = Reuse::of(&self.doc, &art);
                 let made = SymbolMade { name: name.clone(), art: without_ids(&art), reuse };
-                self.doc.symbols.push(vectorcraft_doc::Symbol { name: name.clone(), art: Arc::new(art) });
+                self.doc.symbols.push(evovector_doc::Symbol { name: name.clone(), art: Arc::new(art) });
                 self.symbols.insert(sym, made);
                 if !whole || !reuse.allows(xf) {
                     return None;
@@ -944,7 +944,7 @@ impl Importer {
     /// `<mask>` → opacity mask (luminance; alpha masks are approximated by their luminance). A
     /// mask our export wrote gets its options back ([`mask_flags`]) and its art without what
     /// stands for them: the inverting filter group and the backdrop rectangle.
-    fn opacity_mask(&mut self, m: &usvg::Mask, ts: Affine, label: &str) -> Option<Box<vectorcraft_doc::OpacityMask>> {
+    fn opacity_mask(&mut self, m: &usvg::Mask, ts: Affine, label: &str) -> Option<Box<evovector_doc::OpacityMask>> {
         if m.kind() == usvg::MaskType::Alpha {
             self.warn(format!("alpha mask on {label} imported as a luminance opacity mask"));
         }
@@ -971,7 +971,7 @@ impl Importer {
             1 => Arc::unwrap_or_clone(children.pop()?),
             _ => self.named("", NodeKind::Group { children, clip: false }),
         };
-        let mut mask = vectorcraft_doc::OpacityMask::new(art, clip);
+        let mut mask = evovector_doc::OpacityMask::new(art, clip);
         mask.invert = invert;
         Some(Box::new(mask))
     }

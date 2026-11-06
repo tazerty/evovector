@@ -1,7 +1,7 @@
-use vectorcraft_color::cms::{self, IccProfile, ProfileKind};
-use vectorcraft_color::{Color, Paint};
-use vectorcraft_doc::{Appearance, Node};
-use vectorcraft_geom::shapes;
+use evovector_color::cms::{self, IccProfile, ProfileKind};
+use evovector_color::{Color, Paint};
+use evovector_doc::{Appearance, Node};
+use evovector_geom::shapes;
 
 use super::jpeg::{self, ColorModel, JpegOptions, Method};
 use super::*;

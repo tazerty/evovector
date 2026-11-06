@@ -3,8 +3,8 @@
 use std::io::Cursor;
 
 use serde_json::{Value, json};
-use vectorcraft_doc::{Document, ImageBlob, ImageObject, Node, NodeKind};
-use vectorcraft_geom::Affine;
+use evovector_doc::{Document, ImageBlob, ImageObject, Node, NodeKind};
+use evovector_geom::Affine;
 
 use super::super::*;
 use super::pdfimport::LoadOptions;
@@ -18,7 +18,7 @@ pub struct Loaded {
     pub warnings: Vec<String>,
     /// The document is the native one the file carries (SVG or PDF saved with Preserve Editing).
     pub restored: bool,
-    /// An older native file (the former `.drawcraft` name or format version): saving it again
+    /// An older native file (the former `.evodraw` name or format version): saving it again
     /// rewrites it in today's format.
     pub converted: bool,
     /// Only a stand-in picture of the file (an Affinity document whose native data couldn't be
@@ -31,7 +31,7 @@ impl Loaded {
     /// one that an SVG, PDF, `.ai` or EPS file carries, `restored`), which keeps the grid it was
     /// saved with.
     pub(crate) fn with_grid_prefs(mut self, prefs: &Prefs) -> Self {
-        if !self.restored && !matches!(self.format.id, "vectorcraft" | "template") {
+        if !self.restored && !matches!(self.format.id, "evovector" | "template") {
             self.doc.grid = prefs.grid();
         }
         self
@@ -63,17 +63,17 @@ pub fn file_name(name: &str) -> String {
 /// extension of `name`.
 pub fn detect(name: &str, bytes: &[u8]) -> Option<&'static Format> {
     let by_name = format_for_name(name).filter(|f| f.read);
-    if vectorcraft_affinity::is_affinity(bytes) {
+    if evovector_affinity::is_affinity(bytes) {
         return format("affinity");
     }
-    if vectorcraft_format::sniff(bytes) {
+    if evovector_format::sniff(bytes) {
         // A template keeps its meaning from the extension, like .ait.
-        return by_name.filter(|f| f.id == "template").or_else(|| format("vectorcraft"));
+        return by_name.filter(|f| f.id == "template").or_else(|| format("evovector"));
     }
-    if vectorcraft_svg::is_svgz(bytes) {
+    if evovector_svg::is_svgz(bytes) {
         return format("svgz");
     }
-    if vectorcraft_pdf::is_postscript(bytes) {
+    if evovector_pdf::is_postscript(bytes) {
         // PostScript (.eps, and .ai saved without PDF compatibility) by any name; .ai and .ait
         // keep their meaning (a template), read as PostScript all the same.
         return by_name.filter(|f| matches!(f.id, "ai" | "ait")).or_else(|| format("eps"));
@@ -82,10 +82,10 @@ pub fn detect(name: &str, bytes: &[u8]) -> Option<&'static Format> {
         // .ai and .ait files are PDF inside; the extension keeps the template meaning.
         return by_name.filter(|f| matches!(f.id, "ai" | "ait")).or_else(|| format("pdf"));
     }
-    if vectorcraft_cad::is_dxf(bytes) {
+    if evovector_cad::is_dxf(bytes) {
         return format("dxf");
     }
-    if let Some(kind) = vectorcraft_metafile::sniff(bytes) {
+    if let Some(kind) = evovector_metafile::sniff(bytes) {
         return format(kind.id());
     }
     if psdread::is_psd(bytes) {
@@ -136,8 +136,8 @@ fn restore_or_import(
 
 /// A native file's document and details, the colour profiles it carries installed where missing
 /// (with a warning for each that can't be used).
-pub(crate) fn native_file(bytes: &[u8]) -> Result<(Document, vectorcraft_format::FileInfo, Vec<String>)> {
-    let f = vectorcraft_format::load_file(bytes).map_err(err)?;
+pub(crate) fn native_file(bytes: &[u8]) -> Result<(Document, evovector_format::FileInfo, Vec<String>)> {
+    let f = evovector_format::load_file(bytes).map_err(err)?;
     let warnings = super::native::install_profiles(f.profiles);
     Ok((f.doc, f.info, warnings))
 }
@@ -156,16 +156,16 @@ fn through_editing_data(bytes: &[u8], opts: &LoadOptions, doc: Document, warning
     if opts.pages.is_some() || !opts.layers || !opts.editing_data {
         return (doc, warnings);
     }
-    let Some(private) = vectorcraft_pdf::illustrator_data(bytes, opts.password.as_deref()) else { return (doc, warnings) };
-    let outlined = opts.text_as == vectorcraft_pdf::TextAs::Outlines;
-    let (doc, mut warnings, read) = vectorcraft_eps::layered_ai(&private, doc, warnings, outlined);
+    let Some(private) = evovector_pdf::illustrator_data(bytes, opts.password.as_deref()) else { return (doc, warnings) };
+    let outlined = opts.text_as == evovector_pdf::TextAs::Outlines;
+    let (doc, mut warnings, read) = evovector_eps::layered_ai(&private, doc, warnings, outlined);
     // The layers weren't read (or couldn't be): the notes of reading the PDF part still hold.
     if !read {
         return (doc, warnings);
     }
     // The layers hold the art that the PDF part leaves out or, in a PDF, that the import clipped
     // to the page.
-    warnings.retain(|w| w != vectorcraft_pdf::OFF_ARTBOARD_NOTE && w != vectorcraft_pdf::PAST_PAGE_NOTE);
+    warnings.retain(|w| w != evovector_pdf::OFF_ARTBOARD_NOTE && w != evovector_pdf::PAST_PAGE_NOTE);
     (doc, warnings)
 }
 
@@ -176,9 +176,9 @@ fn from_editing_data_alone(bytes: &[u8], opts: &LoadOptions) -> Option<Result<(D
     if opts.pages.is_some() || !opts.layers || !opts.editing_data {
         return None;
     }
-    let private = vectorcraft_pdf::illustrator_data(bytes, opts.password.as_deref())?;
+    let private = evovector_pdf::illustrator_data(bytes, opts.password.as_deref())?;
     Some(
-        vectorcraft_eps::ai_alone(&private)
+        evovector_eps::ai_alone(&private)
             .map_err(|why| err(format!("this file was saved without PDF compatibility, and its editing data can't be read ({why})"))),
     )
 }
@@ -187,28 +187,28 @@ fn from_editing_data_alone(bytes: &[u8], opts: &LoadOptions) -> Option<Result<(D
 pub fn load_with(name: &str, bytes: &[u8], opts: &LoadOptions) -> Result<Loaded> {
     let format = detect(name, bytes).ok_or_else(|| match super::unsupported(&super::extension(name)) {
         Some(u) => err(format!("can't open `{}`: {}", file_name(name), u.hint)),
-        None => err(format!("can't open `{name}`: not a format VectorCraft reads (see document.formats)")),
+        None => err(format!("can't open `{name}`: not a format EvoVector reads (see document.formats)")),
     })?;
     let title = file_name(name);
     let mut converted = false;
     let mut preview_only = false;
     let (mut doc, warnings, restored) = match format.id {
         // EPS and PostScript .ai: the document our EPS files carry, else the PostScript read.
-        _ if format.id == "eps" || vectorcraft_pdf::is_postscript(bytes) => {
-            let editing = vectorcraft_eps::has_native(bytes).then_some((true, || vectorcraft_eps::native(bytes)));
+        _ if format.id == "eps" || evovector_pdf::is_postscript(bytes) => {
+            let editing = evovector_eps::has_native(bytes).then_some((true, || evovector_eps::native(bytes)));
             restore_or_import(editing, || {
-                let r = vectorcraft_eps::import_with(bytes, opts.editing_data).map_err(|e| err(format!("can't open `{}`: {e}", file_name(name))))?;
+                let r = evovector_eps::import_with(bytes, opts.editing_data).map_err(|e| err(format!("can't open `{}`: {e}", file_name(name))))?;
                 Ok((r.document, r.warnings))
             })?
         }
-        "vectorcraft" | "template" => {
+        "evovector" | "template" => {
             let (d, info, warnings) = native_file(bytes)?;
-            converted = info.is_old() || super::extension(name) == vectorcraft_format::LEGACY_EXTENSION;
+            converted = info.is_old() || super::extension(name) == evovector_format::LEGACY_EXTENSION;
             (d, warnings, false)
         }
         "svg" | "svgz" => {
-            let text = vectorcraft_svg::text_of(bytes).map_err(err)?;
-            let editing = vectorcraft_svg::editing(&text).map(|e| (e.intact, move || vectorcraft_format::base64_decode(&e.data)));
+            let text = evovector_svg::text_of(bytes).map_err(err)?;
+            let editing = evovector_svg::editing(&text).map(|e| (e.intact, move || evovector_format::base64_decode(&e.data)));
             // Relative links are found in the SVG's folder (when `name` is a path).
             let folder = std::path::Path::new(name).parent().map(|f| f.to_string_lossy()).filter(|f| !f.is_empty()).map(|f| absolute_path(&f));
             restore_or_import(editing, || import_svg(&text, folder.as_deref()))?
@@ -218,13 +218,13 @@ pub fn load_with(name: &str, bytes: &[u8], opts: &LoadOptions) -> Result<Loaded>
             let editing = opts
                 .pages
                 .is_none()
-                .then(|| vectorcraft_pdf::editing_with(bytes, opts.password.as_deref()))
+                .then(|| evovector_pdf::editing_with(bytes, opts.password.as_deref()))
                 .flatten()
                 .map(|e| (e.intact, move || Some(e.data)));
             restore_or_import(editing, || match super::pdfimport::import(bytes, opts) {
                 Ok((doc, warnings)) => Ok(through_editing_data(bytes, opts, doc, warnings)),
                 // Saved without its PDF part: the editing copy is all the file has.
-                Err(e) if e.to_string() == vectorcraft_pdf::PdfError::PlaceholderOnly.to_string() => {
+                Err(e) if e.to_string() == evovector_pdf::PdfError::PlaceholderOnly.to_string() => {
                     from_editing_data_alone(bytes, opts).unwrap_or(Err(e))
                 }
                 Err(e) => Err(e),
@@ -255,7 +255,7 @@ pub fn load_with(name: &str, bytes: &[u8], opts: &LoadOptions) -> Result<Loaded>
     }
     // Imports are named after the file; a native document keeps its own title (the tab shows the
     // file name once it has a path).
-    if !matches!(format.id, "vectorcraft" | "template") || doc.title.is_empty() {
+    if !matches!(format.id, "evovector" | "template") || doc.title.is_empty() {
         doc.title = title;
     }
     Ok(Loaded { doc, format, warnings, restored, converted, preview_only })
@@ -263,7 +263,7 @@ pub fn load_with(name: &str, bytes: &[u8], opts: &LoadOptions) -> Result<Loaded>
 
 /// Import SVG text, reading the files its images link to (relative links from `folder`, the SVG's
 /// own): rasters stay linked, SVG files become art, missing ones placeholders (see
-/// [`vectorcraft_svg::ImportOptions`]).
+/// [`evovector_svg::ImportOptions`]).
 pub(crate) fn import_svg(text: &str, folder: Option<&str>) -> Result<(Document, Vec<String>)> {
     let read = |path: &str| {
         // Only files (not folders or devices) are read.
@@ -272,7 +272,7 @@ pub(crate) fn import_svg(text: &str, folder: Option<&str>) -> Result<(Document, 
         let link = crate::cmd::links::link_info(path, &bytes);
         Some((bytes, link))
     };
-    vectorcraft_svg::import_with(text, &vectorcraft_svg::ImportOptions { folder, read: Some(&read) }).map_err(err)
+    evovector_svg::import_with(text, &evovector_svg::ImportOptions { folder, read: Some(&read) }).map_err(err)
 }
 
 /// Open a file's bytes as the new active document (what `document.open` does) →
@@ -327,7 +327,7 @@ fn open_loaded(s: &mut Session, loaded: Loaded, path: Option<String>, opts: &Loa
     let losses: Vec<String> = warnings.iter().filter(|w| is_loss(w)).cloned().collect();
     let source_path = path.clone().filter(|_| !losses.is_empty());
     let links = crate::cmd::links::resolve(&mut doc, path.as_deref(), s.prefs.update_links == "automatically");
-    // A template (saved by Save as Template, or an .ait/.vctemplate file) opens as a new untitled
+    // A template (saved by Save as Template, or an .ait/.evovectortemplate file) opens as a new untitled
     // document.
     let template = as_template || doc.template || matches!(format.id, "ait" | "template");
     if template {
@@ -367,7 +367,7 @@ pub(crate) fn source<'a>(p: &'a Value, cmd: &str) -> Result<Source<'a>> {
     match (str_param(p, "path"), str_param(p, "dataBase64")) {
         (Some(path), _) => Ok(Source { name: path, bytes: read_file(path)?, path: Some(path) }),
         (None, Some(b64)) => {
-            let bytes = vectorcraft_format::base64_decode(b64).ok_or_else(|| bad(cmd, "bad base64"))?;
+            let bytes = evovector_format::base64_decode(b64).ok_or_else(|| bad(cmd, "bad base64"))?;
             Ok(Source { name: str_param(p, "name").unwrap_or("Untitled"), bytes, path: None })
         }
         _ => Err(bad(cmd, "give path, or name and dataBase64")),
@@ -396,14 +396,14 @@ const MAX_RASTER_ALLOC: u64 = if cfg!(target_arch = "wasm32") { 512 << 20 } else
 pub fn raster_image(bytes: &[u8]) -> Result<RasterImage> {
     let ppi = super::ppi::resolution(bytes);
     if psdread::is_psd(bytes) {
-        let cms = vectorcraft_color::cms::active();
+        let cms = evovector_color::cms::active();
         return as_png(psdread::decode(bytes, MAX_RASTER_ALLOC, |c| cms.cmyk_to_srgb(c, false)).map_err(err)?, ppi);
     }
     let mut reader = image::ImageReader::new(Cursor::new(bytes)).with_guessed_format().map_err(err)?;
     let mut limits = image::Limits::default();
     limits.max_alloc = Some(MAX_RASTER_ALLOC);
     reader.limits(limits);
-    let kind = reader.format().ok_or_else(|| err("not an image VectorCraft reads (see document.formats)"))?;
+    let kind = reader.format().ok_or_else(|| err("not an image EvoVector reads (see document.formats)"))?;
     let f = image_format(kind).ok_or_else(|| err(format!("{kind:?} images can't be opened (see document.formats)")))?;
     let cmyk = || ImageBlob::new(f.mime, bytes.to_vec()).cmyk().is_some();
     if matches!(f.id, "png" | "jpg" | "gif" | "webp") || (f.id == "tiff" && cmyk()) {
@@ -411,8 +411,8 @@ pub fn raster_image(bytes: &[u8]) -> Result<RasterImage> {
         return stored(bytes.to_vec(), f.mime, (width, height), ppi);
     }
     let cmyka = || {
-        let cms = vectorcraft_color::cms::active();
-        vectorcraft_doc::cmyk::cmyka_tiff_rgba(bytes, |c| cms.cmyk_to_srgb(c, false))
+        let cms = evovector_color::cms::active();
+        evovector_doc::cmyk::cmyka_tiff_rgba(bytes, |c| cms.cmyk_to_srgb(c, false))
     };
     let img = match (f.id == "tiff").then(cmyka).flatten() {
         Some(img) => img,
@@ -461,7 +461,7 @@ pub(super) fn raster_doc(name: &str, bytes: &[u8]) -> Result<Document> {
 
 /// Does this import note say that the file has something the document doesn't?
 fn is_loss(note: &str) -> bool {
-    note == vectorcraft_pdf::OFF_ARTBOARD_NOTE || vectorcraft_eps::is_loss(note)
+    note == evovector_pdf::OFF_ARTBOARD_NOTE || evovector_eps::is_loss(note)
 }
 
 /// Writing the file `target` for document `st`: not over the file `st` was read from when reading

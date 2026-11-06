@@ -2,10 +2,10 @@
 #![allow(clippy::unwrap_used, clippy::expect_used, clippy::panic)]
 
 use serde_json::{Value, json};
-use vectorcraft_doc::{NodeId, NodeKind};
-use vectorcraft_engine::Session;
-use vectorcraft_geom::{Affine, FillRule, PathData};
-use vectorcraft_render::{RenderOptions, Renderer};
+use evovector_doc::{NodeId, NodeKind};
+use evovector_engine::Session;
+use evovector_geom::{Affine, FillRule, PathData};
+use evovector_render::{RenderOptions, Renderer};
 
 fn run(s: &mut Session, command: &str, params: Value) -> Value {
     s.execute(command, &params).unwrap()

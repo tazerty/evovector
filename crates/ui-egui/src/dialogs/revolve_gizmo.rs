@@ -2,11 +2,11 @@
 //! the existing effect preview applies commands and owns OK, Cancel and undo.
 use egui::{Align2, FontId, Id, Pos2, Rect, Sense, Stroke, Vec2, vec2};
 use serde_json::json;
-use vectorcraft_effects::{REVOLVE, revolve_options};
-use vectorcraft_geom::Point;
-use vectorcraft_three_d::Revolve;
+use evovector_effects::{REVOLVE, revolve_options};
+use evovector_geom::Point;
+use evovector_three_d::Revolve;
 
-use crate::{VectorcraftApp, canvas::Xf, state::Dialog, theme::Tokens};
+use crate::{EvoVectorApp, canvas::Xf, state::Dialog, theme::Tokens};
 
 const KEYS: [&str; 3] = ["rotationX", "rotationY", "rotationZ"];
 const SAMPLES: usize = 96;
@@ -75,11 +75,11 @@ struct Geometry {
     radius: f32,
     rings: [Ring; 3],
     xf: Xf,
-    bounds: vectorcraft_geom::Rect,
+    bounds: evovector_geom::Rect,
 }
 
 impl Geometry {
-    fn new(app: &VectorcraftApp, d: &Dialog) -> Option<Self> {
+    fn new(app: &EvoVectorApp, d: &Dialog) -> Option<Self> {
         let state = app.session.active()?;
         let node = state.doc.node(*state.selection.objects.first()?)?;
         let bounds = node.geometric_bounds()?;
@@ -179,7 +179,7 @@ fn wrap(n: f64, snap: bool) -> f64 {
     (n + 180.0).rem_euclid(360.0) - 180.0
 }
 
-pub(super) fn show(app: &VectorcraftApp, ctx: &egui::Context, d: &mut Dialog) {
+pub(super) fn show(app: &EvoVectorApp, ctx: &egui::Context, d: &mut Dialog) {
     let light_mode = lighting(d);
     if !d.bool("preview") || (light_mode && !d.bool("shade")) {
         clear(ctx);

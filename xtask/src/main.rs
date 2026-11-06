@@ -29,12 +29,12 @@ commands:
   corpus [--download] [--affinity]
                   show where test corpora live; --download fetches PngSuite into corpus/pngsuite,
                   --affinity the pinned public Affinity documents into corpus/affinity
-  bundle          build dist/VectorCraft.app (macOS) with assets/app-icon/vectorcraft.icns
+  bundle          build dist/EvoVector.app (macOS) with assets/app-icon/evovector.icns
   ico <out.ico> <png>...
                   pack PNGs into a Windows .ico (used by packaging/icons.sh)
   stats [--exact] count tests and lines per crate (--exact: ask the test harness via `-- --list`)
-  web-fonts       copy the craft-fonts faces in crates/text/web-fonts.txt into the web site (the Trunk
-                  post_build hook; a no-op without CRAFT_FONTS_DIR)
+  web-fonts       copy the evo-fonts faces in crates/text/web-fonts.txt into the web site (the Trunk
+                  post_build hook; a no-op without EVO_FONTS_DIR)
 ";
 
 fn main() -> ExitCode {
@@ -232,7 +232,7 @@ fn cmd_corpus(download: bool) -> Result<(), String> {
         "Test corpora live under {} (git-ignored, never committed).
 Tests that use a corpus skip cleanly when it is absent.
 
-  corpus/pngsuite/   PngSuite (public domain) — vectorcraft-codecs compares every file
+  corpus/pngsuite/   PngSuite (public domain) — evovector-codecs compares every file
                      against the `image` crate. Fetch: cargo xtask corpus --download
   corpus/psd/        PSD samples from MIT/BSD projects (ag-psd, psd-tools test data).
                      Copy files in manually; licences must be MIT/BSD/CC0.

@@ -1,7 +1,7 @@
 //! Hit testing over the document tree.
 
-use vectorcraft_geom::hit::{fill_contains, stroke_contains};
-use vectorcraft_geom::{Point, Rect};
+use evovector_geom::hit::{fill_contains, stroke_contains};
+use evovector_geom::{Point, Rect};
 
 use crate::{Document, Node, NodeId, NodeKind};
 
@@ -135,7 +135,7 @@ fn edits_contents(n: &Node) -> bool {
 fn clip_contains(clip: &Node, p: Point) -> bool {
     let frame = |n: &Node| {
         let b = n.geometric_bounds()?;
-        Some(Node::path(n.id, vectorcraft_geom::shapes::rectangle(b), Default::default()))
+        Some(Node::path(n.id, evovector_geom::shapes::rectangle(b), Default::default()))
     };
     clip.clip_shapes(Some(&frame)).iter().any(|(bp, rule)| fill_contains(bp, *rule, p))
 }
@@ -199,7 +199,7 @@ fn hit_children(
 /// A click on the strokes of a path or compound path `n` along `bp`: what any visible stroke
 /// paints there (arrowheads, alignment, width profile, projecting caps, miter spikes), else its
 /// outline within the tolerance. Outline mode hits the outline only.
-fn hit_stroke(n: &Node, bp: &vectorcraft_geom::BezPath, rule: vectorcraft_geom::FillRule, p: Point, opt: HitOptions) -> Option<HitKind> {
+fn hit_stroke(n: &Node, bp: &evovector_geom::BezPath, rule: evovector_geom::FillRule, p: Point, opt: HitOptions) -> Option<HitKind> {
     if !opt.outline && n.appearance.stroke_hit(bp, rule, p, opt.tol) {
         return Some(HitKind::Stroke);
     }
@@ -243,7 +243,7 @@ fn hit_leaf(n: &Node, p: Point, opt: HitOptions) -> Option<HitKind> {
             if stroke_contains(&bp, 0.0, opt.tol, p) {
                 return Some(HitKind::Outline);
             }
-            (!opt.path_only && fill_contains(&bp, vectorcraft_geom::FillRule::NonZero, p)).then_some(HitKind::Fill)
+            (!opt.path_only && fill_contains(&bp, evovector_geom::FillRule::NonZero, p)).then_some(HitKind::Fill)
         }
         _ => None,
     }
@@ -254,11 +254,11 @@ fn hit_leaf(n: &Node, p: Point, opt: HitOptions) -> Option<HitKind> {
 /// type on a path's path, drawn through `n`'s perspective projection if it has one.
 fn on_type_path(n: &Node, t: &crate::TextObject, p: Point, tol: f64) -> bool {
     use crate::TextKind;
-    use vectorcraft_geom::kurbo::ParamCurveNearest;
+    use evovector_geom::kurbo::ParamCurveNearest;
     let h = n.projection();
     let project = |q: Point| h.as_ref().and_then(|h| h.apply(q)).unwrap_or(q);
     // A homography keeps straight lines straight: a baseline's ends are enough.
-    let near = |(a, b): (Point, Point)| vectorcraft_geom::Line::new(project(t.xf * a), project(t.xf * b)).nearest(p, 1e-9).distance_sq <= tol * tol;
+    let near = |(a, b): (Point, Point)| evovector_geom::Line::new(project(t.xf * a), project(t.xf * b)).nearest(p, 1e-9).distance_sq <= tol * tol;
     if t.baselines().any(near) {
         return true;
     }
@@ -308,7 +308,7 @@ pub fn marquee(doc: &Document, r: Rect, scope: Option<NodeId>, leaves: bool) -> 
     }
     fn touches(n: &Node, r: Rect) -> bool {
         match &n.kind {
-            NodeKind::Path { path, .. } => vectorcraft_geom::hit::intersects_rect(path, r),
+            NodeKind::Path { path, .. } => evovector_geom::hit::intersects_rect(path, r),
             NodeKind::Layer { children, .. } | NodeKind::Group { children, .. } | NodeKind::Compound { children, .. } => {
                 children.iter().any(|c| c.visible && touches(c, r))
             }
@@ -349,8 +349,8 @@ mod tests {
     use super::*;
     use crate::{Appearance, Node};
     use std::sync::Arc;
-    use vectorcraft_color::{Color, Paint};
-    use vectorcraft_geom::shapes;
+    use evovector_color::{Color, Paint};
+    use evovector_geom::shapes;
 
     #[test]
     fn hits_topmost() {
@@ -473,7 +473,7 @@ mod tests {
         let (a, c) = (d.alloc_id(), d.alloc_id());
         d.insert(Some(l), 0, Node::path(a, shapes::rectangle(Rect::new(0.0, 0.0, 50.0, 50.0)), Appearance::default_art())).unwrap();
         let inner = Node::path(d.alloc_id(), shapes::rectangle(Rect::new(100.0, 0.0, 150.0, 50.0)), Appearance::default());
-        let mut compound = Node::new(c, NodeKind::Compound { children: vec![Arc::new(inner)], rule: vectorcraft_geom::FillRule::NonZero });
+        let mut compound = Node::new(c, NodeKind::Compound { children: vec![Arc::new(inner)], rule: evovector_geom::FillRule::NonZero });
         compound.appearance = Appearance::default_art().into();
         d.insert(Some(l), 9, compound).unwrap();
         let path_only = HitOptions { path_only: true, ..Default::default() };
@@ -529,7 +529,7 @@ mod tests {
     #[test]
     fn type_path_only_picks_every_baseline() {
         use crate::{CharStyle, PerspectiveAttachment, TextKind, TextObject};
-        use vectorcraft_geom::{Affine, Homography};
+        use evovector_geom::{Affine, Homography};
         let mut d = Document::new(400.0, 400.0);
         let l = d.layers[0].id;
         let mut add = |t: TextObject, perspective: Option<Affine>| {

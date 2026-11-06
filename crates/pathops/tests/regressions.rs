@@ -2,8 +2,8 @@
 //! deterministic tests.
 
 use kurbo::{BezPath, Shape as _};
-use vectorcraft_geom::{Anchor, FillRule, PathData, SubPath};
-use vectorcraft_pathops::*;
+use evovector_geom::{Anchor, FillRule, PathData, SubPath};
+use evovector_pathops::*;
 
 const NZ: FillRule = FillRule::NonZero;
 

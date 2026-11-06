@@ -1,6 +1,6 @@
-//! VectorCraft's egui frontend: an Illustrator-style UI over `vectorcraft-engine`.
+//! EvoVector's egui frontend: an Illustrator-style UI over `evovector-engine`.
 //!
-//! The UI is thin: every action goes through [`VectorcraftApp::run`], which dispatches UI commands
+//! The UI is thin: every action goes through [`EvoVectorApp::run`], which dispatches UI commands
 //! (view/window) here and everything else to the engine. The same entry point serves menus,
 //! shortcuts, the ⌘K palette and the control channel ([`control`]).
 #![forbid(unsafe_code)]
@@ -156,9 +156,9 @@ use std::sync::mpsc::{Receiver, Sender};
 use std::sync::{Arc, Mutex};
 
 use serde_json::{Value, json};
-use vectorcraft_engine::cmd::fileio;
-use vectorcraft_engine::file_access::{self, AutomationRoots};
-use vectorcraft_engine::{Session, ViewInfo};
+use evovector_engine::cmd::fileio;
+use evovector_engine::file_access::{self, AutomationRoots};
+use evovector_engine::{Session, ViewInfo};
 
 pub use control::{ControlRequest, ControlResponse};
 pub use state::{UiState, View};
@@ -244,8 +244,8 @@ pub struct Services {
     /// Show a folder picker; returns its path (desktop: Relink to Folder, Package).
     pub pick_folder: Option<Box<dyn FnMut() -> Option<String>>>,
     /// Where Data Recovery keeps its copies when not in a folder (the web's browser storage;
-    /// tests): installed into the session ([`vectorcraft_engine::cmd::recovery`]).
-    pub recovery_store: Option<std::sync::Arc<dyn vectorcraft_engine::cmd::recovery::RecoveryStore>>,
+    /// tests): installed into the session ([`evovector_engine::cmd::recovery`]).
+    pub recovery_store: Option<std::sync::Arc<dyn evovector_engine::cmd::recovery::RecoveryStore>>,
     /// File → Print: the system's printers and print queue (desktop), the browser's print dialog
     /// (web). Without it Print saves the job as a PDF.
     pub print: Option<Box<dyn print::PrintService>>,
@@ -263,7 +263,7 @@ pub struct Services {
 
 /// Cached canvas raster.
 pub struct CanvasCache {
-    pub renderer: vectorcraft_render::Renderer,
+    pub renderer: evovector_render::Renderer,
     pub texture: Option<egui::TextureHandle>,
     pub key: Option<CacheKey>,
     pub last_ms: f64,
@@ -273,19 +273,19 @@ pub struct CanvasCache {
     pub slices: Option<SliceCache>,
     /// The print tiling's pages for (document uid, revision) (View → Show Print Tiling).
     pub print_tiling: Option<PrintTilingCache>,
-    /// [`VectorcraftApp::selection_box`] for (document uid, revision, Use Preview Bounds).
-    pub selection_box: Option<((u64, u64, bool), Option<vectorcraft_doc::OrientedBox>)>,
-    /// [`VectorcraftApp::selection_bounds`] for (document uid, revision).
-    pub selection_bounds: Option<((u64, u64), Option<vectorcraft_geom::Rect>)>,
+    /// [`EvoVectorApp::selection_box`] for (document uid, revision, Use Preview Bounds).
+    pub selection_box: Option<((u64, u64, bool), Option<evovector_doc::OrientedBox>)>,
+    /// [`EvoVectorApp::selection_bounds`] for (document uid, revision).
+    pub selection_bounds: Option<((u64, u64), Option<evovector_geom::Rect>)>,
     /// The tools' cursors as OS cursor bitmaps.
     pub cursors: cursors::Images,
 }
 
 /// [`CanvasCache::slices`]: the layout of the slices of (document uid, revision).
-pub type SliceCache = ((u64, u64), std::sync::Arc<Vec<vectorcraft_doc::SliceArea>>);
+pub type SliceCache = ((u64, u64), std::sync::Arc<Vec<evovector_doc::SliceArea>>);
 
 /// [`CanvasCache::print_tiling`]: the print tiling of (document uid, revision).
-pub type PrintTilingCache = ((u64, u64), std::sync::Arc<Vec<vectorcraft_pdf::TilingPage>>);
+pub type PrintTilingCache = ((u64, u64), std::sync::Arc<Vec<evovector_pdf::TilingPage>>);
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct CacheKey {
@@ -303,17 +303,17 @@ pub struct CacheKey {
     pub rot: f64,
     /// General › Anti-aliased Artwork.
     pub anti_alias: bool,
-    /// [`vectorcraft_render::placed_document::generation`]: placed documents' bitmaps made since.
+    /// [`evovector_render::placed_document::generation`]: placed documents' bitmaps made since.
     pub placed: u64,
     /// View › Pixel Preview: the document pixels rendered (x0, y0, x1, y1), one per point, shown
     /// with hard edges. None: the art is rendered for the screen.
     pub pixel: Option<[i64; 4]>,
-    /// Images sampled smoothly ([`vectorcraft_render::RenderOptions::smooth_images`]).
+    /// Images sampled smoothly ([`evovector_render::RenderOptions::smooth_images`]).
     pub smooth_images: bool,
-    /// Isolation mode's group or layer ([`vectorcraft_render::RenderOptions::isolated`]).
+    /// Isolation mode's group or layer ([`evovector_render::RenderOptions::isolated`]).
     pub isolated: Option<u64>,
     /// Appearance of Black › On Screen › Display All Blacks as Rich Black
-    /// ([`vectorcraft_render::RenderOptions::rich_black`]).
+    /// ([`evovector_render::RenderOptions::rich_black`]).
     pub rich_black: bool,
 }
 
@@ -324,7 +324,7 @@ pub struct Perf {
     pub fps: f64,
 }
 
-pub struct VectorcraftApp {
+pub struct EvoVectorApp {
     pub session: Session,
     pub ui: UiState,
     pub views: Vec<View>,
@@ -358,13 +358,13 @@ pub struct VectorcraftApp {
     /// Canvas rect of the last frame (screen points), for control-channel coordinate mapping.
     pub canvas_rect: Option<egui::Rect>,
     /// Hover position in document coordinates.
-    pub hover_doc: Option<vectorcraft_geom::Point>,
+    pub hover_doc: Option<evovector_geom::Point>,
     /// System clipboard: SVG to publish next frame, the last SVG we published (so pasting it back
     /// uses the lossless internal clipboard) and what came with a paste (a Paste event's text, a
     /// picture or file the host read: [`Self::paste_from_host`]).
     clipboard_out: Option<String>,
     clipboard_published: Option<String>,
-    pub(crate) clipboard_in: Option<vectorcraft_engine::cmd::clipboard::Flavour>,
+    pub(crate) clipboard_in: Option<evovector_engine::cmd::clipboard::Flavour>,
     /// A URL to open through egui next frame (when the host has no `open_url` service).
     pending_url: Option<String>,
     /// Windows and Linux: the window has no OS decorations, so the app bar is the title bar (drag,
@@ -433,13 +433,13 @@ struct PendingScreenshot {
     deadline: f64,
 }
 
-/// Seconds between two looks at the system clipboard for [`VectorcraftApp::system_paste`].
+/// Seconds between two looks at the system clipboard for [`EvoVectorApp::system_paste`].
 const SYSTEM_CLIPBOARD_POLL: f64 = 0.25;
 
-impl VectorcraftApp {
+impl EvoVectorApp {
     pub fn new(mut session: Session, services: Services) -> Self {
         // The font menus and the first file opened need the installed fonts: catalog them now.
-        vectorcraft_text::FontDb::global().scan_in_background();
+        evovector_text::FontDb::global().scan_in_background();
         if let Some(store) = &services.recovery_store {
             session.recovery.set_store(store.clone());
         }
@@ -450,7 +450,7 @@ impl VectorcraftApp {
             views,
             services,
             canvas: CanvasCache {
-                renderer: vectorcraft_render::Renderer::new(),
+                renderer: evovector_render::Renderer::new(),
                 texture: None,
                 key: None,
                 last_ms: 0.0,
@@ -555,13 +555,13 @@ impl VectorcraftApp {
     }
 
     /// The zero point shown by rulers and position fields; command coordinates stay absolute.
-    pub(crate) fn ruler_origin(&self) -> vectorcraft_geom::Point {
-        let origin = self.session.active().map_or(vectorcraft_geom::Point::ZERO, |d| d.doc.ruler_origin);
+    pub(crate) fn ruler_origin(&self) -> evovector_geom::Point {
+        let origin = self.session.active().map_or(evovector_geom::Point::ZERO, |d| d.doc.ruler_origin);
         // An untrusted file cannot make the ruler's tick loop or position fields overflow.
-        if origin.is_finite() && origin.x.abs() <= vectorcraft_engine::MAX_COORD && origin.y.abs() <= vectorcraft_engine::MAX_COORD {
+        if origin.is_finite() && origin.x.abs() <= evovector_engine::MAX_COORD && origin.y.abs() <= evovector_engine::MAX_COORD {
             origin
         } else {
-            vectorcraft_geom::Point::ZERO
+            evovector_geom::Point::ZERO
         }
     }
     pub fn view_mut(&mut self) -> Option<&mut View> {
@@ -586,11 +586,11 @@ impl VectorcraftApp {
     }
 
     /// The canvas on screen in document coordinates (none before it is laid out).
-    pub fn screen_frame(&self) -> Option<vectorcraft_tools::ScreenFrame> {
+    pub fn screen_frame(&self) -> Option<evovector_tools::ScreenFrame> {
         let (rect, view) = (self.canvas_rect?, self.view()?);
         let xf = canvas::Xf::new(rect, view);
         let px = |x: f32, y: f32| xf.delta_to_doc(egui::vec2(x, y));
-        Some(vectorcraft_tools::ScreenFrame {
+        Some(evovector_tools::ScreenFrame {
             origin: xf.to_doc(rect.left_top()),
             right: px(1.0, 0.0),
             down: px(0.0, 1.0),
@@ -617,7 +617,7 @@ impl VectorcraftApp {
         let mut params = params;
         // Paste in place, in front, in back (#693), Select › All on Active Artboard (#1006) and Align to
         // Artboard: onto, on or to the active artboard, the view's. A batch passes it on to those steps.
-        if (vectorcraft_engine::ON_ACTIVE_ARTBOARD.contains(&id) || id == "command.batch")
+        if (evovector_engine::ON_ACTIVE_ARTBOARD.contains(&id) || id == "command.batch")
             && params.get("artboard").is_none()
             && self.view().is_some()
             && let Some(n) = self.session.active().map(|d| d.doc.artboards.len())
@@ -707,7 +707,7 @@ impl VectorcraftApp {
         {
             panels::artboards::select(self, panels::artboards::selected(self, n));
         }
-        if let Some(g) = vectorcraft_tools::catalog::group_of(id)
+        if let Some(g) = evovector_tools::catalog::group_of(id)
             && let Some(slot) = self.ui.group_tool.get_mut(g)
         {
             *slot = id.to_string();
@@ -722,7 +722,7 @@ impl VectorcraftApp {
             let reply = req.reply.clone();
             // Guarded per request: a panic must not drop the channel (taken out of `self` above).
             let roots = self.automation_roots.clone();
-            let outcome = match file_access::confine(roots.as_ref(), || vectorcraft_engine::guard::catch_panic(|| control::handle(self, ctx, &req))) {
+            let outcome = match file_access::confine(roots.as_ref(), || evovector_engine::guard::catch_panic(|| control::handle(self, ctx, &req))) {
                 Ok(outcome) => outcome,
                 Err(msg) => {
                     self.picks.recover();
@@ -808,7 +808,7 @@ impl VectorcraftApp {
     /// Linked files another app changed while their document is open: every two seconds, and as
     /// soon as the window comes back to the front, stamp the active document's linked files on a
     /// worker thread and act on the changed ones as Preferences › File Handling › Update Links
-    /// says ([`vectorcraft_engine::link_watch`]). No look starts while a dialog is open, so an
+    /// says ([`evovector_engine::link_watch`]). No look starts while a dialog is open, so an
     /// Ask When Modified question never goes unseen.
     #[cfg(not(target_arch = "wasm32"))]
     fn tick_link_updates(&mut self, ctx: &egui::Context, now: f64) {
@@ -908,7 +908,7 @@ pub fn now_ms() -> f64 {
 /// The most fonts Type › Recent Fonts lists (Preferences › Type › Number of Recent Fonts).
 pub const MAX_RECENT_FONTS: usize = 15;
 
-impl VectorcraftApp {
+impl EvoVectorApp {
     /// Type › Recent Fonts: the fonts used last, newest first, as many as Preferences › Type ›
     /// Number of Recent Fonts says.
     pub fn recent_fonts(&self) -> &[String] {
@@ -918,7 +918,7 @@ impl VectorcraftApp {
 
     /// The selection's bounding box, rotated with rotated objects ([`Session::transform_box`]). The
     /// canvas and the transform fields read it every frame: it is measured once per revision.
-    pub fn selection_box(&mut self) -> Option<vectorcraft_doc::OrientedBox> {
+    pub fn selection_box(&mut self) -> Option<evovector_doc::OrientedBox> {
         let st = self.session.active()?;
         let key = (st.uid, st.revision, self.session.prefs.use_preview_bounds);
         if let Some((k, b)) = self.canvas.selection_box
@@ -934,7 +934,7 @@ impl VectorcraftApp {
     /// The selection's visual bounds (stroke and effects included), square to the page: measured
     /// once per revision, as the canvas reads it every frame (a traced photo selects a group of
     /// hundreds of thousands of paths).
-    pub fn selection_bounds(&mut self) -> Option<vectorcraft_geom::Rect> {
+    pub fn selection_bounds(&mut self) -> Option<evovector_geom::Rect> {
         let st = self.session.active()?;
         let key = (st.uid, st.revision);
         if let Some((k, b)) = self.canvas.selection_bounds
@@ -950,7 +950,7 @@ impl VectorcraftApp {
 
 /// eframe isn't a dependency of this crate (the host owns the event loop); these entry points are
 /// called from the host's `eframe::App` impl.
-impl VectorcraftApp {
+impl EvoVectorApp {
     /// The language the UI is drawn in: the Preferences dialog's choice while it is open (so a
     /// change shows before OK), else the `interfaceLanguage` preference (`auto` = the system's).
     pub fn ui_language(&self) -> i18n::Lang {
@@ -963,7 +963,7 @@ impl VectorcraftApp {
     /// one frame and shows an error, instead of closing the app with unsaved work.
     pub fn logic(&mut self, ctx: &egui::Context) {
         let confined = self.synthetic_frame.then(|| self.automation_roots.clone()).flatten();
-        if let Err(msg) = file_access::confine(confined.as_ref(), || vectorcraft_engine::guard::catch_panic(|| self.logic_frame(ctx))) {
+        if let Err(msg) = file_access::confine(confined.as_ref(), || evovector_engine::guard::catch_panic(|| self.logic_frame(ctx))) {
             self.picks.recover();
             self.status(format!("Internal error: {msg} (please report this bug)"));
         }
@@ -1033,7 +1033,7 @@ impl VectorcraftApp {
                 }
             } else {
                 // Quitting with nothing unsaved: no copies to leave behind.
-                vectorcraft_engine::cmd::recovery::forget_all(&mut self.session);
+                evovector_engine::cmd::recovery::forget_all(&mut self.session);
             }
         }
         if let Some(wait) = recovery::frame(self, now) {
@@ -1079,7 +1079,7 @@ impl VectorcraftApp {
         let mut files = vec![];
         for f in dropped {
             let path = Some(f.path().to_string_lossy().to_string()).filter(|s| !s.is_empty());
-            let name = path.as_deref().map_or_else(|| "dropped".into(), vectorcraft_engine::cmd::fileio::file_name);
+            let name = path.as_deref().map_or_else(|| "dropped".into(), evovector_engine::cmd::fileio::file_name);
             // Native file drops usually carry a path. Use the same file reader as File → Open
             // (and File → Place), even if the drop handle can't supply the bytes itself.
             let bytes = if path.is_some() && self.services.read.is_some() { Ok(vec![]) } else { f.bytes() };
@@ -1111,7 +1111,7 @@ impl VectorcraftApp {
         let (tx, rx) = std::sync::mpsc::channel();
         let look = move || {
             // The UI gone meanwhile has nothing to refresh.
-            let _ = tx.send(vectorcraft_text::FontDb::global().installed_fonts_changed());
+            let _ = tx.send(evovector_text::FontDb::global().installed_fonts_changed());
         };
         let spawned =
             if cfg!(target_arch = "wasm32") { None } else { std::thread::Builder::new().name("font-check".into()).spawn(look.clone()).ok() };
@@ -1202,7 +1202,7 @@ impl VectorcraftApp {
     /// Lay out the whole window.
     pub fn ui(&mut self, ui: &mut egui::Ui) {
         let confined = self.synthetic_frame.then(|| self.automation_roots.clone()).flatten();
-        if let Err(msg) = file_access::confine(confined.as_ref(), || vectorcraft_engine::guard::catch_panic(|| self.ui_frame(ui))) {
+        if let Err(msg) = file_access::confine(confined.as_ref(), || evovector_engine::guard::catch_panic(|| self.ui_frame(ui))) {
             self.picks.recover();
             self.status(format!("Internal error: {msg} (please report this bug)"));
         }

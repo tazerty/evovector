@@ -2,8 +2,8 @@
 //! and adding one to the Swatches panel as a colour group.
 
 use serde_json::{Value, json};
-use vectorcraft_color::Color;
-use vectorcraft_color::harmony::Harmony;
+use evovector_color::Color;
+use evovector_color::harmony::Harmony;
 
 use super::*;
 

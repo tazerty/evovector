@@ -1,5 +1,5 @@
 [package]
-name = "vectorcraft-three-d"
+name = "evovector-three-d"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
@@ -9,4 +9,4 @@ description = "Portable surface-of-revolution geometry and projected vector shad
 workspace = true
 
 [dependencies]
-vectorcraft-geom = { workspace = true }
+evovector-geom = { workspace = true }

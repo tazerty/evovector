@@ -1,8 +1,8 @@
 //! What renderers keep between frames: decoded images shared by all of them, image mips, and
 //! caches swept by every kind of render.
 
-use vectorcraft_color::{Color, Paint};
-use vectorcraft_doc::{Document, ImageBlob, ImageObject, Node, NodeKind};
+use evovector_color::{Color, Paint};
+use evovector_doc::{Document, ImageBlob, ImageObject, Node, NodeKind};
 
 use super::*;
 
@@ -59,8 +59,8 @@ fn node_renders_sweep_stale_cache_entries() {
     let mut d = Document::new(10.0, 10.0);
     let id = d.alloc_id();
     let square = |x: f64| {
-        let p = vectorcraft_geom::shapes::rectangle(Rect::new(x, 0.0, x + 5.0, 5.0));
-        Arc::new(Node::path(id, p, vectorcraft_doc::Appearance::basic(Paint::solid(Color::rgb(1.0, 0.0, 0.0)), Paint::None, 0.0)))
+        let p = evovector_geom::shapes::rectangle(Rect::new(x, 0.0, x + 5.0, 5.0));
+        Arc::new(Node::path(id, p, evovector_doc::Appearance::basic(Paint::solid(Color::rgb(1.0, 0.0, 0.0)), Paint::None, 0.0)))
     };
     let first = square(0.0);
     let mut r = Renderer::new();
@@ -106,11 +106,11 @@ fn image_mips_are_opt_in_and_change_nothing_off() {
 
 /// A document of `n` point type objects reading `word`, in rows.
 fn text_doc(n: usize, word: &str) -> Document {
-    use vectorcraft_doc::text::{CharStyle, TextObject};
+    use evovector_doc::text::{CharStyle, TextObject};
     let mut d = Document::new(400.0, 400.0);
     let l = d.layers[0].id;
     for i in 0..n {
-        let at = vectorcraft_geom::Point::new(10.0 + (i % 8) as f64 * 48.0, 30.0 + (i / 8) as f64 * 30.0);
+        let at = evovector_geom::Point::new(10.0 + (i % 8) as f64 * 48.0, 30.0 + (i / 8) as f64 * 30.0);
         let style = CharStyle { size: 18.0, ..Default::default() };
         let mut t = Node::new(NodeId(0), NodeKind::Text(Box::new(TextObject::point(at, word, style))));
         t.id = d.alloc_id();
@@ -178,20 +178,20 @@ fn swept_type_entries_give_back_their_bytes() {
 /// decorations in layout order (the whole text's path is kept once, the runs as spans of it).
 #[test]
 fn text_runs_draw_their_own_glyphs_from_the_shared_outlines() {
-    use vectorcraft_doc::text::{CharStyle, TextObject, TextRun};
+    use evovector_doc::text::{CharStyle, TextObject, TextRun};
     let plain = CharStyle { size: 24.0, ..Default::default() };
     let under = CharStyle { underline: true, ..plain.clone() };
-    let mut t = TextObject::point(vectorcraft_geom::Point::new(10.0, 40.0), "Ab", plain.clone());
+    let mut t = TextObject::point(evovector_geom::Point::new(10.0, 40.0), "Ab", plain.clone());
     t.runs.push(TextRun::new("cd", under));
     t.runs.push(TextRun::new("ef", plain));
     let g = text_geom(&t);
-    let db = vectorcraft_text::FontDb::global();
-    let layout = vectorcraft_text::layout(db, &t);
+    let db = evovector_text::FontDb::global();
+    let layout = evovector_text::layout(db, &t);
     let mut want = vec![BezPath::new(); t.runs.len()];
     for gl in &layout.glyphs {
         want[gl.run].extend(gl.outline.iter());
     }
-    for (run, bar) in vectorcraft_text::decorations(&layout, db, &t) {
+    for (run, bar) in evovector_text::decorations(&layout, db, &t) {
         want[run].extend(bar.iter());
     }
     for (i, w) in want.iter().enumerate() {

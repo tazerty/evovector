@@ -1,4 +1,4 @@
-//! `web-fonts.txt` (the craft-fonts faces web builds fetch instead of embedding) and the
+//! `web-fonts.txt` (the evo-fonts faces web builds fetch instead of embedding) and the
 //! `WEB_FONTS` fields built from it. Shared by `build.rs` and the crate's tests (`#[path]`-included
 //! by both, so it has no dependencies), and by `xtask/src/web_fonts.rs`, which copies the files to [`url`].
 

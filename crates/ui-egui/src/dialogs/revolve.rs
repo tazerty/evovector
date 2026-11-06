@@ -3,19 +3,19 @@
 
 use egui::{Align2, FontId, Id, Pos2, Sense, Stroke, vec2};
 use serde_json::{Value, json};
-use vectorcraft_doc::Unit;
-use vectorcraft_effects::REVOLVE;
+use evovector_doc::Unit;
+use evovector_effects::REVOLVE;
 
 use crate::state::Dialog;
 use crate::theme::Tokens;
-use crate::{VectorcraftApp, scrub, widgets};
+use crate::{EvoVectorApp, scrub, widgets};
 
 const LABEL_W: f32 = 102.0;
 const VALUE_W: f32 = 74.0;
 const SIDE_W: f32 = 354.0;
 
 /// Sized to the screen, with scrolling inside the body so OK and Cancel stay reachable.
-pub(super) fn body(app: &VectorcraftApp, ui: &mut egui::Ui, d: &mut Dialog) {
+pub(super) fn body(app: &EvoVectorApp, ui: &mut egui::Ui, d: &mut Dialog) {
     // Values start in drag mode; clicking or Tab enters their text editor.
     ui.data_mut(|m| m.remove::<bool>(widgets::dialog_focus_flag()));
     let screen = ui.ctx().content_rect();
@@ -32,7 +32,7 @@ pub(super) fn body(app: &VectorcraftApp, ui: &mut egui::Ui, d: &mut Dialog) {
             ui.add(egui::Label::new(egui::RichText::new(super::revolve_gizmo::hint(d)).size(11.0).color(t.text_dim)).wrap());
         });
         ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
-            let defaults = vectorcraft_effects::default_params(REVOLVE).unwrap_or(json!({}));
+            let defaults = evovector_effects::default_params(REVOLVE).unwrap_or(json!({}));
             let changed = defaults.as_object().is_some_and(|m| {
                 m.iter().any(|(k, v)| v.as_f64().map_or_else(|| d.fields.get(k) != Some(v), |default| (d.f64(k, default) - default).abs() > 1e-6))
             });
@@ -53,7 +53,7 @@ pub(super) fn body(app: &VectorcraftApp, ui: &mut egui::Ui, d: &mut Dialog) {
     });
 }
 
-fn controls(app: &VectorcraftApp, ui: &mut egui::Ui, d: &mut Dialog) {
+fn controls(app: &EvoVectorApp, ui: &mut egui::Ui, d: &mut Dialog) {
     ui.spacing_mut().item_spacing.y = 4.0;
     let lighting = super::revolve_gizmo::lighting(d);
     if let Some(tab) = widgets::tab_bar(ui, &[tl!("Rotation"), tl!("Lighting")], usize::from(lighting)) {
@@ -148,7 +148,7 @@ fn rail_width(ui: &egui::Ui) -> f32 {
 /// A value can be typed, dragged, scrubbed by its label, or moved on its slider.
 #[allow(clippy::too_many_arguments)]
 fn number(ui: &mut egui::Ui, d: &mut Dialog, key: &str, name: &str, range: (f64, f64), suffix: &str, decimals: usize, unit: Option<Unit>) {
-    let default = vectorcraft_effects::default_params(REVOLVE).and_then(|p| p.get(key).and_then(Value::as_f64)).unwrap_or(0.0);
+    let default = evovector_effects::default_params(REVOLVE).and_then(|p| p.get(key).and_then(Value::as_f64)).unwrap_or(0.0);
     let from = |n| unit.map_or(n, |u| u.from_pt(n));
     let to = |n| unit.map_or(n, |u| u.to_pt(n));
     let typed = unit.map(|u| widgets::typed_unit(ui.ctx(), u));
@@ -173,7 +173,7 @@ fn number(ui: &mut egui::Ui, d: &mut Dialog, key: &str, name: &str, range: (f64,
                         .update_while_editing(false)
                         .custom_parser(|s| {
                             unit.map_or_else(
-                                || vectorcraft_doc::parse_number(&s.replace(['°', '%'], "")),
+                                || evovector_doc::parse_number(&s.replace(['°', '%'], "")),
                                 |u| typed.unwrap_or(u).parse(s).map(|v| u.from_pt(v)),
                             )
                         }),

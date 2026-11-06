@@ -1,4 +1,4 @@
-//! `.vectorcraft` v3: compression, pruning unused images, keys from newer versions, colour
+//! `.evovector` v3: compression, pruning unused images, keys from newer versions, colour
 //! profiles as a document field, saving for older versions and the embedded preview.
 // Integration tests: unwrapping and panicking on failure is fine here, unlike in shipped code (AGENTS.md › Robustness).
 #![allow(clippy::unwrap_used, clippy::expect_used, clippy::panic)]
@@ -7,11 +7,11 @@ use std::io::Write as _;
 use std::sync::Arc;
 
 use serde_json::{Value, json};
-use vectorcraft_doc::{ColorProfiles, Composer, Document, ImageBlob, ImageObject, Node, NodeKind, OpacityMask, Symbol};
-use vectorcraft_format::{FormatError, SaveOptions, VERSION, is_compressed, load, preview, save, save_with, sniff};
-use vectorcraft_geom::Affine;
-use vectorcraft_testkit::fixtures;
-use vectorcraft_testkit::invariants::{check_native_roundtrip, doc_json, json_approx_eq};
+use evovector_doc::{ColorProfiles, Composer, Document, ImageBlob, ImageObject, Node, NodeKind, OpacityMask, Symbol};
+use evovector_format::{FormatError, SaveOptions, VERSION, is_compressed, load, preview, save, save_with, sniff};
+use evovector_geom::Affine;
+use evovector_testkit::fixtures;
+use evovector_testkit::invariants::{check_native_roundtrip, doc_json, json_approx_eq};
 
 fn rich_doc() -> Document {
     (*fixtures::rich_session().doc().unwrap().doc).clone()
@@ -62,7 +62,7 @@ fn area_type_vertical_alignment_round_trips() {
         d.walk(|n| {
             // The fixture's centred area type, by its text (the fixture has other area type).
             if let NodeKind::Text(t) = &n.kind
-                && matches!(t.kind, vectorcraft_doc::TextKind::Area { .. })
+                && matches!(t.kind, evovector_doc::TextKind::Area { .. })
                 && t.runs.iter().map(|r| r.text.as_str()).collect::<String>() == "Centred area type"
             {
                 found = Some(t.area.vertical_align);
@@ -70,7 +70,7 @@ fn area_type_vertical_alignment_round_trips() {
         });
         found.unwrap()
     };
-    assert_eq!(area(&back), vectorcraft_doc::VerticalAlign::Center);
+    assert_eq!(area(&back), evovector_doc::VerticalAlign::Center);
     // Files from before the option open top-aligned.
     // (Every area type the fixture has writes its options, so the key goes from all of them.)
     fn strip(v: &mut Value) {
@@ -87,7 +87,7 @@ fn area_type_vertical_alignment_round_trips() {
     strip(&mut v);
     let old = serde_json::to_string(&v).unwrap();
     assert!(!old.contains("verticalAlign"));
-    assert_eq!(area(&load(old.as_bytes()).unwrap()), vectorcraft_doc::VerticalAlign::Top);
+    assert_eq!(area(&load(old.as_bytes()).unwrap()), evovector_doc::VerticalAlign::Top);
 }
 
 #[test]
@@ -102,7 +102,7 @@ fn compressed_files_load() {
     assert!(!flate2_unpack(&packed).contains(&b'\n'));
     // A legacy (v2, pre-rename) file compressed by hand opens too.
     let text = String::from_utf8(plain.clone()).unwrap();
-    let legacy = text.replacen(&format!("\"format\":\"vectorcraft\",\"version\":{VERSION}"), "\"format\":\"drawcraft\",\"version\":2", 1);
+    let legacy = text.replacen(&format!("\"format\":\"evovector\",\"version\":{VERSION}"), "\"format\":\"evodraw\",\"version\":2", 1);
     assert_ne!(legacy, text);
     let legacy = gzip(legacy.as_bytes());
     assert!(sniff(&legacy));
@@ -195,8 +195,8 @@ fn text_composer_round_trips() {
     assert!(!String::from_utf8_lossy(&save(&d2, false)).contains("composer"));
 }
 
-/// A document as the first version wrote it (format name `drawcraft`, anchors as maps).
-const V1_FILE: &str = r#"{"format":"drawcraft","version":1,"generator":"DrawCraft 0.1.0","document":{"version":1,"title":"Old","artboards":[{"id":1,"name":"Artboard 1","rect":{"x0":0.0,"y0":0.0,"x1":100.0,"y1":80.0}}],
+/// A document as the first version wrote it (format name `evodraw`, anchors as maps).
+const V1_FILE: &str = r#"{"format":"evodraw","version":1,"generator":"EvoDraw 0.1.0","document":{"version":1,"title":"Old","artboards":[{"id":1,"name":"Artboard 1","rect":{"x0":0.0,"y0":0.0,"x1":100.0,"y1":80.0}}],
 "layers":[{"id":1,"name":"Layer 1","visible":true,"locked":false,"opacity":1.0,"kind":{"type":"layer","children":[
 {"id":2,"visible":true,"locked":false,"opacity":1.0,"kind":{"type":"path","path":{"subpaths":[{"anchors":[
 {"p":{"x":10.0,"y":10.0},"in":{"x":10.0,"y":10.0},"out":{"x":30.0,"y":0.0},"kind":"Smooth"},
@@ -223,7 +223,7 @@ fn saves_down_to_older_versions() {
     for version in [1, 2] {
         let bytes = save_with(&d, &opts(version, false)).unwrap();
         let v = json_of(&bytes);
-        assert_eq!((v["format"].as_str(), v["version"].as_u64()), (Some("drawcraft"), Some(version as u64)), "older apps know the old name");
+        assert_eq!((v["format"].as_str(), v["version"].as_u64()), (Some("evodraw"), Some(version as u64)), "older apps know the old name");
         // Profiles where those versions keep them.
         assert_eq!(v["document"]["unknown"]["colorProfiles"], json!({"rgb": null, "cmyk": "Coated"}));
         assert!(v["document"].get("color_profiles").is_none());
@@ -235,7 +235,7 @@ fn saves_down_to_older_versions() {
         assert_eq!(text.contains("\"p\":["), version == 2);
     }
     let v3 = json_of(&save(&d, false));
-    assert_eq!((v3["format"].as_str(), v3["version"].as_u64()), (Some("vectorcraft"), Some(VERSION as u64)));
+    assert_eq!((v3["format"].as_str(), v3["version"].as_u64()), (Some("evovector"), Some(VERSION as u64)));
     assert_eq!(v3["document"]["color_profiles"], json!({"cmyk": "Coated"}));
     assert!(v3["document"]["unknown"].get("colorProfiles").is_none());
     // Out of range, and compression older apps can't read.
@@ -262,7 +262,7 @@ fn pretty_files_are_indented_like_serde_json() {
     let d = rich_doc();
     let bytes = save(&d, true);
     let text = String::from_utf8(bytes.clone()).unwrap();
-    assert!(text.starts_with("{\n  \"format\": \"vectorcraft\",\n  \"version\": "));
+    assert!(text.starts_with("{\n  \"format\": \"evovector\",\n  \"version\": "));
     assert!(text.contains("\n  \"document\": {\n    \""));
     assert!(text.ends_with("\n}"));
     // The same JSON as the compact file.
@@ -273,7 +273,7 @@ fn pretty_files_are_indented_like_serde_json() {
 /// did, and a file without it (an older version's) opens with canvas guides.
 #[test]
 fn artboard_guides_round_trip_and_canvas_guides_save_as_before() {
-    use vectorcraft_doc::Guide;
+    use evovector_doc::Guide;
     let mut d = Document::new(100.0, 100.0);
     let id = d.artboards[0].id;
     d.guides = vec![Guide::new(true, 10.0), Guide { artboard: Some(id), ..Guide::new(false, 20.0) }];

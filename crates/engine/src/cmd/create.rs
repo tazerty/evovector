@@ -1,8 +1,8 @@
 //! Creating art: shapes, paths, text.
 
 use serde_json::{Value, json};
-use vectorcraft_doc::{Appearance, CharStyle, LiveShape, Node, NodeKind, TextObject};
-use vectorcraft_geom::{Affine, Anchor, AnchorKind, FillRule, PathData, Point, Rect, SubPath, shapes};
+use evovector_doc::{Appearance, CharStyle, LiveShape, Node, NodeKind, TextObject};
+use evovector_geom::{Affine, Anchor, AnchorKind, FillRule, PathData, Point, Rect, SubPath, shapes};
 
 use super::newart::NewArt;
 use super::*;
@@ -97,7 +97,7 @@ pub(crate) fn add_look(s: &mut Session, label: &str, kind: NodeKind, look: NewAr
                         let (par, idx, _) = d.position(target).ok_or(crate::EngineError::NoNode(target))?;
                         let mut mask = d.node(target).cloned().ok_or(crate::EngineError::NoNode(target))?;
                         mask.id = d.alloc_id();
-                        mask.appearance = Appearance::basic(vectorcraft_color::Paint::None, vectorcraft_color::Paint::None, 0.0).into();
+                        mask.appearance = Appearance::basic(evovector_color::Paint::None, evovector_color::Paint::None, 0.0).into();
                         if let NodeKind::Path { clipping, .. } = &mut mask.kind {
                             *clipping = true;
                         }
@@ -224,7 +224,7 @@ fn star(s: &mut Session, p: &Value) -> Result<Value> {
 /// Flare tool: a lens flare built from radial-gradient paths in Screen mode — a bright centre, a halo
 /// ring, rays of varying length and rings along the path to the end point.
 fn flare(s: &mut Session, p: &Value) -> Result<Value> {
-    use vectorcraft_color::{BlendMode, Gradient, GradientGeom, GradientKind, GradientPaint, GradientStop, Paint};
+    use evovector_color::{BlendMode, Gradient, GradientGeom, GradientKind, GradientPaint, GradientStop, Paint};
     let c = Point::new(f64_req(p, "cx", "shape.flare")?, f64_req(p, "cy", "shape.flare")?);
     let pct = |k: &str, d: f64| (f64_or(p, k, d) / 100.0).clamp(0.0, 10.0);
     let r = (f64_or(p, "diameter", 100.0) / 2.0).max(0.5);
@@ -241,7 +241,7 @@ fn flare(s: &mut Session, p: &Value) -> Result<Value> {
         (Some(x), Some(y)) => Point::new(x, y),
         _ => {
             let a = f64_or(p, "direction", 45.0).to_radians();
-            c + vectorcraft_geom::Vec2::new(a.cos(), -a.sin()) * f64_or(p, "pathLength", 300.0)
+            c + evovector_geom::Vec2::new(a.cos(), -a.sin()) * f64_or(p, "pathLength", 300.0)
         }
     };
     // Deterministic pseudo-random sizes (same parameters → same flare).
@@ -252,10 +252,10 @@ fn flare(s: &mut Session, p: &Value) -> Result<Value> {
         seed ^= seed << 17;
         (seed >> 11) as f64 / (1u64 << 53) as f64
     };
-    let stop = |offset: f32, opacity: f32| GradientStop { opacity, ..GradientStop::new(offset, vectorcraft_color::Color::WHITE) };
+    let stop = |offset: f32, opacity: f32| GradientStop { opacity, ..GradientStop::new(offset, evovector_color::Color::WHITE) };
     let radial = |centre: Point, radius: f64, stops: Vec<GradientStop>| {
         let mut g = GradientPaint::new(Gradient { kind: GradientKind::Radial, stops });
-        g.geom = Some(GradientGeom { start: centre, end: centre + vectorcraft_geom::Vec2::new(radius, 0.0), aspect: 1.0, focal: None });
+        g.geom = Some(GradientGeom { start: centre, end: centre + evovector_geom::Vec2::new(radius, 0.0), aspect: 1.0, focal: None });
         Paint::Gradient(Box::new(g))
     };
     let circle = |centre: Point, radius: f64| shapes::ellipse(Rect::from_center_size(centre, (radius * 2.0, radius * 2.0)));
@@ -266,15 +266,15 @@ fn flare(s: &mut Session, p: &Value) -> Result<Value> {
     parts.push(("Halo", circle(c, halo_r), radial(c, halo_r, vec![stop(0.0, 0.0), stop(inner * 0.75, 0.0), stop(inner, 0.5), stop(1.0, 0.0)]), 1.0));
     // Rays: thin spikes of random length (Longest = % of the centre radius), fading outwards.
     if rays > 0 {
-        let mut bp = vectorcraft_geom::BezPath::new();
+        let mut bp = evovector_geom::BezPath::new();
         let mut reach: f64 = 0.0;
         for i in 0..rays {
             let a = std::f64::consts::TAU * (i as f64 + rnd() * 0.6) / rays as f64;
             let len = r * longest * (1.0 - ray_fuzz * 0.75 * rnd()).max(0.1);
             reach = reach.max(len);
             let w = r * 0.035;
-            let dir = vectorcraft_geom::Vec2::new(a.cos(), a.sin());
-            let n = vectorcraft_geom::Vec2::new(-dir.y, dir.x) * w;
+            let dir = evovector_geom::Vec2::new(a.cos(), a.sin());
+            let n = evovector_geom::Vec2::new(-dir.y, dir.x) * w;
             bp.move_to(c + n);
             bp.line_to(c + dir * len);
             bp.line_to(c - n);
@@ -326,8 +326,8 @@ fn line(s: &mut Session, p: &Value) -> Result<Value> {
     let live = LiveShape::Line { a, b };
     // Lines are stroked, never filled (Illustrator ignores the fill for new open lines).
     let look = s.new_art_look(
-        vectorcraft_color::Paint::None,
-        if s.paint.stroke.is_none() { vectorcraft_color::Paint::solid(vectorcraft_color::Color::BLACK) } else { s.paint.stroke.clone() },
+        evovector_color::Paint::None,
+        if s.paint.stroke.is_none() { evovector_color::Paint::solid(evovector_color::Color::BLACK) } else { s.paint.stroke.clone() },
         s.paint.stroke_width.max(0.1),
     );
     add_look(s, "Line", path_kind(live.to_path(), Some(live)), look, None)
@@ -353,7 +353,7 @@ fn arc(s: &mut Session, p: &Value) -> Result<Value> {
 
 fn grid_group(s: &mut Session, label: &str, paths: Vec<PathData>) -> Result<Value> {
     let parent = s.doc()?.target_parent()?;
-    let look = s.new_art_look(vectorcraft_color::Paint::None, s.paint.stroke.clone(), s.paint.stroke_width);
+    let look = s.new_art_look(evovector_color::Paint::None, s.paint.stroke.clone(), s.paint.stroke_width);
     let id = s.edit(label, |d, sel| {
         let children = paths
             .into_iter()
@@ -407,7 +407,7 @@ pub(crate) fn anchor_from_json(v: &Value, cmd: &str) -> Result<Anchor> {
 
 fn path_create(s: &mut Session, p: &Value) -> Result<Value> {
     let path = if let Some(d) = str_param(p, "d") {
-        let bp = vectorcraft_geom::BezPath::from_svg(d).map_err(|e| bad("path.create", format!("bad path data: {e}")))?;
+        let bp = evovector_geom::BezPath::from_svg(d).map_err(|e| bad("path.create", format!("bad path data: {e}")))?;
         PathData::from_bezpath(&bp)
     } else {
         let anchors: Vec<Anchor> = p
@@ -426,7 +426,7 @@ fn path_create(s: &mut Session, p: &Value) -> Result<Value> {
     // Open paths drawn with a stroke of None would be invisible: mimic Illustrator and keep what the user set.
     let ap = &mut look.appearance;
     if !path.is_closed() && ap.stroke_paint().is_none() && ap.fill_paint().is_none() {
-        ap.set_stroke(vectorcraft_color::Paint::solid(vectorcraft_color::Color::BLACK));
+        ap.set_stroke(evovector_color::Paint::solid(evovector_color::Color::BLACK));
     }
     add_look(s, "Pen", path_kind(path, None), look, None)
 }
@@ -442,7 +442,7 @@ fn text_create(s: &mut Session, p: &Value) -> Result<Value> {
     if let Some(a) = p.get("area") {
         let w = f64_or(a, "width", 200.0);
         let h = f64_or(a, "height", 100.0);
-        t.kind = vectorcraft_doc::TextKind::Area { frame: shapes::rectangle(Rect::new(0.0, 0.0, w, h)) };
+        t.kind = evovector_doc::TextKind::Area { frame: shapes::rectangle(Rect::new(0.0, 0.0, w, h)) };
         t.area.fit = new_area_fit(s, a, "text.create")?;
     }
     if bool_or(p, "placeholder", false) {
@@ -457,11 +457,11 @@ fn text_create(s: &mut Session, p: &Value) -> Result<Value> {
 /// The paragraph attributes new type gets (the Type tools, `text.create`): aligned to the start of
 /// each paragraph's direction (left, right for Hebrew and Arabic), Japanese punctuation composed
 /// with Line-end Punctuation Half Width and Standard burasagari. Imported text keeps its own.
-pub(crate) fn new_type_para() -> vectorcraft_doc::ParaStyle {
-    vectorcraft_doc::ParaStyle {
-        justify: vectorcraft_doc::Justify::Auto,
-        mojikumi: vectorcraft_doc::Mojikumi::LineEndHalf,
-        burasagari: vectorcraft_doc::Burasagari::Standard,
+pub(crate) fn new_type_para() -> evovector_doc::ParaStyle {
+    evovector_doc::ParaStyle {
+        justify: evovector_doc::Justify::Auto,
+        mojikumi: evovector_doc::Mojikumi::LineEndHalf,
+        burasagari: evovector_doc::Burasagari::Standard,
         ..Default::default()
     }
 }
@@ -471,7 +471,7 @@ pub(crate) fn new_type_para() -> vectorcraft_doc::ParaStyle {
 /// interface is in Japanese (#432), else the Roman baseline for both. Noted in the journal, so a
 /// replay sets the same whatever the interface.
 pub(crate) fn new_type_alignment(s: &mut Session, p: &Value, cmd: &str, t: &mut TextObject) -> Result<()> {
-    use vectorcraft_doc::{CharAlign, LeadingModel};
+    use evovector_doc::{CharAlign, LeadingModel};
     let japanese = s.japanese_interface();
     let leading = match p.get("leadingModel").filter(|v| !v.is_null()) {
         Some(v) => match v.as_str() {
@@ -502,8 +502,8 @@ pub(crate) fn new_type_alignment(s: &mut Session, p: &Value, cmd: &str, t: &mut 
 
 /// The fit new area type gets: `fit`/`fitMinPercent` from `p` (as `text.areaOptions` takes
 /// them), else Auto Size when the "Auto Size New Area Type" preference is on.
-pub(crate) fn new_area_fit(s: &Session, p: &Value, c: &str) -> Result<vectorcraft_doc::AreaFit> {
-    let default = if s.prefs.auto_size_area_type { vectorcraft_doc::AreaFit::AutoHeight } else { vectorcraft_doc::AreaFit::None };
+pub(crate) fn new_area_fit(s: &Session, p: &Value, c: &str) -> Result<evovector_doc::AreaFit> {
+    let default = if s.prefs.auto_size_area_type { evovector_doc::AreaFit::AutoHeight } else { evovector_doc::AreaFit::None };
     Ok(super::typecmd::fit_param(p, default, c)?.unwrap_or(default))
 }
 
@@ -521,9 +521,9 @@ pub(crate) fn new_type_style(s: &Session, p: &Value) -> CharStyle {
         style.font_style = f.to_string();
     }
     style.fill = match p.get("color").and_then(color_value) {
-        Some(c) => vectorcraft_color::Paint::solid(c),
-        None if !s.paint.fill.is_none() && s.paint.fill != vectorcraft_color::Paint::solid(vectorcraft_color::Color::WHITE) => s.paint.fill.clone(),
-        None => vectorcraft_color::Paint::solid(vectorcraft_color::Color::BLACK),
+        Some(c) => evovector_color::Paint::solid(c),
+        None if !s.paint.fill.is_none() && s.paint.fill != evovector_color::Paint::solid(evovector_color::Color::WHITE) => s.paint.fill.clone(),
+        None => evovector_color::Paint::solid(evovector_color::Color::BLACK),
     };
     style
 }

@@ -1,8 +1,8 @@
 //! Help → project links (this app's GitHub repository). The commands return the URL; the frontend
 //! opens it.
 //!
-//! Evora (EVORA-SIN-03, patch E1): the ArtCraft community and website links (`help.discord`,
-//! `help.website`, `help.appPage`) are removed. A modified version must not carry the ArtCraft
+//! Evora (EVORA-SIN-03, patch E1): the Upstream community and website links (`help.discord`,
+//! `help.website`, `help.appPage`) are removed. A modified version must not carry the Upstream
 //! marks (docs/brand/LICENSE-brand.txt), and these commands compiled them into every build.
 
 use serde_json::{Value, json};
@@ -10,7 +10,7 @@ use serde_json::{Value, json};
 use super::*;
 
 /// The app's id on GitHub.
-pub const APP_ID: &str = "vectorcraft";
+pub const APP_ID: &str = "evovector";
 
 /// This app's source repository.
 pub fn github_url() -> String {
@@ -19,7 +19,7 @@ pub fn github_url() -> String {
 
 pub fn specs() -> Vec<CommandSpec> {
     vec![
-        cmd!(query "help.github", "VectorCraft on GitHub", ["Help"], None, "{} → {url} source code, issues and releases", always, |_, _| url(github_url())),
+        cmd!(query "help.github", "EvoVector on GitHub", ["Help"], None, "{} → {url} source code, issues and releases", always, |_, _| url(github_url())),
         cmd!(query "help.links", "Links", [], None, "{} → {github}", always, |_, _| {
             Ok(json!({ "github": github_url() }))
         }),
@@ -37,9 +37,9 @@ mod tests {
     #[test]
     fn links() {
         let mut s = Session::new();
-        assert_eq!(s.execute("help.github", &json!({})).unwrap()["url"], "https://github.com/storytold/vectorcraft");
-        assert_eq!(s.execute("help.links", &json!({})).unwrap()["github"], "https://github.com/storytold/vectorcraft");
-        // Evora (E1): the ArtCraft links are gone.
+        assert_eq!(s.execute("help.github", &json!({})).unwrap()["url"], "https://github.com/tazerty/evovector");
+        assert_eq!(s.execute("help.links", &json!({})).unwrap()["github"], "https://github.com/tazerty/evovector");
+        // Evora (E1): the Upstream links are gone.
         for id in ["help.discord", "help.website", "help.appPage"] {
             assert!(s.execute(id, &json!({})).is_err(), "{id} is still registered");
         }

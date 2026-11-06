@@ -5,14 +5,14 @@ use std::rc::Rc;
 
 use egui::{Event, Pos2, Rect, Shape, vec2};
 use serde_json::json;
-use vectorcraft_engine::Session;
+use evovector_engine::Session;
 
-use crate::{Services, VectorcraftApp};
+use crate::{Services, EvoVectorApp};
 
 use super::tests_export::Written;
 
 struct ExportHarness {
-    app: VectorcraftApp,
+    app: EvoVectorApp,
     ctx: egui::Context,
     written: Written,
     time: f64,
@@ -30,7 +30,7 @@ impl ExportHarness {
             })),
             ..Default::default()
         };
-        let mut app = VectorcraftApp::new(Session::new(), services);
+        let mut app = EvoVectorApp::new(Session::new(), services);
         app.run("file.new", json!({"width": 80, "height": 60, "artboards": 80, "columns": 10, "spacing": 20})).unwrap();
         app.run("paint.setStroke", json!({"none": true})).unwrap();
         for (i, name, colour, width, height) in

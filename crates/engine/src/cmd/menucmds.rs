@@ -5,12 +5,12 @@
 use std::sync::Arc;
 
 use serde_json::{Value, json};
-use vectorcraft_color::{Color, Paint};
-use vectorcraft_doc::marks::{MarkStyle, TrimMarks};
-use vectorcraft_doc::{Appearance, ImageObject, LiveShape, Node, NodeId, NodeKind, RasterColorModel, RasterEffectsSettings, Scaling};
-use vectorcraft_geom::{Affine, Anchor, PathData, Point, Rect, Vec2};
-use vectorcraft_render::AntiAlias;
-use vectorcraft_render::encode::{RasterExportOptions, RasterFormat};
+use evovector_color::{Color, Paint};
+use evovector_doc::marks::{MarkStyle, TrimMarks};
+use evovector_doc::{Appearance, ImageObject, LiveShape, Node, NodeId, NodeKind, RasterColorModel, RasterEffectsSettings, Scaling};
+use evovector_geom::{Affine, Anchor, PathData, Point, Rect, Vec2};
+use evovector_render::AntiAlias;
+use evovector_render::encode::{RasterExportOptions, RasterFormat};
 
 use super::edit::{duplicate_in, selected_roots};
 use super::*;
@@ -331,7 +331,7 @@ fn transform_each(s: &mut Session, p: &Value) -> Result<Value> {
                 k_mv = mv * (rng.next() * 2.0 - 1.0);
                 k_rot = rot * (rng.next() * 2.0 - 1.0);
             }
-            let o = vectorcraft_geom::reference_point(b, refi);
+            let o = evovector_geom::reference_point(b, refi);
             let refl = Affine::scale_non_uniform(if ry { -1.0 } else { 1.0 }, if rx { -1.0 } else { 1.0 });
             let m = Affine::translate((k_mh, k_mv))
                 * about(o, Affine::rotate(-k_rot.to_radians()) * refl * Affine::scale_non_uniform(k_sh / 100.0, k_sv / 100.0));
@@ -349,9 +349,9 @@ fn transform_each(s: &mut Session, p: &Value) -> Result<Value> {
 pub(crate) const MAX_PIXELS: f64 = 64.0e6;
 
 /// A copy of `doc` whose only content is `nodes` (paint order), for offscreen rendering.
-pub(crate) fn isolated_doc(doc: &vectorcraft_doc::Document, nodes: Vec<Node>) -> vectorcraft_doc::Document {
+pub(crate) fn isolated_doc(doc: &evovector_doc::Document, nodes: Vec<Node>) -> evovector_doc::Document {
     let mut tmp = doc.clone();
-    let mut layer = Node::layer(NodeId(u64::MAX), "raster", vectorcraft_doc::LayerColor::Preset(0));
+    let mut layer = Node::layer(NodeId(u64::MAX), "raster", evovector_doc::LayerColor::Preset(0));
     if let Some(ch) = layer.children_mut() {
         *ch = nodes.into_iter().map(Arc::new).collect();
     }
@@ -359,7 +359,7 @@ pub(crate) fn isolated_doc(doc: &vectorcraft_doc::Document, nodes: Vec<Node>) ->
     tmp
 }
 
-pub(crate) fn unique_key(d: &vectorcraft_doc::Document, stem: &str) -> String {
+pub(crate) fn unique_key(d: &evovector_doc::Document, stem: &str) -> String {
     let mut i = d.images.len() + 1;
     loop {
         let k = format!("{stem}-{i}");
@@ -372,16 +372,16 @@ pub(crate) fn unique_key(d: &vectorcraft_doc::Document, stem: &str) -> String {
 
 /// `doc` rendered over `region` with `opts` as a PNG in colour model `color`.
 fn render_png(
-    doc: &vectorcraft_doc::Document,
+    doc: &evovector_doc::Document,
     region: Rect,
     scale: f64,
-    opts: &vectorcraft_render::RenderOptions,
+    opts: &evovector_render::RenderOptions,
     color: RasterColorModel,
 ) -> Result<(Vec<u8>, u32, u32)> {
     if region.width() * region.height() * scale * scale > MAX_PIXELS || region.width() * scale > 65535.0 || region.height() * scale > 65535.0 {
         return Err(EngineError::Other("image would be too large; lower the resolution".into()));
     }
-    let mut r = vectorcraft_render::Renderer::new();
+    let mut r = evovector_render::Renderer::new();
     let mut img = r.render_region_with(doc, region, scale, opts);
     RasterEffectsSettings { color_model: color, ..Default::default() }.finish_pixels(&mut img.pixels);
     Ok((img.to_png().map_err(EngineError::Other)?, img.width, img.height))
@@ -397,7 +397,7 @@ fn rasterize(s: &mut Session, p: &Value) -> Result<Value> {
     }
     // The document's raster effects settings, changed by the params.
     let mut look = st.doc.raster_effects.clone();
-    let mut background = (look.background == vectorcraft_doc::Background::White).then_some([255; 3]);
+    let mut background = (look.background == evovector_doc::Background::White).then_some([255; 3]);
     let mut anti_alias = if look.anti_alias { AntiAlias::Art } else { AntiAlias::None };
     for (k, v) in p.as_object().into_iter().flatten().filter(|(_, v)| !v.is_null()) {
         match k.as_str() {
@@ -437,7 +437,7 @@ fn rasterize(s: &mut Session, p: &Value) -> Result<Value> {
     // Create Clipping Mask: the image is clipped to the art's outline.
     let clip = look
         .clipping_mask
-        .then(|| vectorcraft_render::effects::clip_outline(&Node::group(NodeId(u64::MAX), nodes.iter().cloned().map(Arc::new).collect())))
+        .then(|| evovector_render::effects::clip_outline(&Node::group(NodeId(u64::MAX), nodes.iter().cloned().map(Arc::new).collect())))
         .flatten()
         .map(|(bp, rule)| (PathData::from_bezpath(&bp), rule));
     let tmp = isolated_doc(&st.doc, nodes);
@@ -446,7 +446,7 @@ fn rasterize(s: &mut Session, p: &Value) -> Result<Value> {
     let id = s.edit("Rasterize", |d, sel| {
         let (par, idx, _) = d.position(top).ok_or(EngineError::NoNode(top))?;
         let key = unique_key(d, "raster");
-        d.images.insert(key.clone(), vectorcraft_doc::ImageBlob::new("image/png", png));
+        d.images.insert(key.clone(), evovector_doc::ImageBlob::new("image/png", png));
         let id = d.alloc_id();
         let xf = Affine::translate(region.origin().to_vec2()) * Affine::scale(1.0 / scale);
         let mut node =
@@ -488,11 +488,11 @@ fn object_mosaic(s: &mut Session, p: &Value) -> Result<Value> {
     let node = st.doc.node(id).cloned().ok_or(EngineError::NoNode(id))?;
     let NodeKind::Image(im) = &node.kind else { return Err(bad(C, "select an image")) };
     let blob = st.doc.images.get(&im.key).filter(|b| !b.bytes.is_empty()).ok_or_else(|| bad(C, "the image has no embedded pixels"))?;
-    let raster = vectorcraft_trace::Raster::decode(&blob.bytes).map_err(|e| bad(C, e.to_string()))?;
+    let raster = evovector_trace::Raster::decode(&blob.bytes).map_err(|e| bad(C, e.to_string()))?;
     let cols = p.get("columns").and_then(Value::as_u64).unwrap_or(10).clamp(1, 1000) as u32;
     let rows = p.get("rows").and_then(Value::as_u64).unwrap_or(10).clamp(1, 1000) as u32;
     let gray = bool_or(p, "gray", false);
-    let colors = vectorcraft_trace::mosaic(&raster, cols, rows);
+    let colors = evovector_trace::mosaic(&raster, cols, rows);
     // Tiles in image space, placed by the image transform (scaled to a new size if asked).
     let b = node.geometric_bounds().ok_or_else(|| bad(C, "image has no bounds"))?;
     let (nw, nh) = (f64_or(p, "width", b.width()).max(0.1), f64_or(p, "height", b.height()).max(0.1));
@@ -547,7 +547,7 @@ fn object_mosaic(s: &mut Session, p: &Value) -> Result<Value> {
 }
 
 fn polygon_path(pts: &[Point]) -> PathData {
-    PathData::single(vectorcraft_geom::SubPath::new(pts.iter().map(|p| Anchor::corner(*p)).collect(), true))
+    PathData::single(evovector_geom::SubPath::new(pts.iter().map(|p| Anchor::corner(*p)).collect(), true))
 }
 
 fn crop_image(s: &mut Session, p: &Value) -> Result<Value> {
@@ -602,7 +602,7 @@ fn crop_image(s: &mut Session, p: &Value) -> Result<Value> {
     let (png, w, h) = render_png(&tmp, region, scale, &RasterExportOptions::default().render_options(RasterFormat::Png), RasterColorModel::Document)?;
     s.edit("Crop Image", |d, _| {
         let key = unique_key(d, "crop");
-        d.images.insert(key.clone(), vectorcraft_doc::ImageBlob::new("image/png", png));
+        d.images.insert(key.clone(), evovector_doc::ImageBlob::new("image/png", png));
         if let Some(n) = d.node_mut(id) {
             n.kind = NodeKind::Image(Box::new(ImageObject {
                 key,
@@ -645,7 +645,7 @@ fn trim_image(s: &mut Session, id: NodeId, im: ImageObject) -> Result<Value> {
     let (cw, ch) = (x1 - x0, y1 - y0);
     s.edit("Crop Image", |d, _| {
         let key = unique_key(d, "crop");
-        d.images.insert(key.clone(), vectorcraft_doc::ImageBlob::new("image/png", png));
+        d.images.insert(key.clone(), evovector_doc::ImageBlob::new("image/png", png));
         if let Some(n) = d.node_mut(id) {
             n.kind = NodeKind::Image(Box::new(ImageObject {
                 key,
@@ -671,7 +671,7 @@ fn mask_image(s: &mut Session, _: &Value) -> Result<Value> {
         .iter()
         .find_map(|id| match st.doc.node(*id).map(|n| &n.kind) {
             Some(NodeKind::Image(im)) => {
-                Some((*id, vectorcraft_geom::shapes::rectangle(Rect::new(0.0, 0.0, im.width as f64, im.height as f64)).transformed(im.xf)))
+                Some((*id, evovector_geom::shapes::rectangle(Rect::new(0.0, 0.0, im.width as f64, im.height as f64)).transformed(im.xf)))
             }
             _ => None,
         })
@@ -824,7 +824,7 @@ fn convert_to_artboards(s: &mut Session, _: &Value) -> Result<Value> {
                 continue;
             }
             let aid = d.next_artboard_id();
-            d.artboards.push(vectorcraft_doc::Artboard {
+            d.artboards.push(evovector_doc::Artboard {
                 id: aid,
                 name: format!("Artboard {aid}"),
                 rect: b,

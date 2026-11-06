@@ -807,23 +807,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "craft-print"
-version = "0.1.0"
-source = "git+https://github.com/storytold/craft-libs?rev=d991bf6792f8ade99c51358bf3c1d902c8cd96b5#d991bf6792f8ade99c51358bf3c1d902c8cd96b5"
-dependencies = [
- "tempfile",
-]
-
-[[package]]
-name = "craft-ui"
-version = "0.1.0"
-source = "git+https://github.com/storytold/craft-libs?rev=5c874d51eeb3de70e735c8ce87a59a7dedd47675#5c874d51eeb3de70e735c8ce87a59a7dedd47675"
-dependencies = [
- "egui",
- "serde",
-]
-
-[[package]]
 name = "crc32fast"
 version = "1.5.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1275,6 +1258,500 @@ checksum = "8be9f3dfaaffdae2972880079a491a1a8bb7cbed0b8dd7a347f668b4150a3b93"
 dependencies = [
  "event-listener",
  "pin-project-lite",
+]
+
+[[package]]
+name = "evo-print"
+version = "0.1.0"
+dependencies = [
+ "tempfile",
+]
+
+[[package]]
+name = "evo-ui"
+version = "0.1.0"
+dependencies = [
+ "egui",
+ "serde",
+]
+
+[[package]]
+name = "evovector"
+version = "0.10.0"
+dependencies = [
+ "arboard",
+ "block2 0.6.2",
+ "clipboard-win",
+ "eframe",
+ "egui",
+ "evo-print",
+ "evovector-engine",
+ "evovector-text",
+ "evovector-ui-egui",
+ "image",
+ "log",
+ "muda",
+ "objc2 0.6.4",
+ "objc2-app-kit 0.3.2",
+ "objc2-core-foundation",
+ "objc2-core-text",
+ "objc2-foundation 0.3.2",
+ "pollster 1.0.1",
+ "raw-window-handle",
+ "rfd",
+ "serde_json",
+ "wayland-client",
+ "wayland-protocols",
+ "webbrowser",
+ "windows",
+ "winit",
+ "winresource",
+ "winsafe",
+]
+
+[[package]]
+name = "evovector-affinity"
+version = "0.10.0"
+dependencies = [
+ "crc32fast",
+ "flate2",
+ "image",
+ "proptest",
+ "ruzstd",
+]
+
+[[package]]
+name = "evovector-brush"
+version = "0.10.0"
+dependencies = [
+ "evovector-color",
+ "evovector-doc",
+ "evovector-geom",
+ "kurbo 0.13.1",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
+name = "evovector-cad"
+version = "0.10.0"
+dependencies = [
+ "evovector-brush",
+ "evovector-color",
+ "evovector-doc",
+ "evovector-effects",
+ "evovector-geom",
+ "evovector-pathops",
+ "evovector-text",
+ "image",
+ "kurbo 0.13.1",
+ "serde_json",
+]
+
+[[package]]
+name = "evovector-cli"
+version = "0.10.0"
+dependencies = [
+ "evovector-color",
+ "evovector-doc",
+ "evovector-engine",
+ "evovector-format",
+ "evovector-geom",
+ "evovector-mcp",
+ "evovector-render",
+ "evovector-svg",
+ "evovector-testkit",
+ "evovector-text",
+ "log",
+ "objc2-core-foundation",
+ "objc2-core-text",
+ "serde_json",
+ "windows",
+]
+
+[[package]]
+name = "evovector-color"
+version = "0.10.0"
+dependencies = [
+ "kurbo 0.13.1",
+ "moxcms",
+ "proptest",
+ "serde",
+ "serde_json",
+ "thiserror 2.0.21",
+]
+
+[[package]]
+name = "evovector-doc"
+version = "0.10.0"
+dependencies = [
+ "evovector-color",
+ "evovector-geom",
+ "image",
+ "jpeg-encoder",
+ "kurbo 0.13.1",
+ "proptest",
+ "serde",
+ "serde_json",
+ "thiserror 2.0.21",
+ "tiff",
+ "zune-jpeg",
+]
+
+[[package]]
+name = "evovector-effects"
+version = "0.10.0"
+dependencies = [
+ "evovector-color",
+ "evovector-doc",
+ "evovector-geom",
+ "evovector-pathops",
+ "evovector-plugins",
+ "evovector-text",
+ "evovector-three-d",
+ "kurbo 0.13.1",
+ "serde_json",
+]
+
+[[package]]
+name = "evovector-engine"
+version = "0.10.0"
+dependencies = [
+ "crc32fast",
+ "evovector-affinity",
+ "evovector-brush",
+ "evovector-cad",
+ "evovector-color",
+ "evovector-doc",
+ "evovector-eps",
+ "evovector-format",
+ "evovector-geom",
+ "evovector-metafile",
+ "evovector-pathops",
+ "evovector-pdf",
+ "evovector-plugins",
+ "evovector-render",
+ "evovector-svg",
+ "evovector-testkit",
+ "evovector-text",
+ "evovector-tools",
+ "evovector-trace",
+ "flate2",
+ "image",
+ "kurbo 0.13.1",
+ "log",
+ "proptest",
+ "ruzstd",
+ "serde",
+ "serde_json",
+ "thiserror 2.0.21",
+ "wat",
+]
+
+[[package]]
+name = "evovector-eps"
+version = "0.10.0"
+dependencies = [
+ "evovector-brush",
+ "evovector-color",
+ "evovector-doc",
+ "evovector-effects",
+ "evovector-geom",
+ "evovector-metafile",
+ "evovector-pdf",
+ "evovector-render",
+ "evovector-testkit",
+ "evovector-text",
+ "flate2",
+ "image",
+ "kurbo 0.13.1",
+ "ruzstd",
+]
+
+[[package]]
+name = "evovector-format"
+version = "0.10.0"
+dependencies = [
+ "evovector-doc",
+ "evovector-geom",
+ "evovector-testkit",
+ "flate2",
+ "proptest",
+ "serde",
+ "serde_json",
+ "thiserror 2.0.21",
+]
+
+[[package]]
+name = "evovector-geom"
+version = "0.10.0"
+dependencies = [
+ "evovector-testkit",
+ "kurbo 0.13.1",
+ "proptest",
+ "serde",
+ "serde_json",
+ "thiserror 2.0.21",
+]
+
+[[package]]
+name = "evovector-mcp"
+version = "0.10.0"
+dependencies = [
+ "evovector-doc",
+ "evovector-engine",
+ "evovector-format",
+ "evovector-geom",
+ "evovector-render",
+ "evovector-svg",
+ "evovector-testkit",
+ "evovector-tools",
+ "image",
+ "log",
+ "proptest",
+ "serde_json",
+ "socket2",
+]
+
+[[package]]
+name = "evovector-metafile"
+version = "0.10.0"
+dependencies = [
+ "evovector-brush",
+ "evovector-color",
+ "evovector-doc",
+ "evovector-effects",
+ "evovector-geom",
+ "evovector-text",
+ "image",
+ "kurbo 0.13.1",
+]
+
+[[package]]
+name = "evovector-pathops"
+version = "0.10.0"
+dependencies = [
+ "evovector-geom",
+ "evovector-testkit",
+ "kurbo 0.13.1",
+ "linesweeper",
+ "proptest",
+ "thiserror 2.0.21",
+]
+
+[[package]]
+name = "evovector-pdf"
+version = "0.10.0"
+dependencies = [
+ "aes",
+ "evovector-brush",
+ "evovector-color",
+ "evovector-doc",
+ "evovector-effects",
+ "evovector-geom",
+ "evovector-testkit",
+ "evovector-text",
+ "flate2",
+ "hayro-interpret",
+ "hayro-syntax",
+ "image",
+ "jpeg-encoder",
+ "krilla",
+ "kurbo 0.13.1",
+ "log",
+ "md-5",
+ "serde",
+ "serde_json",
+ "sha2",
+ "skrifa 0.47.0",
+ "smallvec",
+ "thiserror 2.0.21",
+]
+
+[[package]]
+name = "evovector-plugins"
+version = "0.10.0"
+dependencies = [
+ "evovector-color",
+ "evovector-doc",
+ "evovector-geom",
+ "serde",
+ "serde_json",
+ "thiserror 2.0.21",
+ "wasmi",
+ "wat",
+]
+
+[[package]]
+name = "evovector-render"
+version = "0.10.0"
+dependencies = [
+ "evovector-brush",
+ "evovector-color",
+ "evovector-doc",
+ "evovector-effects",
+ "evovector-geom",
+ "evovector-testkit",
+ "evovector-text",
+ "flate2",
+ "gif",
+ "image",
+ "jpeg-encoder",
+ "log",
+ "proptest",
+ "psd",
+ "serde_json",
+ "tiff",
+ "vello_common 0.2.0",
+ "vello_cpu 0.2.0",
+ "weezl",
+]
+
+[[package]]
+name = "evovector-svg"
+version = "0.10.0"
+dependencies = [
+ "evovector-brush",
+ "evovector-color",
+ "evovector-doc",
+ "evovector-effects",
+ "evovector-geom",
+ "evovector-testkit",
+ "evovector-text",
+ "flate2",
+ "image",
+ "kurbo 0.13.1",
+ "proptest",
+ "resvg",
+ "serde",
+ "serde_json",
+ "skrifa 0.47.0",
+ "svgtypes 0.16.1",
+ "thiserror 2.0.21",
+ "usvg 0.48.1",
+]
+
+[[package]]
+name = "evovector-testkit"
+version = "0.10.0"
+dependencies = [
+ "evovector-color",
+ "evovector-doc",
+ "evovector-engine",
+ "evovector-format",
+ "evovector-geom",
+ "evovector-render",
+ "evovector-svg",
+ "image",
+ "kurbo 0.13.1",
+ "proptest",
+ "serde_json",
+]
+
+[[package]]
+name = "evovector-text"
+version = "0.10.0"
+dependencies = [
+ "evovector-doc",
+ "evovector-geom",
+ "harfrust 0.13.3",
+ "icu_segmenter",
+ "kurbo 0.13.1",
+ "log",
+ "skrifa 0.47.0",
+ "subsetter",
+ "unicode-bidi",
+ "unicode-general-category",
+ "unicode-script",
+ "unicode-segmentation",
+ "windows-registry",
+ "write-fonts",
+]
+
+[[package]]
+name = "evovector-three-d"
+version = "0.10.0"
+dependencies = [
+ "evovector-geom",
+]
+
+[[package]]
+name = "evovector-tools"
+version = "0.10.0"
+dependencies = [
+ "evovector-color",
+ "evovector-doc",
+ "evovector-geom",
+ "evovector-pathops",
+ "evovector-text",
+ "image",
+ "kurbo 0.13.1",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
+name = "evovector-trace"
+version = "0.10.0"
+dependencies = [
+ "evovector-geom",
+ "evovector-pathops",
+ "image",
+ "kurbo 0.13.1",
+ "serde",
+ "serde_json",
+ "thiserror 2.0.21",
+]
+
+[[package]]
+name = "evovector-ui-egui"
+version = "0.10.0"
+dependencies = [
+ "egui",
+ "egui_extras",
+ "egui_kittest",
+ "evo-ui",
+ "evovector-brush",
+ "evovector-cad",
+ "evovector-color",
+ "evovector-doc",
+ "evovector-effects",
+ "evovector-engine",
+ "evovector-eps",
+ "evovector-format",
+ "evovector-geom",
+ "evovector-pdf",
+ "evovector-plugins",
+ "evovector-render",
+ "evovector-svg",
+ "evovector-testkit",
+ "evovector-text",
+ "evovector-three-d",
+ "evovector-tools",
+ "image",
+ "log",
+ "serde",
+ "serde_json",
+ "toml",
+ "wat",
+]
+
+[[package]]
+name = "evovector-web"
+version = "0.10.0"
+dependencies = [
+ "eframe",
+ "egui",
+ "evovector-engine",
+ "evovector-format",
+ "evovector-text",
+ "evovector-ui-egui",
+ "js-sys",
+ "log",
+ "rfd",
+ "wasm-bindgen",
+ "wasm-bindgen-futures",
+ "web-sys",
 ]
 
 [[package]]
@@ -4486,485 +4963,6 @@ dependencies = [
  "js-sys",
  "serde_core",
  "wasm-bindgen",
-]
-
-[[package]]
-name = "vectorcraft"
-version = "0.10.0"
-dependencies = [
- "arboard",
- "block2 0.6.2",
- "clipboard-win",
- "craft-print",
- "eframe",
- "egui",
- "image",
- "log",
- "muda",
- "objc2 0.6.4",
- "objc2-app-kit 0.3.2",
- "objc2-core-foundation",
- "objc2-core-text",
- "objc2-foundation 0.3.2",
- "pollster 1.0.1",
- "raw-window-handle",
- "rfd",
- "serde_json",
- "vectorcraft-engine",
- "vectorcraft-text",
- "vectorcraft-ui-egui",
- "wayland-client",
- "wayland-protocols",
- "webbrowser",
- "windows",
- "winit",
- "winresource",
- "winsafe",
-]
-
-[[package]]
-name = "vectorcraft-affinity"
-version = "0.10.0"
-dependencies = [
- "crc32fast",
- "flate2",
- "image",
- "proptest",
- "ruzstd",
-]
-
-[[package]]
-name = "vectorcraft-brush"
-version = "0.10.0"
-dependencies = [
- "kurbo 0.13.1",
- "serde",
- "serde_json",
- "vectorcraft-color",
- "vectorcraft-doc",
- "vectorcraft-geom",
-]
-
-[[package]]
-name = "vectorcraft-cad"
-version = "0.10.0"
-dependencies = [
- "image",
- "kurbo 0.13.1",
- "serde_json",
- "vectorcraft-brush",
- "vectorcraft-color",
- "vectorcraft-doc",
- "vectorcraft-effects",
- "vectorcraft-geom",
- "vectorcraft-pathops",
- "vectorcraft-text",
-]
-
-[[package]]
-name = "vectorcraft-cli"
-version = "0.10.0"
-dependencies = [
- "log",
- "objc2-core-foundation",
- "objc2-core-text",
- "serde_json",
- "vectorcraft-color",
- "vectorcraft-doc",
- "vectorcraft-engine",
- "vectorcraft-format",
- "vectorcraft-geom",
- "vectorcraft-mcp",
- "vectorcraft-render",
- "vectorcraft-svg",
- "vectorcraft-testkit",
- "vectorcraft-text",
- "windows",
-]
-
-[[package]]
-name = "vectorcraft-color"
-version = "0.10.0"
-dependencies = [
- "kurbo 0.13.1",
- "moxcms",
- "proptest",
- "serde",
- "serde_json",
- "thiserror 2.0.21",
-]
-
-[[package]]
-name = "vectorcraft-doc"
-version = "0.10.0"
-dependencies = [
- "image",
- "jpeg-encoder",
- "kurbo 0.13.1",
- "proptest",
- "serde",
- "serde_json",
- "thiserror 2.0.21",
- "tiff",
- "vectorcraft-color",
- "vectorcraft-geom",
- "zune-jpeg",
-]
-
-[[package]]
-name = "vectorcraft-effects"
-version = "0.10.0"
-dependencies = [
- "kurbo 0.13.1",
- "serde_json",
- "vectorcraft-color",
- "vectorcraft-doc",
- "vectorcraft-geom",
- "vectorcraft-pathops",
- "vectorcraft-plugins",
- "vectorcraft-text",
- "vectorcraft-three-d",
-]
-
-[[package]]
-name = "vectorcraft-engine"
-version = "0.10.0"
-dependencies = [
- "crc32fast",
- "flate2",
- "image",
- "kurbo 0.13.1",
- "log",
- "proptest",
- "ruzstd",
- "serde",
- "serde_json",
- "thiserror 2.0.21",
- "vectorcraft-affinity",
- "vectorcraft-brush",
- "vectorcraft-cad",
- "vectorcraft-color",
- "vectorcraft-doc",
- "vectorcraft-eps",
- "vectorcraft-format",
- "vectorcraft-geom",
- "vectorcraft-metafile",
- "vectorcraft-pathops",
- "vectorcraft-pdf",
- "vectorcraft-plugins",
- "vectorcraft-render",
- "vectorcraft-svg",
- "vectorcraft-testkit",
- "vectorcraft-text",
- "vectorcraft-tools",
- "vectorcraft-trace",
- "wat",
-]
-
-[[package]]
-name = "vectorcraft-eps"
-version = "0.10.0"
-dependencies = [
- "flate2",
- "image",
- "kurbo 0.13.1",
- "ruzstd",
- "vectorcraft-brush",
- "vectorcraft-color",
- "vectorcraft-doc",
- "vectorcraft-effects",
- "vectorcraft-geom",
- "vectorcraft-metafile",
- "vectorcraft-pdf",
- "vectorcraft-render",
- "vectorcraft-testkit",
- "vectorcraft-text",
-]
-
-[[package]]
-name = "vectorcraft-format"
-version = "0.10.0"
-dependencies = [
- "flate2",
- "proptest",
- "serde",
- "serde_json",
- "thiserror 2.0.21",
- "vectorcraft-doc",
- "vectorcraft-geom",
- "vectorcraft-testkit",
-]
-
-[[package]]
-name = "vectorcraft-geom"
-version = "0.10.0"
-dependencies = [
- "kurbo 0.13.1",
- "proptest",
- "serde",
- "serde_json",
- "thiserror 2.0.21",
- "vectorcraft-testkit",
-]
-
-[[package]]
-name = "vectorcraft-mcp"
-version = "0.10.0"
-dependencies = [
- "image",
- "log",
- "proptest",
- "serde_json",
- "socket2",
- "vectorcraft-doc",
- "vectorcraft-engine",
- "vectorcraft-format",
- "vectorcraft-geom",
- "vectorcraft-render",
- "vectorcraft-svg",
- "vectorcraft-testkit",
- "vectorcraft-tools",
-]
-
-[[package]]
-name = "vectorcraft-metafile"
-version = "0.10.0"
-dependencies = [
- "image",
- "kurbo 0.13.1",
- "vectorcraft-brush",
- "vectorcraft-color",
- "vectorcraft-doc",
- "vectorcraft-effects",
- "vectorcraft-geom",
- "vectorcraft-text",
-]
-
-[[package]]
-name = "vectorcraft-pathops"
-version = "0.10.0"
-dependencies = [
- "kurbo 0.13.1",
- "linesweeper",
- "proptest",
- "thiserror 2.0.21",
- "vectorcraft-geom",
- "vectorcraft-testkit",
-]
-
-[[package]]
-name = "vectorcraft-pdf"
-version = "0.10.0"
-dependencies = [
- "aes",
- "flate2",
- "hayro-interpret",
- "hayro-syntax",
- "image",
- "jpeg-encoder",
- "krilla",
- "kurbo 0.13.1",
- "log",
- "md-5",
- "serde",
- "serde_json",
- "sha2",
- "skrifa 0.47.0",
- "smallvec",
- "thiserror 2.0.21",
- "vectorcraft-brush",
- "vectorcraft-color",
- "vectorcraft-doc",
- "vectorcraft-effects",
- "vectorcraft-geom",
- "vectorcraft-testkit",
- "vectorcraft-text",
-]
-
-[[package]]
-name = "vectorcraft-plugins"
-version = "0.10.0"
-dependencies = [
- "serde",
- "serde_json",
- "thiserror 2.0.21",
- "vectorcraft-color",
- "vectorcraft-doc",
- "vectorcraft-geom",
- "wasmi",
- "wat",
-]
-
-[[package]]
-name = "vectorcraft-render"
-version = "0.10.0"
-dependencies = [
- "flate2",
- "gif",
- "image",
- "jpeg-encoder",
- "log",
- "proptest",
- "psd",
- "serde_json",
- "tiff",
- "vectorcraft-brush",
- "vectorcraft-color",
- "vectorcraft-doc",
- "vectorcraft-effects",
- "vectorcraft-geom",
- "vectorcraft-testkit",
- "vectorcraft-text",
- "vello_common 0.2.0",
- "vello_cpu 0.2.0",
- "weezl",
-]
-
-[[package]]
-name = "vectorcraft-svg"
-version = "0.10.0"
-dependencies = [
- "flate2",
- "image",
- "kurbo 0.13.1",
- "proptest",
- "resvg",
- "serde",
- "serde_json",
- "skrifa 0.47.0",
- "svgtypes 0.16.1",
- "thiserror 2.0.21",
- "usvg 0.48.1",
- "vectorcraft-brush",
- "vectorcraft-color",
- "vectorcraft-doc",
- "vectorcraft-effects",
- "vectorcraft-geom",
- "vectorcraft-testkit",
- "vectorcraft-text",
-]
-
-[[package]]
-name = "vectorcraft-testkit"
-version = "0.10.0"
-dependencies = [
- "image",
- "kurbo 0.13.1",
- "proptest",
- "serde_json",
- "vectorcraft-color",
- "vectorcraft-doc",
- "vectorcraft-engine",
- "vectorcraft-format",
- "vectorcraft-geom",
- "vectorcraft-render",
- "vectorcraft-svg",
-]
-
-[[package]]
-name = "vectorcraft-text"
-version = "0.10.0"
-dependencies = [
- "harfrust 0.13.3",
- "icu_segmenter",
- "kurbo 0.13.1",
- "log",
- "skrifa 0.47.0",
- "subsetter",
- "unicode-bidi",
- "unicode-general-category",
- "unicode-script",
- "unicode-segmentation",
- "vectorcraft-doc",
- "vectorcraft-geom",
- "windows-registry",
- "write-fonts",
-]
-
-[[package]]
-name = "vectorcraft-three-d"
-version = "0.10.0"
-dependencies = [
- "vectorcraft-geom",
-]
-
-[[package]]
-name = "vectorcraft-tools"
-version = "0.10.0"
-dependencies = [
- "image",
- "kurbo 0.13.1",
- "serde",
- "serde_json",
- "vectorcraft-color",
- "vectorcraft-doc",
- "vectorcraft-geom",
- "vectorcraft-pathops",
- "vectorcraft-text",
-]
-
-[[package]]
-name = "vectorcraft-trace"
-version = "0.10.0"
-dependencies = [
- "image",
- "kurbo 0.13.1",
- "serde",
- "serde_json",
- "thiserror 2.0.21",
- "vectorcraft-geom",
- "vectorcraft-pathops",
-]
-
-[[package]]
-name = "vectorcraft-ui-egui"
-version = "0.10.0"
-dependencies = [
- "craft-ui",
- "egui",
- "egui_extras",
- "egui_kittest",
- "image",
- "log",
- "serde",
- "serde_json",
- "toml",
- "vectorcraft-brush",
- "vectorcraft-cad",
- "vectorcraft-color",
- "vectorcraft-doc",
- "vectorcraft-effects",
- "vectorcraft-engine",
- "vectorcraft-eps",
- "vectorcraft-format",
- "vectorcraft-geom",
- "vectorcraft-pdf",
- "vectorcraft-plugins",
- "vectorcraft-render",
- "vectorcraft-svg",
- "vectorcraft-testkit",
- "vectorcraft-text",
- "vectorcraft-three-d",
- "vectorcraft-tools",
- "wat",
-]
-
-[[package]]
-name = "vectorcraft-web"
-version = "0.10.0"
-dependencies = [
- "eframe",
- "egui",
- "js-sys",
- "log",
- "rfd",
- "vectorcraft-engine",
- "vectorcraft-format",
- "vectorcraft-text",
- "vectorcraft-ui-egui",
- "wasm-bindgen",
- "wasm-bindgen-futures",
- "web-sys",
 ]
 
 [[package]]

@@ -13,9 +13,9 @@
 //! scaling its type: the text reflows at its size.
 
 use serde_json::{Value, json};
-use vectorcraft_doc::hit::{hit_test, marquee, objects_at};
-use vectorcraft_doc::{NodeId, OrientedBox};
-use vectorcraft_geom::{Affine, Point, Rect, Vec2};
+use evovector_doc::hit::{hit_test, marquee, objects_at};
+use evovector_doc::{NodeId, OrientedBox};
+use evovector_geom::{Affine, Point, Rect, Vec2};
 
 use crate::bbox::{Handle, hit_handle, in_rotate_zone, move_delta, rotate_for_drag, scale_for_drag};
 use crate::corners::{self, CornerDrag, over_widget};
@@ -147,7 +147,7 @@ impl MoveSnap {
 /// two edges and its centre is nearest a gridline, however far that is.
 fn grid_pull(r: Rect, step: f64) -> Vec2 {
     let pull = |vs: [f64; 3]| {
-        vs.iter().map(|v| vectorcraft_geom::snap::snap_to_grid(*v, step, 0.0) - v).min_by(|a, b| a.abs().total_cmp(&b.abs())).unwrap_or(0.0)
+        vs.iter().map(|v| evovector_geom::snap::snap_to_grid(*v, step, 0.0) - v).min_by(|a, b| a.abs().total_cmp(&b.abs())).unwrap_or(0.0)
     };
     Vec2::new(pull([r.x0, r.center().x, r.x1]), pull([r.y0, r.center().y, r.y1]))
 }
@@ -260,10 +260,10 @@ impl Tool for SelectionTool {
                 }
                 if let Some(h) = hit_test(cx.doc, p, cx.hit_options()) {
                     let top = h.top_object(cx.isolation);
-                    if cx.double_click_isolate && cx.doc.node(top).is_some_and(|n| matches!(n.kind, vectorcraft_doc::NodeKind::Group { .. })) {
+                    if cx.double_click_isolate && cx.doc.node(top).is_some_and(|n| matches!(n.kind, evovector_doc::NodeKind::Group { .. })) {
                         return vec![Action::Exec("object.isolate".into(), json!({ "id": top.0 }))];
                     }
-                    if cx.doc.node(top).is_some_and(|n| matches!(n.kind, vectorcraft_doc::NodeKind::Text(_))) {
+                    if cx.doc.node(top).is_some_and(|n| matches!(n.kind, evovector_doc::NodeKind::Text(_))) {
                         return vec![Action::SwitchTool("type".into())];
                     }
                 } else if cx.isolation.is_some() {
@@ -444,7 +444,7 @@ impl Tool for SelectionTool {
 
     fn overlays(&self, cx: &ToolContext) -> Vec<Overlay> {
         let mut o = pathtype::overlays(cx);
-        if let Some(source) = cx.isolation.and_then(|id| cx.doc.node(id)).filter(|n| n.name.as_deref() == Some(vectorcraft_doc::shaper::SOURCES)) {
+        if let Some(source) = cx.isolation.and_then(|id| cx.doc.node(id)).filter(|n| n.name.as_deref() == Some(evovector_doc::shaper::SOURCES)) {
             for n in source.children().into_iter().flatten() {
                 if let Some(path) = n.path_data() {
                     o.push(Overlay::Path { path: path.to_bezpath(), color: [0x80, 0x80, 0x80], width: 1.0, dashed: true });
@@ -539,9 +539,9 @@ fn can_be_key(cx: &ToolContext, id: NodeId) -> bool {
 
 /// Is `n` area type (text in a frame) whose frame the tools reshape? Type in perspective isn't:
 /// it transforms whole.
-pub(crate) fn is_area_type(n: &vectorcraft_doc::Node) -> bool {
+pub(crate) fn is_area_type(n: &evovector_doc::Node) -> bool {
     n.extras().perspective.is_none()
-        && matches!(&n.kind, vectorcraft_doc::NodeKind::Text(t) if matches!(t.kind, vectorcraft_doc::TextKind::Area { .. }))
+        && matches!(&n.kind, evovector_doc::NodeKind::Text(t) if matches!(t.kind, evovector_doc::TextKind::Area { .. }))
 }
 
 /// The resize cursor for handle `h` of a box turned by `angle` (counter-clockwise degrees): the
@@ -561,7 +561,7 @@ fn handle_cursor(h: Handle, angle: f64) -> Cursor {
 mod tests {
     use super::*;
     use crate::testutil::*;
-    use vectorcraft_doc::Selection;
+    use evovector_doc::Selection;
 
     fn ev(kind: PointerKind, x: f64, y: f64) -> PointerEvent {
         PointerEvent::new(kind, x, y)
@@ -575,8 +575,8 @@ mod tests {
         let l = d.layers[0].id;
         let tri = d.alloc_id();
         let pts = [Point::new(350.3, 250.0), Point::new(300.0, 320.0), Point::new(420.0, 330.0)];
-        let path = vectorcraft_geom::PathData::single(vectorcraft_geom::SubPath::polyline(&pts, true));
-        d.insert(Some(l), 1, vectorcraft_doc::Node::path(tri, path, vectorcraft_doc::Appearance::default_art())).unwrap();
+        let path = evovector_geom::PathData::single(evovector_geom::SubPath::polyline(&pts, true));
+        d.insert(Some(l), 1, evovector_doc::Node::path(tri, path, evovector_doc::Appearance::default_art())).unwrap();
         let (none, mut picked) = (Selection::default(), Selection::default());
         picked.add(id);
         let p = paint();
@@ -641,7 +641,7 @@ mod tests {
     #[test]
     fn a_press_on_a_ruler_guide_picks_it_over_the_art() {
         let (mut d, _) = doc_with_rect();
-        d.guides.push(vectorcraft_doc::Guide::new(false, 150.0));
+        d.guides.push(evovector_doc::Guide::new(false, 150.0));
         let s = Selection::default();
         let p = paint();
         let cx = cx(&d, &s, &p);
@@ -696,7 +696,7 @@ mod tests {
     /// gathered before the previews moved it); released, the move doesn't.
     #[test]
     fn an_alt_copy_snaps_to_the_original_left_behind() {
-        use vectorcraft_doc::{Appearance, Node};
+        use evovector_doc::{Appearance, Node};
         let (mut d, id) = doc_with_rect();
         // An artboard whose edges and centre are out of reach.
         d.artboards[0].rect = Rect::new(0.0, 0.0, 1000.0, 1000.0);
@@ -714,7 +714,7 @@ mod tests {
         let mut moved = d.clone();
         let l = moved.layers[0].id;
         moved.remove(id).unwrap();
-        let r = vectorcraft_geom::shapes::rectangle(Rect::new(150.0, 100.0, 250.0, 200.0));
+        let r = evovector_geom::shapes::rectangle(Rect::new(150.0, 100.0, 250.0, 200.0));
         moved.insert(Some(l), 0, Node::path(id, r, Appearance::default_art())).unwrap();
         let c = cx(&moved, &s, &p);
         let alt = Mods { alt: true, ..Mods::default() };
@@ -829,8 +829,8 @@ mod tests {
     /// click inside an isolated compound path picks a member.
     #[test]
     fn a_click_makes_only_a_selected_top_level_object_the_key() {
-        use vectorcraft_doc::{Appearance, Document, LayerColor, Node, NodeKind};
-        use vectorcraft_geom::shapes;
+        use evovector_doc::{Appearance, Document, LayerColor, Node, NodeKind};
+        use evovector_geom::shapes;
         let p = paint();
         let click = |d: &Document, s: &Selection, isolation: NodeId| {
             let c = ToolContext { isolation: Some(isolation), ..cx(d, s, &p) };
@@ -934,12 +934,12 @@ mod tests {
 
     #[test]
     fn handle_drag_snaps_to_the_other_objects_with_smart_guides() {
-        use vectorcraft_doc::{Appearance, Node};
+        use evovector_doc::{Appearance, Node};
         let (mut d, _) = doc_with_rect();
         let l = d.layers[0].id;
         let id = d.alloc_id();
         let r = Rect::new(250.0, 100.0, 300.0, 150.0);
-        d.insert(Some(l), 1, Node::path(id, vectorcraft_geom::shapes::rectangle(r), Appearance::default_art())).unwrap();
+        d.insert(Some(l), 1, Node::path(id, evovector_geom::shapes::rectangle(r), Appearance::default_art())).unwrap();
         let mut s = Selection::default();
         s.add(id);
         let p = paint();
@@ -968,11 +968,11 @@ mod tests {
     /// far a dragged handle is pulled.
     #[test]
     fn smart_guide_display_preferences_drive_the_readouts_and_the_pull() {
-        use vectorcraft_doc::{Appearance, Node};
+        use evovector_doc::{Appearance, Node};
         let (mut d, _) = doc_with_rect();
         let l = d.layers[0].id;
         let id = d.alloc_id();
-        d.insert(Some(l), 1, Node::path(id, vectorcraft_geom::shapes::rectangle(Rect::new(250.0, 100.0, 300.0, 150.0)), Appearance::default_art()))
+        d.insert(Some(l), 1, Node::path(id, evovector_geom::shapes::rectangle(Rect::new(250.0, 100.0, 300.0, 150.0)), Appearance::default_art()))
             .unwrap();
         let mut s = Selection::default();
         s.add(id);
@@ -1013,7 +1013,7 @@ mod tests {
 
     #[test]
     fn handle_drag_of_a_turned_box_snaps_on_the_page() {
-        use vectorcraft_doc::{Appearance, Node};
+        use evovector_doc::{Appearance, Node};
         let matrix = |a: &[Action]| {
             let Action::Preview(_, v) = &a[0] else { panic!("{a:?}") };
             let m: Vec<f64> = v["matrix"].as_array().unwrap().iter().map(|x| x.as_f64().unwrap()).collect();
@@ -1025,7 +1025,7 @@ mod tests {
             let l = d.layers[0].id;
             let id = d.alloc_id();
             let r = Rect::new(250.0, 100.0, 300.0, 150.0);
-            d.insert(Some(l), 1, Node::path(id, vectorcraft_geom::shapes::rectangle(r), Appearance::default_art())).unwrap();
+            d.insert(Some(l), 1, Node::path(id, evovector_geom::shapes::rectangle(r), Appearance::default_art())).unwrap();
             let c = Point::new(275.0, 125.0);
             d.node_mut(id)
                 .unwrap()

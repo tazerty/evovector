@@ -2,9 +2,9 @@
 #![allow(clippy::unwrap_used)]
 
 use serde_json::json;
-use vectorcraft_doc::NodeId;
-use vectorcraft_engine::{Session, ViewInfo};
-use vectorcraft_tools::{PointerEvent, PointerKind};
+use evovector_doc::NodeId;
+use evovector_engine::{Session, ViewInfo};
+use evovector_tools::{PointerEvent, PointerKind};
 
 fn fixture() -> (Session, NodeId) {
     let mut s = Session::new();

@@ -4,14 +4,14 @@
 
 use egui::{Key, Modifiers};
 use serde_json::{Value, json};
-use vectorcraft_engine::Session;
-use vectorcraft_tools::{PointerEvent, PointerKind};
+use evovector_engine::Session;
+use evovector_tools::{PointerEvent, PointerKind};
 
-use crate::VectorcraftApp;
+use crate::EvoVectorApp;
 
 /// A 300×300 document with a selected 10 pt line from (100, 200) to (300, 200) → its id.
-fn app_with_line() -> (VectorcraftApp, u64) {
-    let mut app = VectorcraftApp::new(Session::new(), Default::default());
+fn app_with_line() -> (EvoVectorApp, u64) {
+    let mut app = EvoVectorApp::new(Session::new(), Default::default());
     app.run("file.new", json!({"width": 400, "height": 400})).unwrap();
     let id = app.run("shape.line", json!({"x1": 100, "y1": 200, "x2": 300, "y2": 200})).unwrap()["id"].as_u64().unwrap();
     app.run("stroke.set", json!({"weight": 10})).unwrap();
@@ -20,7 +20,7 @@ fn app_with_line() -> (VectorcraftApp, u64) {
 }
 
 /// One frame pressing `key` through the shortcut handler.
-fn press(app: &mut VectorcraftApp, key: Key) {
+fn press(app: &mut EvoVectorApp, key: Key) {
     let ctx = egui::Context::default();
     let ev = egui::Event::Key { key, physical_key: None, pressed: true, repeat: false, modifiers: Modifiers::NONE };
     let mut out = ctx.run_ui(egui::RawInput { events: vec![ev], ..Default::default() }, |ui| crate::shortcuts::handle(app, ui.ctx()));
@@ -29,7 +29,7 @@ fn press(app: &mut VectorcraftApp, key: Key) {
 
 #[test]
 fn escape_leaves_artboard_editing_after_cancelling_an_active_drag() {
-    let mut app = VectorcraftApp::new(Session::new(), Default::default());
+    let mut app = EvoVectorApp::new(Session::new(), Default::default());
     app.run("file.new", json!({"width": 400, "height": 400})).unwrap();
     app.select_tool("artboard");
     press(&mut app, Key::Escape);
@@ -49,19 +49,19 @@ fn escape_leaves_artboard_editing_after_cancelling_an_active_drag() {
     assert_eq!(app.session.tool_id(), "selection", "next Escape leaves artboard editing");
 }
 
-fn click(app: &mut VectorcraftApp, x: f64, y: f64) {
+fn click(app: &mut EvoVectorApp, x: f64, y: f64) {
     let v = app.view_info();
     for kind in [PointerKind::Down, PointerKind::Up] {
         app.session.pointer(&PointerEvent::new(kind, x, y), v).unwrap();
     }
 }
 
-fn exists(app: &VectorcraftApp, id: u64) -> bool {
-    app.session.doc().unwrap().doc.node(vectorcraft_doc::NodeId(id)).is_some()
+fn exists(app: &EvoVectorApp, id: u64) -> bool {
+    app.session.doc().unwrap().doc.node(evovector_doc::NodeId(id)).is_some()
 }
 
-fn width_points(app: &VectorcraftApp, id: u64) -> Value {
-    let n = app.session.doc().unwrap().doc.node(vectorcraft_doc::NodeId(id)).cloned().unwrap();
+fn width_points(app: &EvoVectorApp, id: u64) -> Value {
+    let n = app.session.doc().unwrap().doc.node(evovector_doc::NodeId(id)).cloned().unwrap();
     json!(n.appearance.stroke().unwrap().profile.as_ref().map(|p| p.points.len()))
 }
 
@@ -86,12 +86,12 @@ fn delete_and_backspace_remove_the_selected_width_point_then_clear() {
 #[test]
 fn delete_and_backspace_remove_the_selected_pin_then_clear() {
     for key in [Key::Delete, Key::Backspace] {
-        let mut app = VectorcraftApp::new(Session::new(), Default::default());
+        let mut app = EvoVectorApp::new(Session::new(), Default::default());
         app.run("file.new", json!({"width": 400, "height": 400})).unwrap();
         let id = app.run("shape.rectangle", json!({"x": 100, "y": 100, "width": 200, "height": 100})).unwrap()["id"].as_u64().unwrap();
         app.run("select.set", json!({"ids": [id]})).unwrap();
         app.select_tool("puppetWarp");
-        let pins = |app: &VectorcraftApp| app.session.tool_options()["pins"].as_array().map_or(0, Vec::len);
+        let pins = |app: &EvoVectorApp| app.session.tool_options()["pins"].as_array().map_or(0, Vec::len);
         // A click on the art away from the automatic pins adds a pin and selects it.
         click(&mut app, 112.0, 188.0);
         let n = pins(&app);

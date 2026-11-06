@@ -1,7 +1,7 @@
 # Ukrainian (uk) catalog. Same format as zh-hant.tsv: context <TAB> source <TAB> translation.
 # Empty context = a plain UI string; @plural = one|few|many; @msg = a status/error template.
 #
-# Clean-room: translations of VectorCraft's labels, reviewed against their English meaning.
+# Clean-room: translations of EvoVector's labels, reviewed against their English meaning.
 # The existing Russian catalog supplied the row layout and a machine-assisted draft, not any
 # other product's localisation resources. Ukrainian vector-illustration terminology:
 # монтажна область, шар, обведення, заливка, контур, опорна точка, зразки, пензель, виділення.
@@ -81,7 +81,7 @@
 	A lower value follows the stroke closely; a higher one gives fewer points and smoother curves.	Менше значення точніше відтворює обведення; більше дає менше точок і плавніші криві.
 	A new preset starting from the selected one	Новий набір на основі вибраного
 	A saved copy of the selected preset	Збережена копія вибраного набору
-	About VectorCraft	Про програму VectorCraft
+	About EvoVector	Про програму EvoVector
 	above	зверху
 	Absolute Position	Абсолютна позиція
 	Accurate	Точний
@@ -184,7 +184,7 @@
 	Appearance Panel	Панель «Оформлення»
 	Appearance panel	Панель «Оформлення»
 	Applies when the linked file is relinked or updated.	Використовується при повторній прив’язці або оновленні пов’язаного файлу.
-	Applies the next time VectorCraft starts.	Застосовується при наступному запуску VectorCraft.
+	Applies the next time EvoVector starts.	Застосовується при наступному запуску EvoVector.
 	Apply	Застосувати
 	Apply Brush	Застосувати пензель
 	Apply Character Style	Застосувати стиль символу
@@ -1895,7 +1895,7 @@
 	Paragraph Style Options	Параметри стилю абзацу
 	Paragraph Styles	Стилі абзаців
 	Paragraph Symbol	Символ абзацу
-	MIT OR Apache-2.0. Fonts: Source Sans 3, Inter, JetBrains Mono (OFL). Icons: Lucide (ISC) + VectorCraft.	MIT OR Apache-2.0. Шрифти: Source Sans 3, Inter, JetBrains Mono (OFL). Значки: Lucide (ISC) + VectorCraft.
+	MIT OR Apache-2.0. Fonts: Source Sans 3, Inter, JetBrains Mono (OFL). Icons: Lucide (ISC) + EvoVector.	MIT OR Apache-2.0. Шрифти: Source Sans 3, Inter, JetBrains Mono (OFL). Значки: Lucide (ISC) + EvoVector.
 	Password	Пароль
 	Paste	Вставити
 	Paste in Back	Вставити позаду
@@ -2073,7 +2073,7 @@
 	Quarter Space	Четверта шпація
 	Quick Actions	Швидкі дії
 	Quickly start a new file	Швидко створити новий файл
-	Quit VectorCraft	Вийти з VectorCraft
+	Quit EvoVector	Вийти з EvoVector
 	Radar Graph Tool	Інструмент «Пелюсткова діаграма»
 	Radial	Радіальний
 	Radial Glows	Радіальні світіння
@@ -2197,7 +2197,7 @@
 	{count} folder(s) or file(s) couldn't be read	Не вдалося прочитати папок або файлів: {count}
 	The search stopped at its limit: search a smaller folder.	Пошук зупинився на межі: виберіть меншу папку.
 	Copy only fonts you own or are licensed to install.	Копіюйте лише шрифти, які належать вам або які ви маєте право встановлювати за ліцензією.
-	VectorCraft copies the fonts to {folder}.	VectorCraft копіює шрифти в {folder}.
+	EvoVector copies the fonts to {folder}.	EvoVector копіює шрифти в {folder}.
 	Registered Trademark Symbol	Символ зареєстрованого товарного знаку
 	Registration marks	Мітки поєднання
 	Registry name:	Ім’я у реєстрі:
@@ -2304,7 +2304,7 @@
 	Revert	Повернути
 	Revert to the saved version of “{name}”?	Повернутися до збереженої версії «{name}»?
 	Replace “{name}”, the file this document was opened from?	Замінити «{name}» — файл, з якого відкрито цей документ?
-	Opening it left out what VectorCraft can't read yet ({what}), so replacing it loses that for good. Save under another name to keep it.	При відкритті було пропущено те, що VectorCraft поки що не вміє читати ({what}), тому заміна файлу втратить це назавжди. Щоб зберегти це, збережіть документ під іншим ім’ям.
+	Opening it left out what EvoVector can't read yet ({what}), so replacing it loses that for good. Save under another name to keep it.	При відкритті було пропущено те, що EvoVector поки що не вміє читати ({what}), тому заміна файлу втратить це назавжди. Щоб зберегти це, збережіть документ під іншим ім’ям.
 	Revolve…	Обертання…
 	RGB Color	Колір RGB
 	Right	Праворуч
@@ -2443,7 +2443,7 @@
 	Saves the current bars, toolbar and panel layout.	Зберігає поточне розташування панелей, панелі інструментів та панелей.
 	Save…	Зберегти…
 	Saving	Збереження
-	Saving Poster.vectorcraft	Збереження Poster.vectorcraft
+	Saving Poster.evovector	Збереження Poster.evovector
 	Saving recovery data for {}	Збереження даних відновлення для {}
 	Saving {}	Збереження {}
 	Scale	Масштабувати
@@ -3120,9 +3120,9 @@ effect	Points	Точки
 	Vector Halftone	Векторний напівтон
 	Vector Halftone…	Векторний напівтон…
 	Vector illustration — fast, open, scriptable.	Векторне малювання — швидке, відкрите, кероване сценаріями.
-	VectorCraft didn't quit normally last time. These documents had unsaved changes:	VectorCraft не завершився нормально минулого разу. У цих документах були незбережені зміни:
-	VectorCraft Help…	Довідка VectorCraft…
-	VectorCraft on GitHub	VectorCraft на GitHub
+	EvoVector didn't quit normally last time. These documents had unsaved changes:	EvoVector не завершився нормально минулого разу. У цих документах були незбережені зміни:
+	EvoVector Help…	Довідка EvoVector…
+	EvoVector on GitHub	EvoVector на GitHub
 	Vectors	Вектори
 	Version {version} — open-source vector illustration in pure Rust.	Версія {version} — векторне малювання з відкритим кодом, написане на Rust.
 	Version:	Версія:
@@ -3162,7 +3162,7 @@ effect	Points	Точки
 	Web Snap:	Прив’язка до web:
 	Weight	Товщина
 	Weight:	Товщина:
-	Welcome to VectorCraft	Ласкаво просимо до VectorCraft
+	Welcome to EvoVector	Ласкаво просимо до EvoVector
 	When pasting text	При вставці тексту
 	White	Білий
 	Widget Position:	Положення віджету:
@@ -3516,7 +3516,7 @@ axis	Both	Обидві
 @msg	can't encode the document: {0}	не вдалося закодувати документ: {0}
 @msg	can't parse shortcut `{c}`	не вдалося розібрати поєднання `{c}`
 @msg	can't parse shortcut `{s}` for `{k}`	не вдалося розібрати поєднання `{s}` для `{k}`
-@msg	can't save version {0}: VectorCraft writes versions {MIN_VERSION} to {VERSION}	не вдалося зберегти версію {0}: VectorCraft записує версії від {MIN_VERSION} до {VERSION}
+@msg	can't save version {0}: EvoVector writes versions {MIN_VERSION} to {VERSION}	не вдалося зберегти версію {0}: EvoVector записує версії від {MIN_VERSION} до {VERSION}
 @msg	can't write .{ext} images	не вдалося записати зображення .{ext}
 @msg	cannot distort a zero-size bounding box	не можна спотворити обмежувальну рамку нульового розміру
 @msg	cannot read PDF: {0}	не вдалося прочитати PDF: {0}
@@ -3540,7 +3540,7 @@ axis	Both	Обидві
 @msg	empty brush stroke	порожній мазок пензля
 @msg	empty cutter	порожній різак
 @msg	empty path	порожній контур
-@msg	file version {0} is newer than this VectorCraft supports ({VERSION})	версія файлу {0} новіша, ніж підтримує цей VectorCraft ({VERSION})
+@msg	file version {0} is newer than this EvoVector supports ({VERSION})	версія файлу {0} новіша, ніж підтримує цей EvoVector ({VERSION})
 @msg	freeform point {i} needs `at` [x, y] and a valid `color`	довільній точці {i} потрібні `at` [x, y] та допустимий `color`
 @msg	freeform line {i} must be an array of point indices	довільна лінія {i} має бути масивом індексів точок
 @msg	give both `start` and `end` [x, y] (or neither)	вкажіть `start`, `end` [x, y] (або жодного)
@@ -3559,9 +3559,9 @@ axis	Both	Обидві
 @msg	invalid PDF setting: {0}	неприпустимий параметр PDF: {0}
 @msg	invalid image data for `{0}`	неприпустимі дані зображення для `{0}`
 @msg	invalid parameters for `{cmd}`: {msg}	неприпустимі параметри для `{cmd}`: {msg}
-@msg	is not an image VectorCraft reads	не є зображенням, яке читає VectorCraft
-@msg	it uses `{at}`, which VectorCraft's PostScript reader doesn't know	використовує `{at}`, яке не знає читач PostScript у VectorCraft
-@msg	it uses `{at}`, which VectorCraft's PostScript reader doesn't know, in {procs}	використовує `{at}`, яке не знає читач PostScript у VectorCraft, у {procs}
+@msg	is not an image EvoVector reads	не є зображенням, яке читає EvoVector
+@msg	it uses `{at}`, which EvoVector's PostScript reader doesn't know	використовує `{at}`, яке не знає читач PostScript у EvoVector
+@msg	it uses `{at}`, which EvoVector's PostScript reader doesn't know, in {procs}	використовує `{at}`, яке не знає читач PostScript у EvoVector, у {procs}
 @msg	its Windows metafile preview was opened instead, which may simplify the art	натомість було відкрито його попереднє подання метафайлу Windows, що може спростити малюнок
 @msg	its preview was placed instead, at screen resolution	замість цього було вміщено його попереднє подання у роздільній здатності екрану
 @msg	join needs open paths	з’єднання вимагає відкритих контурів
@@ -3664,8 +3664,8 @@ axis	Both	Обидві
 @msg	no user workspace `{from}`	немає користувача робочого середовища `{from}`
 @msg	node {_1} is not text	вузол {_1} не є текстом
 @msg	not a DXF drawing	не є кресленням DXF
-@msg	not a VectorCraft file: {0}	не є файлом VectorCraft: {0}
-@msg	not a VectorCraft shortcut set (missing `overrides`)	не є набором поєднань клавіш VectorCraft (відсутнє `overrides`)
+@msg	not a EvoVector file: {0}	не є файлом EvoVector: {0}
+@msg	not a EvoVector shortcut set (missing `overrides`)	не є набором поєднань клавіш EvoVector (відсутнє `overrides`)
 @msg	not a graphic style library (format `{_1}`)	не є бібліотекою графічних стилів (формат `{_1}`)
 @msg	not a stored central record	не є збереженим центральним записом
 @msg	not a valid plug-in module: {0}	не є допустимим модулем: {0}
@@ -3888,9 +3888,9 @@ axis	Both	Обидві
 @msg	Sent to {_1}	Відправлено до {_1}
 @msg	{_1} files	{_1} файлів
 @msg	The graphics were lost and have been restarted	Графіка була втрачена та перезапущена
-@msg	The graphics processor tried first couldn't show the window, so VectorCraft started again on {summary}	Графічний процесор, обраний першим, не зміг показати вікно, тому VectorCraft запустився знову на {summary}
-@msg	Loading VectorCraft…	Завантаження VectorCraft…
-@msg	VectorCraft failed to start: {e}	VectorCraft не вдалося запустити: {e}
+@msg	The graphics processor tried first couldn't show the window, so EvoVector started again on {summary}	Графічний процесор, обраний першим, не зміг показати вікно, тому EvoVector запустився знову на {summary}
+@msg	Loading EvoVector…	Завантаження EvoVector…
+@msg	EvoVector failed to start: {e}	EvoVector не вдалося запустити: {e}
 @msg	A browser with WebGPU or WebGL2 is required.	Потрібен браузер із WebGPU або WebGL2.
 @msg	The graphics were lost and couldn't be restarted.	Графіку було втрачено, і її не вдалося перезапустити.
 @msg	Your unsaved changes are kept in this browser: reload the page to get them back.	Ваші незбережені зміни зберігаються у цьому браузері: перезавантажте сторінку, щоб повернути їх.
@@ -3912,23 +3912,23 @@ axis	Both	Обидві
 @msg	it has more than {MAX_NODES} objects	в них більше {MAX_NODES} об’єктів
 @msg	it has no layers	у них немає шарів
 @msg	it has too many values in a row	у них занадто багато значень поспіль
-@msg	it has {_1}, which VectorCraft doesn't read from it yet	у них є {_1}, які VectorCraft поки не читає
+@msg	it has {_1}, which EvoVector doesn't read from it yet	у них є {_1}, які EvoVector поки не читає
 @msg	its objects are nested too deeply	об’єкти в них вкладені надто глибоко
 @msg	its section ending with `%{end}` doesn't end	розділ, що закінчується на `%{end}`, не закінчується
 @msg	objects with several fills or strokes, effects or brushes came in as their drawn look ({_1}): their appearance isn't editable yet	об’єкти з кількома заливками або обведеннями, ефектами або пензлями імпортовані в намальованому вигляді ({_1}): їх оформлення поки що не можна редагувати
 @msg	gradient “{name}” isn't defined in the file: a plain colour stands in for it	градієнт «{name}» не визначено у файлі: замість нього використовується суцільний колір
-@msg	an image VectorCraft can't read was left out	зображення, яке VectorCraft не може прочитати, пропущено
+@msg	an image EvoVector can't read was left out	зображення, яке EvoVector не може прочитати, пропущено
 @msg	an image whose data is cut short was left out	зображення з обрізаними даними пропущено
 @msg	its editing data doesn't say where its art is	у даних редагування не зазначено, де знаходиться графіка
 @msg	this file was saved without PDF compatibility, and its editing data can't be read ({why})	цей файл збережений без сумісності з PDF, і його дані редагування не вдається прочитати ({why})
 @msg	No fonts are missing in this document	У цьому документі немає відсутніх шрифтів
-@msg	VectorCraft doesn't search other apps' or the system's folders: {path}	VectorCraft не шукає в папках інших програм і системи: {path}
-@msg	VectorCraft doesn't search the Shared or Public folder in Users: {path}	VectorCraft не шукає в папках Shared і Public у Users: {path}
+@msg	EvoVector doesn't search other apps' or the system's folders: {path}	EvoVector не шукає в папках інших програм і системи: {path}
+@msg	EvoVector doesn't search the Shared or Public folder in Users: {path}	EvoVector не шукає в папках Shared і Public у Users: {path}
 @msg	{path} is not a folder	{path} не є папкою
 @msg	the search couldn't start: try again in a moment	не вдалося почати пошук: спробуйте ще раз за мить
 @msg	searching a folder isn't available on the web	пошук у папці недоступний у веб-версії
 @msg	every search thread stopped on an internal error (please report this bug)	усі потоки пошуку зупинилися через внутрішню помилку (повідомте про цю помилку)
-@msg	VectorCraft's Fonts folder isn't set here: the desktop app and vectorcraft-cli set it	Папку Fonts VectorCraft тут не задано: її задають настільна програма та vectorcraft-cli
+@msg	EvoVector's Fonts folder isn't set here: the desktop app and evovector-cli set it	Папку Fonts EvoVector тут не задано: її задають настільна програма та evovector-cli
 @msg	choose the font files to add	виберіть файли шрифтів для додавання
 @msg	{n} font file(s) are now in {folder}	Файлів шрифтів тепер у {folder}: {n}
 @msg	{n} font file(s) are now in {folder}; {failed} couldn't be added: {reason}	Файлів шрифтів тепер у {folder}: {n}; не вдалося додати {failed}: {reason}
@@ -3943,7 +3943,7 @@ axis	Both	Обидві
 @msg	No linked files to look for	Немає пов’язаних файлів для пошуку
 @msg	Relinked {n} image(s); {name} couldn't be relinked: {reason}	Відновлено зв’язок із зображеннями: {n}; не вдалося відновити зв’язок із {name}: {reason}
 	Services	Служби
-	Hide VectorCraft	Приховати VectorCraft
+	Hide EvoVector	Приховати EvoVector
 	Zoom	Масштаб
 	Bring All to Front	Усі вікна на передній план
 	Settings	Налаштування
@@ -3951,7 +3951,7 @@ axis	Both	Обидві
 	On: one locked object showing the document, updated when it changes.	Увімк.: один заблокований об’єкт, який показує документ і оновлюється під час його зміни.
 	Off: an editable copy of its art, embedded in this document.	Вимк.: редагована копія графіки, вбудована в цей документ.
 	Images: link to the file instead of only embedding it.	Зображення: пов’язувати із файлом замість простого впровадження.
-	VectorCraft documents: one locked object, updated when the file changes.	Документи VectorCraft: один заблокований об’єкт, який оновлюється під час зміни файлу.
+	EvoVector documents: one locked object, updated when the file changes.	Документи EvoVector: один заблокований об’єкт, який оновлюється під час зміни файлу.
 	A file dialog is open: choose there first	Відкрито вікно вибору файлу: спочатку зробіть вибір у ньому
 	The document was closed while its file dialog was open	Документ було закрито, поки було відкрито його вікно вибору файлу
 	The dialog was closed before its file dialog answered	Діалогове вікно було закрито раніше, ніж відповіло його вікно вибору файлу
@@ -4163,7 +4163,7 @@ lighting	Light	Світло
 	Artistic	Художні
 	Film Grain…	Зернистість плівки…
 	Highlight Area	Область світлих тонів
-@msg	the compressed file unpacks to more than VectorCraft reads ({_1} MB of document, {_2} MB per image)	стислий файл розпаковується в обсяг більший, ніж читає VectorCraft ({_1} МБ документа, {_2} МБ на зображення)
+@msg	the compressed file unpacks to more than EvoVector reads ({_1} MB of document, {_2} MB per image)	стислий файл розпаковується в обсяг більший, ніж читає EvoVector ({_1} МБ документа, {_2} МБ на зображення)
 @msg	the document is too large to save compressed ({0}): save it with Use Compression off	документ завеликий для збереження зі стиском ({0}): збережіть його з вимкненим параметром «Використовувати стиск»
 @msg	the file stopped being read (please report this bug)	читання файлу перервалося (будь ласка, повідомте про цю помилку)
 	Concentric Dividers:	Концентричні розділювачі:

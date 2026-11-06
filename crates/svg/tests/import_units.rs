@@ -3,9 +3,9 @@
 // Integration tests: unwrapping and panicking on failure is fine here, unlike in shipped code (AGENTS.md › Robustness).
 #![allow(clippy::unwrap_used, clippy::expect_used, clippy::panic)]
 
-use vectorcraft_doc::{Document, Node, NodeKind, Unit};
-use vectorcraft_geom::Rect;
-use vectorcraft_svg::import;
+use evovector_doc::{Document, Node, NodeKind, Unit};
+use evovector_geom::Rect;
+use evovector_svg::import;
 
 fn art(d: &Document) -> Vec<&Node> {
     let mut v = Vec::new();

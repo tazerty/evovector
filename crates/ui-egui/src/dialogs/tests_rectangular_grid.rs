@@ -4,18 +4,18 @@
 use std::sync::Arc;
 
 use serde_json::{Value, json};
-use vectorcraft_doc::{Document, NodeId, NodeKind};
-use vectorcraft_engine::{Session, ViewInfo};
-use vectorcraft_geom::{PathData, Point, Rect};
-use vectorcraft_tools::distort::perspective::{PerspectiveGrid, Plane};
-use vectorcraft_tools::{PointerEvent, PointerKind};
+use evovector_doc::{Document, NodeId, NodeKind};
+use evovector_engine::{Session, ViewInfo};
+use evovector_geom::{PathData, Point, Rect};
+use evovector_tools::distort::perspective::{PerspectiveGrid, Plane};
+use evovector_tools::{PointerEvent, PointerKind};
 
-use crate::{VectorcraftApp, theme};
+use crate::{EvoVectorApp, theme};
 
 const KIND: &str = "rectangularGrid";
 
-fn app() -> VectorcraftApp {
-    let mut app = VectorcraftApp::new(Session::new(), Default::default());
+fn app() -> EvoVectorApp {
+    let mut app = EvoVectorApp::new(Session::new(), Default::default());
     app.run("file.new", json!({"width": 800, "height": 600})).unwrap();
     app.select_tool(KIND);
     // Pointer-up persists tool settings even for a click. Seed them so opening/cancelling can
@@ -24,7 +24,7 @@ fn app() -> VectorcraftApp {
     app
 }
 
-fn saved_counts(app: &mut VectorcraftApp, rows: u32, columns: u32) {
+fn saved_counts(app: &mut EvoVectorApp, rows: u32, columns: u32) {
     let values = json!({"rows": rows, "columns": columns});
     app.session.set_tool_options(Some(KIND), values.as_object().unwrap());
 }
@@ -33,11 +33,11 @@ fn view() -> ViewInfo {
     ViewInfo { smart_guides: false, snap_to_point: false, snap_to_grid: false, snap_to_pixel: false, ..Default::default() }
 }
 
-fn pointer(app: &mut VectorcraftApp, kind: PointerKind, p: Point) {
+fn pointer(app: &mut EvoVectorApp, kind: PointerKind, p: Point) {
     crate::canvas::dispatch(app, &PointerEvent::new(kind, p.x, p.y), view());
 }
 
-fn click(app: &mut VectorcraftApp, at: Point) {
+fn click(app: &mut EvoVectorApp, at: Point) {
     app.select_tool(KIND);
     pointer(app, PointerKind::Down, at);
     assert!(app.ui.dialog.is_none(), "the dialog opens on release");
@@ -47,27 +47,27 @@ fn click(app: &mut VectorcraftApp, at: Point) {
     assert!(!app.session.in_interaction());
 }
 
-fn field(app: &VectorcraftApp, key: &str) -> Value {
+fn field(app: &EvoVectorApp, key: &str) -> Value {
     app.ui.dialog.as_ref().unwrap().fields.get(key).cloned().unwrap_or_default()
 }
 
-fn set(app: &mut VectorcraftApp, key: &str, value: Value) {
+fn set(app: &mut EvoVectorApp, key: &str, value: Value) {
     app.ui.dialog.as_mut().unwrap().fields.insert(key.into(), value);
 }
 
-fn values(app: &mut VectorcraftApp, width: Value, height: Value, rows: Value, columns: Value) {
+fn values(app: &mut EvoVectorApp, width: Value, height: Value, rows: Value, columns: Value) {
     for (key, value) in [("width", width), ("height", height), ("rows", rows), ("columns", columns)] {
         set(app, key, value);
     }
 }
 
-fn confirm(app: &mut VectorcraftApp) -> NodeId {
+fn confirm(app: &mut EvoVectorApp) -> NodeId {
     let result = super::confirm(app).unwrap();
     assert!(app.ui.dialog.is_none());
     NodeId(result["id"].as_u64().expect("confirmation returns the created group"))
 }
 
-fn paths(app: &VectorcraftApp, id: NodeId) -> Vec<PathData> {
+fn paths(app: &EvoVectorApp, id: NodeId) -> Vec<PathData> {
     let doc = &app.session.doc().unwrap().doc;
     let group = doc.node(id).unwrap();
     assert!(matches!(group.kind, NodeKind::Group { .. }));
@@ -86,7 +86,7 @@ fn assert_path(path: &PathData, expected: &[Point], closed: bool) {
 }
 
 /// Independent coordinate oracle: counts mean interior dividers, plus one closed outer frame.
-fn assert_grid(app: &VectorcraftApp, id: NodeId, bounds: Rect, rows: u32, columns: u32) {
+fn assert_grid(app: &EvoVectorApp, id: NodeId, bounds: Rect, rows: u32, columns: u32) {
     let paths = paths(app, id);
     assert_eq!(paths.len(), (rows + columns + 1) as usize);
     let mut remaining = paths.iter();
@@ -113,12 +113,12 @@ struct Snapshot {
     options: Value,
     undo: usize,
     redo: usize,
-    journal: vectorcraft_engine::Journal,
+    journal: evovector_engine::Journal,
     dirty: bool,
 }
 
 impl Snapshot {
-    fn take(app: &VectorcraftApp) -> Self {
+    fn take(app: &EvoVectorApp) -> Self {
         let state = app.session.doc().unwrap();
         Self {
             doc: state.doc.clone(),
@@ -132,7 +132,7 @@ impl Snapshot {
         }
     }
 
-    fn assert_unchanged(&self, app: &VectorcraftApp) {
+    fn assert_unchanged(&self, app: &EvoVectorApp) {
         let state = app.session.doc().unwrap();
         assert_eq!(state.doc, self.doc, "the document, including allocated ids, stays unchanged");
         assert_eq!(state.selection.objects, self.selected);
@@ -145,7 +145,7 @@ impl Snapshot {
     }
 }
 
-fn key_frame(app: &mut VectorcraftApp, key: egui::Key) {
+fn key_frame(app: &mut EvoVectorApp, key: egui::Key) {
     let ctx = egui::Context::default();
     theme::install_fonts(&ctx);
     theme::apply(&ctx, Default::default());

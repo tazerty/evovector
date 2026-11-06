@@ -1,42 +1,43 @@
 [workspace]
+exclude = ["vendor/evo-libs"]
 resolver = "3"
 members = ["crates/*", "apps/*", "xtask"]
-default-members = ["crates/*", "apps/vectorcraft", "apps/vectorcraft-cli", "xtask"]
+default-members = ["crates/*", "apps/evovector", "apps/evovector-cli", "xtask"]
 
 [workspace.package]
 version = "0.10.0"
 edition = "2024"
 license = "MIT OR Apache-2.0"
 rust-version = "1.95"
-repository = "https://github.com/storytold/vectorcraft"
+repository = "https://github.com/tazerty/evovector"
 
 [workspace.dependencies]
-craft-print = { git = "https://github.com/storytold/craft-libs", rev = "d991bf6792f8ade99c51358bf3c1d902c8cd96b5" }
-craft-ui = { git = "https://github.com/storytold/craft-libs", rev = "5c874d51eeb3de70e735c8ce87a59a7dedd47675", features = ["serde"] }
+evo-print = { path = "vendor/evo-libs/evo-print" }
+evo-ui = { path = "vendor/evo-libs/evo-ui", features = ["serde"] }
 # internal
-vectorcraft-geom = { path = "crates/geom" }
-vectorcraft-color = { path = "crates/color" }
-vectorcraft-doc = { path = "crates/doc" }
-vectorcraft-pathops = { path = "crates/pathops" }
-vectorcraft-brush = { path = "crates/brush" }
-vectorcraft-trace = { path = "crates/trace" }
-vectorcraft-text = { path = "crates/text" }
-vectorcraft-effects = { path = "crates/effects" }
-vectorcraft-three-d = { path = "crates/three-d" }
-vectorcraft-render = { path = "crates/render" }
-vectorcraft-svg = { path = "crates/svg" }
-vectorcraft-pdf = { path = "crates/pdf" }
-vectorcraft-format = { path = "crates/format" }
-vectorcraft-tools = { path = "crates/tools" }
-vectorcraft-engine = { path = "crates/engine" }
-vectorcraft-ui-egui = { path = "crates/ui-egui" }
-vectorcraft-mcp = { path = "crates/mcp" }
-vectorcraft-testkit = { path = "crates/testkit" }
-vectorcraft-cad = { path = "crates/cad" }
-vectorcraft-eps = { path = "crates/eps" }
-vectorcraft-metafile = { path = "crates/metafile" }
-vectorcraft-plugins = { path = "crates/plugins" }
-vectorcraft-affinity = { path = "crates/affinity" }
+evovector-geom = { path = "crates/geom" }
+evovector-color = { path = "crates/color" }
+evovector-doc = { path = "crates/doc" }
+evovector-pathops = { path = "crates/pathops" }
+evovector-brush = { path = "crates/brush" }
+evovector-trace = { path = "crates/trace" }
+evovector-text = { path = "crates/text" }
+evovector-effects = { path = "crates/effects" }
+evovector-three-d = { path = "crates/three-d" }
+evovector-render = { path = "crates/render" }
+evovector-svg = { path = "crates/svg" }
+evovector-pdf = { path = "crates/pdf" }
+evovector-format = { path = "crates/format" }
+evovector-tools = { path = "crates/tools" }
+evovector-engine = { path = "crates/engine" }
+evovector-ui-egui = { path = "crates/ui-egui" }
+evovector-mcp = { path = "crates/mcp" }
+evovector-testkit = { path = "crates/testkit" }
+evovector-cad = { path = "crates/cad" }
+evovector-eps = { path = "crates/eps" }
+evovector-metafile = { path = "crates/metafile" }
+evovector-plugins = { path = "crates/plugins" }
+evovector-affinity = { path = "crates/affinity" }
 
 # foundation
 kurbo = { version = "0.13", features = ["serde"] }
@@ -69,7 +70,7 @@ flate2 = { version = "1", default-features = false, features = ["rust_backend"] 
 ruzstd = { version = "0.9", default-features = false, features = ["std"] }
 jpeg-encoder = { version = "0.6", default-features = false, features = ["std"] }
 gif = { version = "0.14", default-features = false, features = ["std", "raii_no_panic"] }
-# CMYK image samples (vectorcraft-doc's cmyk module): the image crate's own TIFF and JPEG
+# CMYK image samples (evovector-doc's cmyk module): the image crate's own TIFF and JPEG
 # decoders, read directly (the image crate converts CMYK to RGB).
 tiff = "0.11"
 zune-jpeg = "0.5"
@@ -89,7 +90,7 @@ unsafe_code = "deny"
 
 [workspace.lints.clippy]
 dbg_macro = "warn"
-# VectorCraft never crashes: shipped code returns `Result`/`Option` instead of panicking (see
+# EvoVector never crashes: shipped code returns `Result`/`Option` instead of panicking (see
 # AGENTS.md › Robustness). Tests may unwrap (clippy.toml).
 unwrap_used = "deny"
 expect_used = "deny"

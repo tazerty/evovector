@@ -4,7 +4,7 @@
 //! flyout text) in every brightness, and the interface is set in Inter (already bundled for
 //! documents), with Source Sans 3 right after it for the characters Inter lacks (the `▾` of the
 //! Hungarian and Chinese catalogs and of the font list's disclosure triangles). The host picks
-//! Light or Dark (`?theme=`, apps/vectorcraft-web).
+//! Light or Dark (`?theme=`, apps/evovector-web).
 
 use std::sync::Arc;
 
@@ -269,25 +269,25 @@ pub fn install_fonts(ctx: &egui::Context) {
     let mut mono = vec!["JetBrainsMono".to_string()];
     mono.extend(fallback);
     fonts.families.insert(FontFamily::Name(FONT_MONO.into()), mono);
-    add_craft_fonts(&mut fonts);
+    add_evo_fonts(&mut fonts);
     ctx.set_fonts(fonts);
 }
 
-/// The egui name of a craft-fonts face.
-pub(crate) fn craft_font_name(f: &vectorcraft_text::CraftFont) -> String {
-    format!("craft-fonts {} {}", f.family, f.style)
+/// The egui name of a evo-fonts face.
+pub(crate) fn evo_font_name(f: &evovector_text::EvoFont) -> String {
+    format!("evo-fonts {} {}", f.family, f.style)
 }
 
-/// The Japanese craft-fonts faces (when built with `CRAFT_FONTS_DIR`) as fallbacks at the end of
+/// The Japanese evo-fonts faces (when built with `EVO_FONTS_DIR`) as fallbacks at the end of
 /// every family, after the app's own fonts and before the installed fonts `ui_fonts` adds: BIZ
 /// UDPGothic first (bold first in the semibold family), then the Mincho faces.
-fn add_craft_fonts(fonts: &mut FontDefinitions) {
-    for f in vectorcraft_text::CRAFT_FONTS.iter().filter(|f| f.is_japanese()) {
-        fonts.font_data.insert(craft_font_name(f), Arc::new(FontData::from_static(f.bytes)));
+fn add_evo_fonts(fonts: &mut FontDefinitions) {
+    for f in evovector_text::EVO_FONTS.iter().filter(|f| f.is_japanese()) {
+        fonts.font_data.insert(evo_font_name(f), Arc::new(FontData::from_static(f.bytes)));
     }
     for (family, stack) in fonts.families.iter_mut() {
         let bold = *family == FontFamily::Name(FONT_UI_SEMIBOLD.into());
-        stack.extend(vectorcraft_text::craft_fonts::japanese_ui_fonts(bold).into_iter().map(craft_font_name));
+        stack.extend(evovector_text::evo_fonts::japanese_ui_fonts(bold).into_iter().map(evo_font_name));
     }
 }
 
@@ -310,7 +310,7 @@ pub fn apply(ctx: &egui::Context, b: Brightness) {
     v.popup_shadow = egui::epaint::Shadow { offset: [0, 4], blur: 14, spread: 0, color: Color32::from_black_alpha(if t.dark { 120 } else { 60 }) };
     v.window_shadow = egui::epaint::Shadow { offset: [0, 8], blur: 28, spread: 0, color: Color32::from_black_alpha(if t.dark { 140 } else { 70 }) };
     let w = &mut v.widgets;
-    craft_ui::theme::WidgetPalette { noninteractive: t.panel, inactive: t.button, hovered: t.hover, active: t.tool_active, open: t.hover }.apply_to(
+    evo_ui::theme::WidgetPalette { noninteractive: t.panel, inactive: t.button, hovered: t.hover, active: t.tool_active, open: t.hover }.apply_to(
         w,
         t.cr(),
         Stroke::new(1.0, t.text),

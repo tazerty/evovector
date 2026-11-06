@@ -21,12 +21,12 @@ fn decode() -> egui::ColorImage {
 
 /// The icon texture, uploaded on first use and kept in the context.
 fn texture(ctx: &Context) -> TextureHandle {
-    let id = Id::new("vectorcraft-brand-mark");
+    let id = Id::new("evovector-brand-mark");
     if let Some(tex) = ctx.data(|d| d.get_temp::<TextureHandle>(id)) {
         return tex;
     }
     let options = TextureOptions { mipmap_mode: Some(egui::TextureFilter::Linear), ..TextureOptions::LINEAR };
-    let tex = ctx.load_texture("vectorcraft-brand-mark", decode(), options);
+    let tex = ctx.load_texture("evovector-brand-mark", decode(), options);
     ctx.data_mut(|d| d.insert_temp(id, tex.clone()));
     tex
 }
@@ -46,7 +46,7 @@ pub fn texture_id(ctx: &Context) -> egui::TextureId {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::VectorcraftApp;
+    use crate::EvoVectorApp;
 
     #[test]
     fn the_icon_decodes_to_a_rounded_128_px_tile() {
@@ -61,7 +61,7 @@ mod tests {
     fn the_app_bar_paints_the_icon_from_one_cached_texture() {
         let ctx = Context::default();
         crate::theme::install_fonts(&ctx);
-        let mut app = VectorcraftApp::new(vectorcraft_engine::Session::new(), Default::default());
+        let mut app = EvoVectorApp::new(evovector_engine::Session::new(), Default::default());
         // The system title bar hides the in-app mark (the OS draws its own icon), so paint the
         // app-drawn bar here.
         app.custom_titlebar = true;

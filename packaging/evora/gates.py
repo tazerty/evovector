@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Portes de la CI web Evora du fork tazerty/vectorcraft (écrit par Evora, EVORA-SIN-04, CI).
+"""Portes de la CI web Evora du fork tazerty/evovector (écrit par Evora, EVORA-SIN-04, CI).
 
 Sous-commandes (chacune écrit du Markdown sur la sortie standard, pour le résumé du job, et sort
 avec le code 1 quand la porte échoue ou quand son instrument ne voit pas son témoin sabordé) :
 
-  brand <site>                 marques ArtCraft dans le bundle (hors LICENSES/), bloquante
+  brand <site>                 marques du nom amont dans le bundle (hors LICENSES/), bloquante
   hosting <site>               fichiers d'hébergement, cachés et liens symboliques, bloquante
   emoji <repo> [--blocking]    émojis et pictogrammes dans les catalogues affichés (patch E10)
   terms <repo>                 termes sensibles dans les catalogues affichés (patch E9), bloquante
@@ -30,7 +30,7 @@ import sys
 import tempfile
 import unicodedata
 
-# Ce qui n'est pas « le bundle » : les avis de licence (LICENSE-MIT nomme l'ArtCraft Team, à
+# Ce qui n'est pas « le bundle » : les avis de licence (LICENSE-MIT nomme l'équipe amont, à
 # conserver), la fiche de build et les sorties compressées (dérivées des fichiers mesurés).
 EXCLUDED_DIRS = ("LICENSES",)
 EXCLUDED_FILES = ("EVORA-BUILD.txt", "csp-hashes.txt")
@@ -50,14 +50,19 @@ def bundle_files(site):
             yield rel, path
 
 
+# Le nom amont retiré n'est jamais écrit en clair dans le dépôt : il est reconstitué ici, pour que
+# la porte et son témoin cherchent le vrai ancien nom, et non un mot de remplacement.
+BRAND = b"Art" + b"C" + b"raft"
+SITE = b"getart" + b"c" + b"raft"
+
 # (libellé, motif, insensible à la casse, bloquant)
 BRAND_PATTERNS = [
-    ("`ArtCraft` (casse exacte)", b"ArtCraft", False, True),
-    ("`artcraft` (toute casse)", b"artcraft", True, True),
-    ("`getartcraft` (toute casse)", b"getartcraft", True, True),
+    ("nom amont (casse exacte)", BRAND, False, True),
+    ("nom amont (toute casse)", BRAND.lower(), True, True),
+    ("site amont (toute casse)", SITE, True, True),
     ("`discord.gg` (toute casse)", b"discord.gg", True, True),
     ("`discord` (toute casse, information)", b"discord", True, False),
-    ("`VectorCraft` (casse exacte, information)", b"VectorCraft", False, False),
+    ("`EvoVector` (casse exacte, information)", b"EvoVector", False, False),
 ]
 
 
@@ -82,11 +87,11 @@ def brand_witness():
     try:
         os.makedirs(os.path.join(root, "LICENSES"))
         files = {
-            "a.js": b"// Made by ArtCraft\n",
-            "b.wasm": b"\x00\x61\x73\x6d https://discord.gg/x \x00 getartcraft.com \xff",
-            "LICENSES/LICENSE-MIT": b"Copyright (c) ArtCraft Team",  # exclu : avis de licence
-            "c.wasm.br": b"ArtCraft",  # exclu : sortie dérivée
-            "EVORA-BUILD.txt": b"ArtCraft",  # exclu : fiche de build
+            "a.js": b"// Made by " + BRAND + b"\n",
+            "b.wasm": b"\x00\x61\x73\x6d https://discord.gg/x \x00 " + SITE + b".com \xff",
+            "LICENSES/LICENSE-MIT": b"Copyright (c) " + BRAND + b" Team",  # exclu : avis de licence
+            "c.wasm.br": BRAND,  # exclu : sortie dérivée
+            "EVORA-BUILD.txt": BRAND,  # exclu : fiche de build
         }
         for rel, data in files.items():
             with open(os.path.join(root, rel), "wb") as fh:
@@ -100,7 +105,7 @@ def brand_witness():
 def cmd_brand(site):
     totals, per_file = brand_counts(site)
     witness = brand_witness()
-    print("### Marques ArtCraft dans le bundle (porte bloquante : 0), hors `LICENSES/`")
+    print("### Marques du nom amont dans le bundle (porte bloquante : 0), hors `LICENSES/`")
     print()
     print("| Motif | Occurrences | Bloquant |")
     print("|---|---|---|")
@@ -183,7 +188,7 @@ def is_pictograph(cp):
 
 # Les catalogues affichés : les TSV de `ui-egui` (toutes langues, source anglaise comprise) et les
 # sources de l'interface (`ui-egui`, crate web), hors lignes de commentaire.
-DISPLAY_ROOTS = ("crates/ui-egui/src", "apps/vectorcraft-web")
+DISPLAY_ROOTS = ("crates/ui-egui/src", "apps/evovector-web")
 
 
 def emoji_scan(repo):

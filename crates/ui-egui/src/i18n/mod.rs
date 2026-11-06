@@ -89,7 +89,7 @@ pub static LANGUAGES: [LangInfo; 14] = [
     LangInfo { code: "ja", name: "日本語", source: include_str!("ja.tsv"), plural: plural_none, complete_menus: true, catalog: OnceLock::new() },
     // Korean: the whole interface and the status and error messages, keeping the same names in
     // English as Japanese; a count takes no plural, so plurals have one form. Hangul is drawn with an
-    // installed system font (craft-fonts has no Korean UI face yet); every `ko-*` locale resolves here.
+    // installed system font (evo-fonts has no Korean UI face yet); every `ko-*` locale resolves here.
     LangInfo { code: "ko", name: "한국어", source: include_str!("ko.tsv"), plural: plural_none, complete_menus: true, catalog: OnceLock::new() },
     // Czech: the whole interface (every menu string and `tl!` literal) and the status and error
     // messages, with one/few/other plurals, keeping the same names in English as Spanish.
@@ -318,9 +318,9 @@ pub fn set_system_locales<S: AsRef<str>>(tags: &[S]) {
 
 #[cfg(not(target_arch = "wasm32"))]
 fn detect_system_lang() -> Lang {
-    // `VECTORCRAFT_LOCALE` overrides everything (also handy for screenshots); then the POSIX
+    // `EVOVECTOR_LOCALE` overrides everything (also handy for screenshots); then the POSIX
     // variables. `LANGUAGE` is a colon-separated priority list.
-    for var in ["VECTORCRAFT_LOCALE", "LC_ALL", "LC_MESSAGES", "LANG", "LANGUAGE"] {
+    for var in ["EVOVECTOR_LOCALE", "LC_ALL", "LC_MESSAGES", "LANG", "LANGUAGE"] {
         let Some(v) = std::env::var(var).ok().filter(|v| !v.is_empty()) else { continue };
         // `C` / `POSIX` (and variants like `C.UTF-8`, `POSIX.UTF-8`) mean "no particular locale":
         // don't force English, fall through to the OS preferred-languages list below.

@@ -1,7 +1,7 @@
 # French (fr) catalog. Same format as zh-hant.tsv:  context <TAB> source <TAB> translation
 # (empty context = a plain UI string; `@id` = a command id; `@plural` = "one|other" forms).
 #
-# Clean-room: written from the meaning of VectorCraft's English labels in standard French, using the
+# Clean-room: written from the meaning of EvoVector's English labels in standard French, using the
 # feature names French-speaking users of vector illustration software know (Plan de travail, Nuancier,
 # Contour, Fond, Tracé, Point d'ancrage, Plume, Sélection directe, Pathfinder, Motif, Paramètre
 # prédéfini, Calque). No other application's French localisation was copied. Labels use sentence case
@@ -88,7 +88,7 @@
 	A lower value follows the stroke closely; a higher one gives fewer points and smoother curves.	Une valeur faible suit le contour de près ; une valeur élevée donne moins de points et des courbes plus lisses.
 	A new preset starting from the selected one	Un nouveau paramètre prédéfini basé sur celui sélectionné
 	A saved copy of the selected preset	Une copie enregistrée du paramètre prédéfini sélectionné
-	About VectorCraft	À propos de VectorCraft
+	About EvoVector	À propos de EvoVector
 	above	au-dessus
 	Absolute Position	Position absolue
 	Accurate	Précis
@@ -191,7 +191,7 @@
 	Appearance Panel	Panneau Aspect
 	Appearance panel	Panneau Aspect
 	Applies when the linked file is relinked or updated.	S’applique lorsque le fichier lié est de nouveau lié ou mis à jour.
-	Applies the next time VectorCraft starts.	S’applique au prochain démarrage de VectorCraft.
+	Applies the next time EvoVector starts.	S’applique au prochain démarrage de EvoVector.
 	Apply	Appliquer
 	Apply Brush	Appliquer la forme
 	Apply Character Style	Appliquer le style de caractère
@@ -1900,7 +1900,7 @@
 	Paragraph Style Options	Options de style de paragraphe
 	Paragraph Styles	Styles de paragraphe
 	Paragraph Symbol	Pied-de-mouche
-	MIT OR Apache-2.0. Fonts: Source Sans 3, Inter, JetBrains Mono (OFL). Icons: Lucide (ISC) + VectorCraft.	MIT OR Apache-2.0. Polices : Source Sans 3, Inter, JetBrains Mono (OFL). Icônes : Lucide (ISC) + VectorCraft.
+	MIT OR Apache-2.0. Fonts: Source Sans 3, Inter, JetBrains Mono (OFL). Icons: Lucide (ISC) + EvoVector.	MIT OR Apache-2.0. Polices : Source Sans 3, Inter, JetBrains Mono (OFL). Icônes : Lucide (ISC) + EvoVector.
 	Password	Mot de passe
 	Paste	Coller
 	Paste in Back	Coller à l’arrière-plan
@@ -2078,7 +2078,7 @@
 	Quarter Space	Quart d’espace
 	Quick Actions	Actions rapides
 	Quickly start a new file	Commencer rapidement un nouveau fichier
-	Quit VectorCraft	Quitter VectorCraft
+	Quit EvoVector	Quitter EvoVector
 	Radar Graph Tool	Outil Graphe radar
 	Radial	Radial
 	Radial Glows	Halos radiaux
@@ -2202,7 +2202,7 @@
 	{count} folder(s) or file(s) couldn't be read	{count} dossier(s) ou fichier(s) illisible(s)
 	The search stopped at its limit: search a smaller folder.	La recherche s’est arrêtée à sa limite : recherchez dans un dossier plus petit.
 	Copy only fonts you own or are licensed to install.	Ne copiez que des polices qui vous appartiennent ou dont la licence vous autorise l’installation.
-	VectorCraft copies the fonts to {folder}.	VectorCraft copie les polices dans {folder}.
+	EvoVector copies the fonts to {folder}.	EvoVector copie les polices dans {folder}.
 	Registered Trademark Symbol	Symbole de marque déposée
 	Registration marks	Repères de montage
 	Registry name:	Nom du registre :
@@ -2309,7 +2309,7 @@
 	Revert	Version précédente
 	Revert to the saved version of “{name}”?	Revenir à la version enregistrée de « {name} » ?
 	Replace “{name}”, the file this document was opened from?	Remplacer « {name} », le fichier à partir duquel ce document a été ouvert ?
-	Opening it left out what VectorCraft can't read yet ({what}), so replacing it loses that for good. Save under another name to keep it.	Son ouverture a laissé de côté ce que VectorCraft ne sait pas encore lire ({what}) : le remplacer le perd définitivement. Enregistrez sous un autre nom pour le conserver.
+	Opening it left out what EvoVector can't read yet ({what}), so replacing it loses that for good. Save under another name to keep it.	Son ouverture a laissé de côté ce que EvoVector ne sait pas encore lire ({what}) : le remplacer le perd définitivement. Enregistrez sous un autre nom pour le conserver.
 	Revolve…	Révolution…
 	RGB Color	Couleur RVB
 	Right	Droite
@@ -2448,7 +2448,7 @@
 	Saves the current bars, toolbar and panel layout.	Enregistre la disposition actuelle des barres, de la barre d’outils et des panneaux.
 	Save…	Enregistrer…
 	Saving	Enregistrement
-	Saving Poster.vectorcraft	Enregistrement de Poster.vectorcraft
+	Saving Poster.evovector	Enregistrement de Poster.evovector
 	Saving recovery data for {}	Enregistrement des données de récupération de {}
 	Saving {}	Enregistrement de {}
 	Scale	Mise à l’échelle
@@ -3124,9 +3124,9 @@
 	Vector Halftone	Trame de demi-teintes vectorielle
 	Vector Halftone…	Trame de demi-teintes vectorielle…
 	Vector illustration — fast, open, scriptable.	Illustration vectorielle — rapide, ouverte, scriptable.
-	VectorCraft didn't quit normally last time. These documents had unsaved changes:	VectorCraft ne s’est pas fermé normalement la dernière fois. Ces documents comportaient des modifications non enregistrées :
-	VectorCraft Help…	Aide de VectorCraft…
-	VectorCraft on GitHub	VectorCraft sur GitHub
+	EvoVector didn't quit normally last time. These documents had unsaved changes:	EvoVector ne s’est pas fermé normalement la dernière fois. Ces documents comportaient des modifications non enregistrées :
+	EvoVector Help…	Aide de EvoVector…
+	EvoVector on GitHub	EvoVector sur GitHub
 	Vectors	Vecteurs
 	Version {version} — open-source vector illustration in pure Rust.	Version {version} — illustration vectorielle open source en pur Rust.
 	Version:	Version :
@@ -3166,7 +3166,7 @@
 	Web Snap:	Magnétisme Web :
 	Weight	Épaisseur
 	Weight:	Épaisseur :
-	Welcome to VectorCraft	Bienvenue dans VectorCraft
+	Welcome to EvoVector	Bienvenue dans EvoVector
 	When pasting text	Lors du collage de texte
 	White	Blanc
 	Widget Position:	Position du widget :
@@ -3529,7 +3529,7 @@ axis	Both	Les deux
 @msg	can't encode the document: {0}	impossible d’encoder le document : {0}
 @msg	can't parse shortcut `{c}`	impossible d’interpréter le raccourci `{c}`
 @msg	can't parse shortcut `{s}` for `{k}`	impossible d’interpréter le raccourci `{s}` pour `{k}`
-@msg	can't save version {0}: VectorCraft writes versions {MIN_VERSION} to {VERSION}	impossible d’enregistrer la version {0} : VectorCraft écrit les versions {MIN_VERSION} à {VERSION}
+@msg	can't save version {0}: EvoVector writes versions {MIN_VERSION} to {VERSION}	impossible d’enregistrer la version {0} : EvoVector écrit les versions {MIN_VERSION} à {VERSION}
 @msg	can't write .{ext} images	impossible d’écrire des images .{ext}
 @msg	cannot distort a zero-size bounding box	impossible de déformer un cadre de sélection de taille nulle
 @msg	cannot read PDF: {0}	impossible de lire le PDF : {0}
@@ -3553,7 +3553,7 @@ axis	Both	Les deux
 @msg	empty brush stroke	tracé de forme vide
 @msg	empty cutter	objet de découpe vide
 @msg	empty path	tracé vide
-@msg	file version {0} is newer than this VectorCraft supports ({VERSION})	la version de fichier {0} est plus récente que celles que prend en charge cette version de VectorCraft ({VERSION})
+@msg	file version {0} is newer than this EvoVector supports ({VERSION})	la version de fichier {0} est plus récente que celles que prend en charge cette version de EvoVector ({VERSION})
 @msg	freeform point {i} needs `at` [x, y] and a valid `color`	le point de forme libre {i} nécessite `at` [x, y] et une `color` valide
 @msg	freeform line {i} must be an array of point indices	la ligne de forme libre {i} doit être un tableau d’indices de points
 @msg	give both `start` and `end` [x, y] (or neither)	indiquez à la fois `start` et `end` [x, y] (ou aucun des deux)
@@ -3572,9 +3572,9 @@ axis	Both	Les deux
 @msg	invalid PDF setting: {0}	réglage PDF non valide : {0}
 @msg	invalid image data for `{0}`	données d’image non valides pour `{0}`
 @msg	invalid parameters for `{cmd}`: {msg}	paramètres non valides pour `{cmd}` : {msg}
-@msg	is not an image VectorCraft reads	n’est pas une image que VectorCraft sait lire
-@msg	it uses `{at}`, which VectorCraft's PostScript reader doesn't know	il utilise `{at}`, que le lecteur PostScript de VectorCraft ne connaît pas
-@msg	it uses `{at}`, which VectorCraft's PostScript reader doesn't know, in {procs}	il utilise `{at}`, que le lecteur PostScript de VectorCraft ne connaît pas, dans {procs}
+@msg	is not an image EvoVector reads	n’est pas une image que EvoVector sait lire
+@msg	it uses `{at}`, which EvoVector's PostScript reader doesn't know	il utilise `{at}`, que le lecteur PostScript de EvoVector ne connaît pas
+@msg	it uses `{at}`, which EvoVector's PostScript reader doesn't know, in {procs}	il utilise `{at}`, que le lecteur PostScript de EvoVector ne connaît pas, dans {procs}
 @msg	its Windows metafile preview was opened instead, which may simplify the art	son aperçu en métafichier Windows a été ouvert à la place, ce qui peut simplifier l’illustration
 @msg	its preview was placed instead, at screen resolution	son aperçu a été importé à la place, en résolution d’écran
 @msg	join needs open paths	la jonction nécessite des tracés ouverts
@@ -3677,8 +3677,8 @@ axis	Both	Les deux
 @msg	no user workspace `{from}`	aucun espace de travail utilisateur `{from}`
 @msg	node {_1} is not text	le nœud {_1} n’est pas du texte
 @msg	not a DXF drawing	ce n’est pas un dessin DXF
-@msg	not a VectorCraft file: {0}	ce n’est pas un fichier VectorCraft : {0}
-@msg	not a VectorCraft shortcut set (missing `overrides`)	ce n’est pas un jeu de raccourcis VectorCraft (`overrides` manquant)
+@msg	not a EvoVector file: {0}	ce n’est pas un fichier EvoVector : {0}
+@msg	not a EvoVector shortcut set (missing `overrides`)	ce n’est pas un jeu de raccourcis EvoVector (`overrides` manquant)
 @msg	not a graphic style library (format `{_1}`)	ce n’est pas une bibliothèque de styles graphiques (format `{_1}`)
 @msg	not a stored central record	ce n’est pas un enregistrement central stocké
 @msg	not a valid plug-in module: {0}	ce n’est pas un module de plug-in valide : {0}
@@ -3901,9 +3901,9 @@ axis	Both	Les deux
 @msg	Sent to {_1}	Envoyé à {_1}
 @msg	{_1} files	Fichiers {_1}
 @msg	The graphics were lost and have been restarted	Le contexte graphique a été perdu puis redémarré
-@msg	The graphics processor tried first couldn't show the window, so VectorCraft started again on {summary}	Le processeur graphique essayé en premier n’a pas pu afficher la fenêtre : VectorCraft a redémarré sur {summary}
-@msg	Loading VectorCraft…	Chargement de VectorCraft…
-@msg	VectorCraft failed to start: {e}	Le démarrage de VectorCraft a échoué : {e}
+@msg	The graphics processor tried first couldn't show the window, so EvoVector started again on {summary}	Le processeur graphique essayé en premier n’a pas pu afficher la fenêtre : EvoVector a redémarré sur {summary}
+@msg	Loading EvoVector…	Chargement de EvoVector…
+@msg	EvoVector failed to start: {e}	Le démarrage de EvoVector a échoué : {e}
 @msg	A browser with WebGPU or WebGL2 is required.	Un navigateur prenant en charge WebGPU ou WebGL2 est nécessaire.
 @msg	The graphics were lost and couldn't be restarted.	Le contexte graphique a été perdu et n’a pas pu être redémarré.
 @msg	Your unsaved changes are kept in this browser: reload the page to get them back.	Vos modifications non enregistrées sont conservées dans ce navigateur : rechargez la page pour les récupérer.
@@ -3925,23 +3925,23 @@ axis	Both	Les deux
 @msg	it has more than {MAX_NODES} objects	elles contiennent plus de {MAX_NODES} objets
 @msg	it has no layers	elles n’ont aucun calque
 @msg	it has too many values in a row	elles contiennent trop de valeurs à la suite
-@msg	it has {_1}, which VectorCraft doesn't read from it yet	elles contiennent {_1}, que VectorCraft n’y lit pas encore
+@msg	it has {_1}, which EvoVector doesn't read from it yet	elles contiennent {_1}, que EvoVector n’y lit pas encore
 @msg	its objects are nested too deeply	leurs objets sont imbriqués trop profondément
 @msg	its section ending with `%{end}` doesn't end	leur section qui se termine par `%{end}` ne se termine pas
 @msg	objects with several fills or strokes, effects or brushes came in as their drawn look ({_1}): their appearance isn't editable yet	les objets à plusieurs fonds ou contours, effets ou formes ont été importés tels qu’ils sont dessinés ({_1}) : leur aspect n’est pas encore modifiable
 @msg	gradient “{name}” isn't defined in the file: a plain colour stands in for it	le dégradé « {name} » n’est pas défini dans le fichier : une couleur unie le remplace
-@msg	an image VectorCraft can't read was left out	une image que VectorCraft ne peut pas lire a été ignorée
+@msg	an image EvoVector can't read was left out	une image que EvoVector ne peut pas lire a été ignorée
 @msg	an image whose data is cut short was left out	une image aux données tronquées a été ignorée
 @msg	its editing data doesn't say where its art is	ses données d’édition ne disent pas où se trouve son illustration
 @msg	this file was saved without PDF compatibility, and its editing data can't be read ({why})	ce fichier a été enregistré sans compatibilité PDF et ses données d’édition sont illisibles ({why})
 @msg	No fonts are missing in this document	Aucune police ne manque dans ce document
-@msg	VectorCraft doesn't search other apps' or the system's folders: {path}	VectorCraft ne recherche pas dans les dossiers d’autres apps ni du système : {path}
-@msg	VectorCraft doesn't search the Shared or Public folder in Users: {path}	VectorCraft ne recherche pas dans les dossiers Shared et Public de Users : {path}
+@msg	EvoVector doesn't search other apps' or the system's folders: {path}	EvoVector ne recherche pas dans les dossiers d’autres apps ni du système : {path}
+@msg	EvoVector doesn't search the Shared or Public folder in Users: {path}	EvoVector ne recherche pas dans les dossiers Shared et Public de Users : {path}
 @msg	{path} is not a folder	{path} n’est pas un dossier
 @msg	the search couldn't start: try again in a moment	la recherche n’a pas pu démarrer : réessayez dans un instant
 @msg	searching a folder isn't available on the web	la recherche dans un dossier n’est pas disponible sur le web
 @msg	every search thread stopped on an internal error (please report this bug)	tous les fils de recherche se sont arrêtés sur une erreur interne (veuillez signaler ce bogue)
-@msg	VectorCraft's Fonts folder isn't set here: the desktop app and vectorcraft-cli set it	Le dossier Fonts de VectorCraft n’est pas défini ici : l’application de bureau et vectorcraft-cli le définissent
+@msg	EvoVector's Fonts folder isn't set here: the desktop app and evovector-cli set it	Le dossier Fonts de EvoVector n’est pas défini ici : l’application de bureau et evovector-cli le définissent
 @msg	choose the font files to add	choisissez les fichiers de polices à ajouter
 @msg	{n} font file(s) are now in {folder}	{n} fichier(s) de polices se trouvent maintenant dans {folder}
 @msg	{n} font file(s) are now in {folder}; {failed} couldn't be added: {reason}	{n} fichier(s) de polices se trouvent maintenant dans {folder} ; {failed} n’ont pas pu être ajoutés : {reason}
@@ -3958,7 +3958,7 @@ axis	Both	Les deux
 
 # The macOS menu bar (native_menu): the app and Window menus' system items, Settings pages.
 	Services	Services
-	Hide VectorCraft	Masquer VectorCraft
+	Hide EvoVector	Masquer EvoVector
 	Zoom	Zoom
 	Bring All to Front	Tout ramener au premier plan
 	Settings	Réglages
@@ -3966,7 +3966,7 @@ axis	Both	Les deux
 	On: one locked object showing the document, updated when it changes.	Activé : un objet verrouillé qui affiche le document et se met à jour quand celui-ci change.
 	Off: an editable copy of its art, embedded in this document.	Désactivé : une copie modifiable de son illustration, incorporée dans ce document.
 	Images: link to the file instead of only embedding it.	Images : lier le fichier au lieu de seulement l’incorporer.
-	VectorCraft documents: one locked object, updated when the file changes.	Documents VectorCraft : un objet verrouillé, mis à jour quand le fichier change.
+	EvoVector documents: one locked object, updated when the file changes.	Documents EvoVector : un objet verrouillé, mis à jour quand le fichier change.
 	A file dialog is open: choose there first	Une boîte de dialogue de fichiers est ouverte : faites d’abord votre choix dans celle-ci
 	The document was closed while its file dialog was open	Le document a été fermé pendant que sa boîte de dialogue de fichiers était ouverte
 	The dialog was closed before its file dialog answered	La boîte de dialogue a été fermée avant la réponse de sa boîte de dialogue de fichiers
@@ -4191,7 +4191,7 @@ lighting	Light	Lumière
 	Artistic	Artistique
 	Film Grain…	Grain photographique…
 	Highlight Area	Zone des tons clairs
-@msg	the compressed file unpacks to more than VectorCraft reads ({_1} MB of document, {_2} MB per image)	le fichier compressé dépasse une fois décompressé ce que VectorCraft lit ({_1} Mo de document, {_2} Mo par image)
+@msg	the compressed file unpacks to more than EvoVector reads ({_1} MB of document, {_2} MB per image)	le fichier compressé dépasse une fois décompressé ce que EvoVector lit ({_1} Mo de document, {_2} Mo par image)
 @msg	the document is too large to save compressed ({0}): save it with Use Compression off	le document est trop volumineux pour être enregistré compressé ({0}) : enregistrez-le avec Utiliser la compression désactivé
 @msg	the file stopped being read (please report this bug)	la lecture du fichier s’est interrompue (veuillez signaler ce bogue)
 	Concentric Dividers:	Divisions concentriques :

@@ -1,7 +1,7 @@
-# cargo-deny : configuration écrite par Evora (fork tazerty/vectorcraft, EVORA-SIN-04, CI).
-# L'amont n'a pas de deny.toml. Portée : le graphe du binaire web livré (apps/vectorcraft-web,
+# cargo-deny : configuration écrite par Evora (fork tazerty/evovector, EVORA-SIN-04, CI).
+# L'amont n'a pas de deny.toml. Portée : le graphe du binaire web livré (apps/evovector-web,
 # cible wasm32), sans les dépendances de développement. La CI lance :
-#   cargo deny --manifest-path apps/vectorcraft-web/Cargo.toml --locked check
+#   cargo deny --manifest-path apps/evovector-web/Cargo.toml --locked check
 # Rien n'est relâché en silence : les réglages ci-dessous sont les valeurs par défaut ou plus
 # stricts ; chaque exception porte sa raison écrite, et la CI imprime le rapport complet.
 
@@ -24,7 +24,7 @@ yanked = "deny"
 # ruzstd 0.9.0 → 0.9.1, correctif de la vulnérabilité RUSTSEC-2026-0344, EVORA-SIN-20).
 # Aucune n'est une vulnérabilité ; à réexaminer à chaque montée de version.
 ignore = [
-    { id = "RUSTSEC-2026-0206", reason = "rustybuzz 0.20.1 non maintenu (avis informatif, aucun correctif publié) ; dépendance transitive de krilla 0.8.2 (export PDF, vectorcraft-pdf L3) ; son remplacement relève de krilla et de l'amont" },
+    { id = "RUSTSEC-2026-0206", reason = "rustybuzz 0.20.1 non maintenu (avis informatif, aucun correctif publié) ; dépendance transitive de krilla 0.8.2 (export PDF, evovector-pdf L3) ; son remplacement relève de krilla et de l'amont" },
     { id = "RUSTSEC-2026-0192", reason = "ttf-parser 0.25.1 non maintenu (avis informatif) ; tiré par rustybuzz, via krilla 0.8.2 ; même motif" },
     { crate = "yoke-derive@0.8.3", reason = "version retirée du registre le 2026-09 sans avis de sécurité ; macro procédurale (compilation seulement) tirée par yoke 0.8.3 ; le Cargo.lock amont est gardé tel quel (--locked), mise à jour à la prochaine montée" },
 ]
@@ -60,5 +60,5 @@ highlight = "all"
 unknown-registry = "deny"
 unknown-git = "deny"
 allow-registry = ["https://github.com/rust-lang/crates.io-index"]
-# craft-libs (craft-ui, craft-print), épinglé par révision dans Cargo.toml et Cargo.lock.
-allow-git = ["https://github.com/storytold/craft-libs"]
+# Aucune source git : evo-libs (evo-ui, evo-print) est recopié sous vendor/, dépendance par chemin.
+allow-git = []

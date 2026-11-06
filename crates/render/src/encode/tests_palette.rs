@@ -1,6 +1,6 @@
-use vectorcraft_color::{Color, Paint};
-use vectorcraft_doc::{Appearance, Node};
-use vectorcraft_geom::shapes;
+use evovector_color::{Color, Paint};
+use evovector_doc::{Appearance, Node};
+use evovector_geom::shapes;
 
 use super::png::{PngOptions, encode_indexed};
 use super::quantize::{Dither, Indexed, PaletteOptions, Reduction, quantize};

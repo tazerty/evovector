@@ -4,10 +4,10 @@
 
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
-use vectorcraft_color::Color;
-use vectorcraft_color::harmony::{Harmony, THEME_SIZE};
-use vectorcraft_color::recolor::ColorKey;
-use vectorcraft_tools::params::color_json;
+use evovector_color::Color;
+use evovector_color::harmony::{Harmony, THEME_SIZE};
+use evovector_color::recolor::ColorKey;
+use evovector_tools::params::color_json;
 
 use super::*;
 

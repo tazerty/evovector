@@ -7,7 +7,7 @@ use serde_json::{Value, json};
 
 use crate::theme::Tokens;
 use crate::widgets::{self, dim_label};
-use crate::{VectorcraftApp, icons};
+use crate::{EvoVectorApp, icons};
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Action {
@@ -44,13 +44,13 @@ pub fn default_sets() -> Vec<ActionSet> {
 }
 
 /// Run an action as a single undoable batch.
-pub fn play(app: &mut VectorcraftApp, set: usize, idx: usize) -> Result<Value, String> {
+pub fn play(app: &mut EvoVectorApp, set: usize, idx: usize) -> Result<Value, String> {
     let Some(a) = app.ui.action_sets.get(set).and_then(|s| s.actions.get(idx)).cloned() else { return Err("no such action".into()) };
     let commands: Vec<Value> = a.steps.iter().map(|(c, p)| json!({"command": c, "params": p})).collect();
     app.run("command.batch", json!({"label": a.name, "commands": commands}))
 }
 
-pub fn show(app: &mut VectorcraftApp, ui: &mut egui::Ui) {
+pub fn show(app: &mut EvoVectorApp, ui: &mut egui::Ui) {
     let t = Tokens::get(ui.ctx());
     let selected_id = egui::Id::new("actions-selected");
     let mut selected: Option<(usize, usize)> = ui.data(|d| d.get_temp(selected_id));
@@ -147,14 +147,14 @@ pub fn show(app: &mut VectorcraftApp, ui: &mut egui::Ui) {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use vectorcraft_engine::Session;
+    use evovector_engine::Session;
 
     #[test]
     fn defaults_are_valid_commands() {
         for set in default_sets() {
             for a in set.actions {
                 for (c, _) in a.steps {
-                    assert!(vectorcraft_engine::find_command(&c).is_some(), "{c}");
+                    assert!(evovector_engine::find_command(&c).is_some(), "{c}");
                 }
             }
         }
@@ -165,14 +165,14 @@ mod tests {
     /// recorded.
     #[test]
     fn actions_play_on_the_artboard_active_when_they_play() {
-        let mut app = VectorcraftApp::new(Session::new(), Default::default());
+        let mut app = EvoVectorApp::new(Session::new(), Default::default());
         app.run("file.new", json!({"width": 200, "height": 100, "artboards": 3})).unwrap();
         let boards: Vec<_> = app.session.active().unwrap().doc.artboards.iter().map(|a| a.rect).collect();
         let r = app.run("shape.rectangle", json!({"x": boards[1].x0 + 10.0, "y": boards[1].y0 + 15.0, "width": 20, "height": 20})).unwrap();
-        let rect = vectorcraft_doc::NodeId(r["id"].as_u64().unwrap());
-        let bounds = |app: &VectorcraftApp, ids: &[vectorcraft_doc::NodeId]| app.session.active().unwrap().doc.bounds_of(ids, false).unwrap();
+        let rect = evovector_doc::NodeId(r["id"].as_u64().unwrap());
+        let bounds = |app: &EvoVectorApp, ids: &[evovector_doc::NodeId]| app.session.active().unwrap().doc.bounds_of(ids, false).unwrap();
         // Each recorded as the panel records an action, with artboard 0 active.
-        let record = |app: &mut VectorcraftApp, name: &str, id: &str, params: Value| {
+        let record = |app: &mut EvoVectorApp, name: &str, id: &str, params: Value| {
             let start = app.session.journal.len();
             app.run(id, params).unwrap();
             let steps = app.session.journal_for_action(start);
@@ -187,11 +187,11 @@ mod tests {
         app.run("select.set", json!({"ids": [rect.0]})).unwrap();
         play(&mut app, 0, align).unwrap();
         assert_eq!(bounds(&app, &[rect]).x0, boards[2].x0, "aligned to artboard 2, active when the action plays");
-        let ids: Vec<vectorcraft_doc::NodeId> = play(&mut app, 0, paste).unwrap()["results"][0]["ids"]
+        let ids: Vec<evovector_doc::NodeId> = play(&mut app, 0, paste).unwrap()["results"][0]["ids"]
             .as_array()
             .unwrap()
             .iter()
-            .map(|v| vectorcraft_doc::NodeId(v.as_u64().unwrap()))
+            .map(|v| evovector_doc::NodeId(v.as_u64().unwrap()))
             .collect();
         let b = bounds(&app, &ids);
         assert_eq!((b.x0, b.y0), (boards[2].x0 + 10.0, boards[2].y0 + 15.0), "pasted onto artboard 2, where it was on artboard 1");

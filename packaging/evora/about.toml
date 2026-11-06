@@ -1,4 +1,4 @@
-# cargo-about : configuration écrite par Evora (fork tazerty/vectorcraft, EVORA-SIN-04, CI).
+# cargo-about : configuration écrite par Evora (fork tazerty/evovector, EVORA-SIN-04, CI).
 # Agrège les licences des composants Rust du build web (cible wasm32, sans dépendances de
 # développement) dans LICENSES/THIRD-PARTY-LICENSES.txt de l'artefact. Ordre de préférence quand
 # une crate offre un choix : MIT d'abord, puis Apache-2.0.

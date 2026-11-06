@@ -3,8 +3,8 @@
 
 use super::*;
 use kurbo::{Affine, Circle, Shape};
-use vectorcraft_doc::{CharStyle, Justify, TextKind, TextRun};
-use vectorcraft_geom::PathData;
+use evovector_doc::{CharStyle, Justify, TextKind, TextRun};
+use evovector_geom::PathData;
 
 fn db() -> &'static FontDb {
     FontDb::global()
@@ -30,7 +30,7 @@ fn area(text: &str, st: CharStyle, frame: Rect, justify: Justify) -> TextObject 
     area_path(text, st, &frame.to_path(0.1), justify)
 }
 
-const COPY: &str = "Typography is the craft of arranging type to make written language legible, readable and appealing when displayed. \
+const COPY: &str = "Typography is the evo of arranging type to make written language legible, readable and appealing when displayed. \
 The arrangement of type involves selecting typefaces, point sizes, line lengths, line spacing and letter spacing, and adjusting the space \
 between pairs of letters. Designers balance hyphenation against justification to produce even texture across the paragraph.";
 
@@ -274,7 +274,7 @@ fn burasagari_keeps_the_every_line_composer_for_latin_text() {
     };
     let every_line = ends(&t, Composer::EveryLine);
     assert_ne!(every_line, ends(&t, Composer::SingleLine));
-    t.para.burasagari = vectorcraft_doc::Burasagari::Standard;
+    t.para.burasagari = evovector_doc::Burasagari::Standard;
     assert_eq!(ends(&t, Composer::EveryLine), every_line);
 }
 
@@ -296,7 +296,7 @@ fn line_texts(t: &TextObject, l: &TextLayout) -> Vec<String> {
 /// flush right.
 #[test]
 fn every_line_composer_balances_ragged_lines() {
-    use vectorcraft_doc::ParaDirection;
+    use evovector_doc::ParaDirection;
     const S: &str = "Destroy all creatures with toughness X or less.";
     let w = natural_width("Destroy all creatures with toughness X or", 12.0) + 2.0;
     assert!(w < natural_width(S, 12.0), "the sentence needs two lines");
@@ -318,7 +318,7 @@ fn every_line_composer_balances_ragged_lines() {
         let every = line_texts(&t, &layout(db(), &t));
         assert_eq!(every, ["Destroy all creatures with toughness X", "or less."], "{justify:?} {direction:?}");
         // Burasagari (new type's Standard) leaves Latin text to the every-line composer.
-        t.para.burasagari = vectorcraft_doc::Burasagari::Standard;
+        t.para.burasagari = evovector_doc::Burasagari::Standard;
         assert_eq!(line_texts(&t, &layout(db(), &t)), every, "{justify:?} {direction:?} with burasagari");
         if (justify, direction) == (Justify::Auto, Some(ParaDirection::RightToLeft)) {
             let l = layout(db(), &t);
@@ -595,7 +595,7 @@ fn vertical_align_in_a_circle_reflows_and_stays_inside() {
 fn vertical_align_with_text_wrap_flows_again_around_the_object() {
     let mut t = area(COPY, style(12.0), Rect::new(0.0, 0.0, 300.0, 400.0), Justify::Left);
     let obstacle = Rect::new(100.0, 250.0, 200.0, 330.0).to_path(0.1);
-    t.wrap = vec![vectorcraft_doc::WrapShape { path: PathData::from_bezpath(&obstacle), wrap: Default::default() }];
+    t.wrap = vec![evovector_doc::WrapShape { path: PathData::from_bezpath(&obstacle), wrap: Default::default() }];
     let top = layout(db(), &t);
     let bottom = layout_with(db(), &t, &valign(VerticalAlign::Bottom));
     assert!(!bottom.overflow);
@@ -630,16 +630,16 @@ fn vertical_align_on_vertical_type_moves_columns_along_the_block_axis() {
 /// model placed, keeps their spacing when it shifts them, and justify adds its share on top of it.
 #[test]
 fn vertical_align_with_top_to_top_leading() {
-    use vectorcraft_doc::LeadingModel;
+    use evovector_doc::LeadingModel;
     let st = |size: f64| CharStyle { size, leading: Some(size * 1.5), ..style(size) };
     let mut t = area("", st(40.0), Rect::new(0.0, 0.0, 200.0, 300.0), Justify::Left);
     t.runs = vec![TextRun { text: "大\n".into(), style: st(40.0), inline: None }, TextRun { text: "小\n中".into(), style: st(20.0), inline: None }];
     t.para.leading_model = LeadingModel::EmBoxTop;
     let top = layout(db(), &t);
     assert_eq!(top.lines.len(), 3);
-    // The em box top sits 0.88 em above the baseline in the craft-fonts CJK faces; a system
-    // fallback (no craft-fonts) has its own metrics, which the relative checks below don't need.
-    if !crate::CRAFT_FONTS.is_empty() {
+    // The em box top sits 0.88 em above the baseline in the evo-fonts CJK faces; a system
+    // fallback (no evo-fonts) has its own metrics, which the relative checks below don't need.
+    if !crate::EVO_FONTS.is_empty() {
         assert!((top.lines[0].baseline - 0.88 * 40.0).abs() < 0.01, "first em box at the top: {}", top.lines[0].baseline);
     }
     let gaps = |l: &TextLayout| l.lines.windows(2).map(|w| w[1].baseline - w[0].baseline).collect::<Vec<_>>();
@@ -754,13 +754,13 @@ fn layout_10k_area_text_is_fast() {
 /// widths (`palt`), and Japanese composition takes nothing more off the punctuation `palt`
 /// re-spaced (the flush bracket at a paragraph's start, consecutive punctuation, half width at a
 /// line's end); punctuation it leaves full width is trimmed as before (vertical type: see
-/// `tests_vertical`). Needs craft-fonts' Shippori Mincho, whose `palt` covers kana and most brackets but not
+/// `tests_vertical`). Needs evo-fonts' Shippori Mincho, whose `palt` covers kana and most brackets but not
 /// 〘〙 (skipped without it).
 #[test]
 fn proportional_metrics_set_full_width_glyphs_on_their_proportional_widths() {
-    use vectorcraft_doc::Mojikumi;
+    use evovector_doc::Mojikumi;
     if db().face("Shippori Mincho", "Regular").is_none_or(|f| f.family != "Shippori Mincho") {
-        eprintln!("skipped: built without craft-fonts (set CRAFT_FONTS_DIR to a craft-fonts checkout to run it)");
+        eprintln!("skipped: built without evo-fonts (set EVO_FONTS_DIR to a evo-fonts checkout to run it)");
         return;
     }
     let st = |on: bool| CharStyle { size: 20.0, font_family: "Shippori Mincho".into(), proportional_metrics: on, ..CharStyle::default() };

@@ -8,14 +8,14 @@ use std::collections::{HashMap, HashSet};
 use std::sync::Arc;
 
 use serde_json::{Value, json};
-use vectorcraft_color::cms::Model;
-use vectorcraft_color::harmony::{Guide, GuideOptions, Harmony, Variation};
-use vectorcraft_color::{Color, Paint, keep_model};
-use vectorcraft_doc::live::lerp_color;
-use vectorcraft_doc::pattern::PatternDef;
-pub(crate) use vectorcraft_doc::recolor::map_paint;
-use vectorcraft_doc::recolor::{ColorVisitor, Reach, map_links, recolor_node};
-use vectorcraft_doc::{Document, ImageBlob, Node, NodeId, NodeKind};
+use evovector_color::cms::Model;
+use evovector_color::harmony::{Guide, GuideOptions, Harmony, Variation};
+use evovector_color::{Color, Paint, keep_model};
+use evovector_doc::live::lerp_color;
+use evovector_doc::pattern::PatternDef;
+pub(crate) use evovector_doc::recolor::map_paint;
+use evovector_doc::recolor::{ColorVisitor, Reach, map_links, recolor_node};
+use evovector_doc::{Document, ImageBlob, Node, NodeId, NodeKind};
 
 use super::edit::selected_roots;
 use super::*;

@@ -1,31 +1,31 @@
 [package]
-name = "vectorcraft-ui-egui"
+name = "evovector-ui-egui"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
-description = "VectorCraft egui frontend (menus, panels, tools and canvas); swappable — nothing below depends on it"
+description = "EvoVector egui frontend (menus, panels, tools and canvas); swappable — nothing below depends on it"
 
 [lints]
 workspace = true
 
 [dependencies]
-craft-ui = { workspace = true }
-vectorcraft-geom = { workspace = true }
-vectorcraft-color = { workspace = true }
-vectorcraft-doc = { workspace = true }
-vectorcraft-brush = { workspace = true }
-vectorcraft-render = { workspace = true }
-vectorcraft-text = { workspace = true }
-vectorcraft-tools = { workspace = true }
-vectorcraft-engine = { workspace = true }
-vectorcraft-svg = { workspace = true }
-vectorcraft-effects = { workspace = true }
-vectorcraft-three-d = { workspace = true }
-vectorcraft-plugins = { workspace = true }
-vectorcraft-pdf = { workspace = true }
-vectorcraft-cad = { workspace = true }
-vectorcraft-eps = { workspace = true }
-vectorcraft-format = { workspace = true }
+evo-ui = { workspace = true }
+evovector-geom = { workspace = true }
+evovector-color = { workspace = true }
+evovector-doc = { workspace = true }
+evovector-brush = { workspace = true }
+evovector-render = { workspace = true }
+evovector-text = { workspace = true }
+evovector-tools = { workspace = true }
+evovector-engine = { workspace = true }
+evovector-svg = { workspace = true }
+evovector-effects = { workspace = true }
+evovector-three-d = { workspace = true }
+evovector-plugins = { workspace = true }
+evovector-pdf = { workspace = true }
+evovector-cad = { workspace = true }
+evovector-eps = { workspace = true }
+evovector-format = { workspace = true }
 egui = { workspace = true }
 egui_extras = { workspace = true }
 image = { workspace = true }
@@ -35,7 +35,7 @@ log = { workspace = true }
 
 [dev-dependencies]
 egui_kittest = { workspace = true, features = ["wgpu", "snapshot"] }
-vectorcraft-testkit = { workspace = true }
+evovector-testkit = { workspace = true }
 wat = { workspace = true }
 
 [build-dependencies]

@@ -74,7 +74,7 @@ pub use svg::options_map as svg_options;
 /// Atomic file writes (a temporary file renamed over the target: a failed write never damages the
 /// file it replaces), for the apps' own writers too.
 #[cfg(not(target_arch = "wasm32"))]
-pub use vectorcraft_format::write_atomic;
+pub use evovector_format::write_atomic;
 
 use super::*;
 use crate::EngineError;
@@ -86,7 +86,7 @@ pub fn specs() -> Vec<CommandSpec> {
             "Open Document",
             [],
             None,
-            "{path} or {name, dataBase64}, PDF/.ai: pages?: \"2-3, 5\" (1-based, default all; one artboard each) | page?: n, cropTo?: bounding|art|crop (default)|trim|bleed|media (the box each artboard gets; bounding: the art's bounds; trim: the bleed box round it becomes the document's bleed; a PDF-compatible .ai opens on its trim boxes for crop), password? (encrypted PDFs; see document.pdfInfo), textAs?: text (default: point type per line, lines wrapped in a frame as area type where they lay out the same, in the file's fonts by name; missing ones are listed in warnings) | outlines (glyph paths), layers?: true (default: optional content groups become layers with their visibility, print state and lock — art that is off comes in as a hidden layer; other art goes to a layer per page) | false (one layer per page, without the art that is off; Save then asks for a name), editingData?: true (default: an EPS, .ai or PDF that carries its editor's own copy of the art opens from it, with its layers, hidden objects, guides, artboards and the art outside them; a .ai or PDF whose type shows opens from its PDF part with textAs: outlines) | false (only what its page or PDF part prints, for print pipelines; a .ai saved without PDF compatibility then can't be opened), colorMode?: rgb|cmyk (the mode the document opens in, its colours converted as file.documentColorMode does, grays? as there; default: the file's — a PDF keeps CMYK, Gray and spot inks (spot swatches at a tint) and opens in CMYK when painted mostly in CMYK), DXF: dxf?: {layout?: \"Model\" (default) | a paper layout's name (document.dxfInfo lists them), unit?, scale? (the ratio: 1 unit of the art = scale drawing units; default: the drawing at 1:1 in its own unit), fit?: false (scale to fit an artboard of fitTo?: [612, 792], turned to the art's orientation), scaleLineweights?: false (lineweights scale with the art), center?: true (false: the drawing's origin on the artboard's bottom-left corner; fitted art's bottom-left corner), mergeLayers?: false (all art on one layer)} → {index, title, format, warnings, restored, missingLinks, modifiedLinks, updatedLinks: [{name, path, ids}]}; any readable format (see document.formats): .vectorcraft/.drawcraft, .svg/.svgz, .pdf/.ai, .ait, ASCII .dxf (each DXF layer with art a layer; blocks symbols; what can't come in is listed in warnings), PNG/JPEG/GIF/WebP/TIFF/BMP (an image opens as a document of its size at the resolution it declares, as file.place sizes it; 72 ppi, 1 px = 1 pt, when it declares none), .emf/.wmf (one artboard, the picture's frame; records VectorCraft doesn't read are skipped with one warning), .eps and PostScript .ai (one artboard, the bounding box: an EPS file VectorCraft wrote restores the document it carries, restored: true; other files are read by a PostScript interpreter — paths, colours and spot inks, clips, gradients, images, type in the fonts named — and come in as their TIFF preview, with a warning, when their PostScript can't be read). A PDF/.ai/.ait or SVG saved with Preserve Editing restores the native document it carries (restored: true; a PDF only when no pages are picked), unless the file was changed elsewhere since or the data can't be read: then its artwork is imported and the first warning says why. Templates (native templates, .ait) open as a new untitled document; a restored .ai keeps its path (Save writes .ai again). Linked images are read from their files (looked for at their path, then relative to the document): missing ones show their saved preview (links.relink), modified ones are read again only with Preferences › Update Links: Automatically (else links.update). An SVG's <image> files (relative links from the SVG's folder) stay linked, SVG files become art, missing ones a placeholder in their box (a warning and missingLinks)",
+            "{path} or {name, dataBase64}, PDF/.ai: pages?: \"2-3, 5\" (1-based, default all; one artboard each) | page?: n, cropTo?: bounding|art|crop (default)|trim|bleed|media (the box each artboard gets; bounding: the art's bounds; trim: the bleed box round it becomes the document's bleed; a PDF-compatible .ai opens on its trim boxes for crop), password? (encrypted PDFs; see document.pdfInfo), textAs?: text (default: point type per line, lines wrapped in a frame as area type where they lay out the same, in the file's fonts by name; missing ones are listed in warnings) | outlines (glyph paths), layers?: true (default: optional content groups become layers with their visibility, print state and lock — art that is off comes in as a hidden layer; other art goes to a layer per page) | false (one layer per page, without the art that is off; Save then asks for a name), editingData?: true (default: an EPS, .ai or PDF that carries its editor's own copy of the art opens from it, with its layers, hidden objects, guides, artboards and the art outside them; a .ai or PDF whose type shows opens from its PDF part with textAs: outlines) | false (only what its page or PDF part prints, for print pipelines; a .ai saved without PDF compatibility then can't be opened), colorMode?: rgb|cmyk (the mode the document opens in, its colours converted as file.documentColorMode does, grays? as there; default: the file's — a PDF keeps CMYK, Gray and spot inks (spot swatches at a tint) and opens in CMYK when painted mostly in CMYK), DXF: dxf?: {layout?: \"Model\" (default) | a paper layout's name (document.dxfInfo lists them), unit?, scale? (the ratio: 1 unit of the art = scale drawing units; default: the drawing at 1:1 in its own unit), fit?: false (scale to fit an artboard of fitTo?: [612, 792], turned to the art's orientation), scaleLineweights?: false (lineweights scale with the art), center?: true (false: the drawing's origin on the artboard's bottom-left corner; fitted art's bottom-left corner), mergeLayers?: false (all art on one layer)} → {index, title, format, warnings, restored, missingLinks, modifiedLinks, updatedLinks: [{name, path, ids}]}; any readable format (see document.formats): .evovector/.evodraw, .svg/.svgz, .pdf/.ai, .ait, ASCII .dxf (each DXF layer with art a layer; blocks symbols; what can't come in is listed in warnings), PNG/JPEG/GIF/WebP/TIFF/BMP (an image opens as a document of its size at the resolution it declares, as file.place sizes it; 72 ppi, 1 px = 1 pt, when it declares none), .emf/.wmf (one artboard, the picture's frame; records EvoVector doesn't read are skipped with one warning), .eps and PostScript .ai (one artboard, the bounding box: an EPS file EvoVector wrote restores the document it carries, restored: true; other files are read by a PostScript interpreter — paths, colours and spot inks, clips, gradients, images, type in the fonts named — and come in as their TIFF preview, with a warning, when their PostScript can't be read). A PDF/.ai/.ait or SVG saved with Preserve Editing restores the native document it carries (restored: true; a PDF only when no pages are picked), unless the file was changed elsewhere since or the data can't be read: then its artwork is imported and the first warning says why. Templates (native templates, .ait) open as a new untitled document; a restored .ai keeps its path (Save writes .ai again). Linked images are read from their files (looked for at their path, then relative to the document): missing ones show their saved preview (links.relink), modified ones are read again only with Preferences › Update Links: Automatically (else links.update). An SVG's <image> files (relative links from the SVG's folder) stay linked, SVG files become art, missing ones a placeholder in their box (a warning and missingLinks)",
             always,
             load::open
         ),
@@ -104,7 +104,7 @@ pub fn specs() -> Vec<CommandSpec> {
             "Serialize Document",
             [],
             None,
-            "{format?: vectorcraft (default)|template|svg|svgz|pdf|png|jpg|webp|gif|png8|txt|dxf|eps|emf|wmf|tiff|bmp|tga|psd, …the format's options (see document.formats; SVG ones also as svg: {…}), selectedOnly?: false (the selected objects alone, in their layers)} → {text, warnings} for svg (plus dataBase64, the file, when its encoding isn't UTF-8), else {dataBase64, warnings}; an SVG of several artboards also gives files: [{name, text}], linked images linked: [{name, dataBase64}]",
+            "{format?: evovector (default)|template|svg|svgz|pdf|png|jpg|webp|gif|png8|txt|dxf|eps|emf|wmf|tiff|bmp|tga|psd, …the format's options (see document.formats; SVG ones also as svg: {…}), selectedOnly?: false (the selected objects alone, in their layers)} → {text, warnings} for svg (plus dataBase64, the file, when its encoding isn't UTF-8), else {dataBase64, warnings}; an SVG of several artboards also gives files: [{name, text}], linked images linked: [{name, dataBase64}]",
             has_doc,
             export::serialize
         ),
@@ -113,7 +113,7 @@ pub fn specs() -> Vec<CommandSpec> {
             "Export Document",
             [],
             None,
-            "{path?, format?: svg|svgz|pdf|png|jpg|webp|gif|png8|txt|dxf|eps|emf|wmf|tiff|bmp|tga|psd|vectorcraft|template (default: from the path's extension, else png; png8 writes an indexed .png), selectedOnly?: false (the selected objects alone, in their layers), artboard?: 0, artboards?: [i…], range?: \"1-3, 5\" | \"all\" (1-based; PDF writes one page per artboard, default all; SVG writes one file per artboard, {stem}-{artboard}.svg; raster formats write one artboard), useArtboards?: true (raster: one file per chosen artboard, default all, {stem}-{artboard}.{ext}; pdf: every page) | false (pdf/raster: the bounds of the visible art; SVG has it as an SVG option), raster: ppi?: 72 (pixels per inch, stored in the file; wins over scale), scale?: 1 (pixels per point), background?: transparent|white|black|\"#rrggbb\" (jpg: white when transparent), antiAlias?: none|art (default)|type (text snapped to pixels), interlaced?: false (png, Adam7), jpg: quality?: 90 (0–100), colorModel?: rgb|cmyk|gray, method?: baseline|optimized|progressive, scans?: 3 (3–5, progressive), embedIcc?: true, imageMap?: none|client|server (an HTML or NCSA map of the objects with a URL, written as <stem>.html / <stem>.map), gif/png8: colors?: 256 (2–256), reduction?: perceptual|selective (default)|adaptive|web|blackWhite|gray, dither?: none|diffusion (default)|pattern|noise, ditherAmount?: 100, transparency?: true, matte?: white|\"#rrggbb\"|none, interlaced?, webp: lossless?: true (lossy WebP isn't available yet: written lossless, with a warning), txt: the stories in stacking order (back to front; a thread once), encoding?: utf8|utf16 (with a byte order mark), lineEndings?: lf|crlf, selectionOnly?: false; SVG options flat or as svg: {styling, outlineText, images, objectIds, decimals, minify, responsive, useArtboards, preserveEditing, metadata, fewerTspans, hiddenLayers, encoding, profile, embedFonts} (see document.formats), …the PDF options of document.exportPdf, …the DXF options of document.exportDxf (useArtboards: one drawing per artboard), …the EPS options of document.exportEps (useArtboards: one file per artboard, {stem}_{artboard}.eps; else the visible art), emf/wmf: one picture of the artboard (useArtboards: true one file per chosen artboard, false the bounds of the visible art; EMF keeps curves, clipping, transparent images and gradients as images clipped to their shape; WMF flattens curves into polygons behind a placeable header; what a format leaves out comes back in warnings), tiff: colorModel?: rgb|cmyk|gray (rgb keeps transparency as an alpha channel), lzw?: true, byteOrder?: little|big, embedIcc?: true, bmp: colorModel?: rgb|gray, depth?: 24 (1 black and white, 4|8 a palette by reduction and dither, 16, 24, 32 with alpha), fileFormat?: windows|os2 (1, 4, 8 or 24 bits), rle?: false (4 and 8 bits, windows), flipRows?: false (top-down rows), tga: depth?: 24 (16 one-bit alpha, 24, 32 with alpha), psd: colorModel?: rgb|cmyk|gray, layers?: true (each top-level layer a pixel layer with its opacity and blend mode; a background colour is a Background layer; false: one flat image, on white), maxEditability?: false (layers and sublayers become groups, each object a layer named as in the Layers panel, text by its text; clipping, masked or knockout layers stay one layer), hiddenLayers?: false (hidden layers and objects written hidden instead of left out), embedIcc?: true, at most 30000 pixels a side; formats without alpha are flattened on white} → {path, format, bytes, warnings, files?: [path…] (several), linked?: [path…] (linked images, image maps)}; no path → {dataBase64, format, bytes, warnings, files?: [{name, dataBase64}], linked?: [{name, dataBase64}]}. Never changes the document's path",
+            "{path?, format?: svg|svgz|pdf|png|jpg|webp|gif|png8|txt|dxf|eps|emf|wmf|tiff|bmp|tga|psd|evovector|template (default: from the path's extension, else png; png8 writes an indexed .png), selectedOnly?: false (the selected objects alone, in their layers), artboard?: 0, artboards?: [i…], range?: \"1-3, 5\" | \"all\" (1-based; PDF writes one page per artboard, default all; SVG writes one file per artboard, {stem}-{artboard}.svg; raster formats write one artboard), useArtboards?: true (raster: one file per chosen artboard, default all, {stem}-{artboard}.{ext}; pdf: every page) | false (pdf/raster: the bounds of the visible art; SVG has it as an SVG option), raster: ppi?: 72 (pixels per inch, stored in the file; wins over scale), scale?: 1 (pixels per point), background?: transparent|white|black|\"#rrggbb\" (jpg: white when transparent), antiAlias?: none|art (default)|type (text snapped to pixels), interlaced?: false (png, Adam7), jpg: quality?: 90 (0–100), colorModel?: rgb|cmyk|gray, method?: baseline|optimized|progressive, scans?: 3 (3–5, progressive), embedIcc?: true, imageMap?: none|client|server (an HTML or NCSA map of the objects with a URL, written as <stem>.html / <stem>.map), gif/png8: colors?: 256 (2–256), reduction?: perceptual|selective (default)|adaptive|web|blackWhite|gray, dither?: none|diffusion (default)|pattern|noise, ditherAmount?: 100, transparency?: true, matte?: white|\"#rrggbb\"|none, interlaced?, webp: lossless?: true (lossy WebP isn't available yet: written lossless, with a warning), txt: the stories in stacking order (back to front; a thread once), encoding?: utf8|utf16 (with a byte order mark), lineEndings?: lf|crlf, selectionOnly?: false; SVG options flat or as svg: {styling, outlineText, images, objectIds, decimals, minify, responsive, useArtboards, preserveEditing, metadata, fewerTspans, hiddenLayers, encoding, profile, embedFonts} (see document.formats), …the PDF options of document.exportPdf, …the DXF options of document.exportDxf (useArtboards: one drawing per artboard), …the EPS options of document.exportEps (useArtboards: one file per artboard, {stem}_{artboard}.eps; else the visible art), emf/wmf: one picture of the artboard (useArtboards: true one file per chosen artboard, false the bounds of the visible art; EMF keeps curves, clipping, transparent images and gradients as images clipped to their shape; WMF flattens curves into polygons behind a placeable header; what a format leaves out comes back in warnings), tiff: colorModel?: rgb|cmyk|gray (rgb keeps transparency as an alpha channel), lzw?: true, byteOrder?: little|big, embedIcc?: true, bmp: colorModel?: rgb|gray, depth?: 24 (1 black and white, 4|8 a palette by reduction and dither, 16, 24, 32 with alpha), fileFormat?: windows|os2 (1, 4, 8 or 24 bits), rle?: false (4 and 8 bits, windows), flipRows?: false (top-down rows), tga: depth?: 24 (16 one-bit alpha, 24, 32 with alpha), psd: colorModel?: rgb|cmyk|gray, layers?: true (each top-level layer a pixel layer with its opacity and blend mode; a background colour is a Background layer; false: one flat image, on white), maxEditability?: false (layers and sublayers become groups, each object a layer named as in the Layers panel, text by its text; clipping, masked or knockout layers stay one layer), hiddenLayers?: false (hidden layers and objects written hidden instead of left out), embedIcc?: true, at most 30000 pixels a side; formats without alpha are flattened on white} → {path, format, bytes, warnings, files?: [path…] (several), linked?: [path…] (linked images, image maps)}; no path → {dataBase64, format, bytes, warnings, files?: [{name, dataBase64}], linked?: [{name, dataBase64}]}. Never changes the document's path",
             has_doc,
             export::export
         ),
@@ -460,12 +460,12 @@ const fn reader(id: &'static str, label: &'static str, extensions: &'static [&'s
     Format { id, label, extensions, mime, read: true, write: false, raster, options: &[] }
 }
 
-/// Every format VectorCraft reads or writes. Append-only: new formats go at the end.
+/// Every format EvoVector reads or writes. Append-only: new formats go at the end.
 pub const FORMATS: &[Format] = &[
     Format {
-        id: "vectorcraft",
-        label: "VectorCraft",
-        extensions: &[vectorcraft_format::EXTENSION, vectorcraft_format::LEGACY_EXTENSION],
+        id: "evovector",
+        label: "EvoVector",
+        extensions: &[evovector_format::EXTENSION, evovector_format::LEGACY_EXTENSION],
         mime: "application/json",
         read: true,
         write: true,
@@ -555,8 +555,8 @@ pub const FORMATS: &[Format] = &[
     Format { id: "bmp", label: "BMP", extensions: &["bmp"], mime: "image/bmp", read: true, write: true, raster: true, options: BMP_OPTIONS },
     Format {
         id: "template",
-        label: "VectorCraft Template",
-        extensions: &["vctemplate"],
+        label: "EvoVector Template",
+        extensions: &["evovectortemplate"],
         mime: "application/json",
         read: true,
         write: true,
@@ -589,8 +589,8 @@ pub const FORMATS: &[Format] = &[
 
 /// Every extension `document.open` reads (the "All readable files" filter of open dialogs).
 pub const OPEN_EXTS: &[&str] = &[
-    "vectorcraft",
-    "drawcraft",
+    "evovector",
+    "evodraw",
     "svg",
     "svgz",
     "pdf",
@@ -606,7 +606,7 @@ pub const OPEN_EXTS: &[&str] = &[
     "bmp",
     "psd",
     "psb",
-    "vctemplate",
+    "evovectortemplate",
     "dxf",
     "emf",
     "wmf",
@@ -616,7 +616,7 @@ pub const OPEN_EXTS: &[&str] = &[
     "afpub",
 ];
 
-/// Extensions in [`OPEN_EXTS`] the desktop packaging doesn't associate with VectorCraft: Photoshop
+/// Extensions in [`OPEN_EXTS`] the desktop packaging doesn't associate with EvoVector: Photoshop
 /// documents belong to raster editors, so Finder and file managers don't offer a vector app for
 /// them (File › Open and Place still read them).
 pub const UNASSOCIATED_EXTS: &[&str] = &["psd", "psb"];
@@ -638,8 +638,8 @@ pub const TEXT_EXTS: &[&str] = &["txt"];
 
 /// Every extension File → Place reads: [`OPEN_EXTS`] and [`TEXT_EXTS`].
 pub const PLACE_EXTS: &[&str] = &[
-    "vectorcraft",
-    "drawcraft",
+    "evovector",
+    "evodraw",
     "svg",
     "svgz",
     "pdf",
@@ -655,7 +655,7 @@ pub const PLACE_EXTS: &[&str] = &[
     "bmp",
     "psd",
     "psb",
-    "vctemplate",
+    "evovectortemplate",
     "dxf",
     "emf",
     "wmf",
@@ -776,7 +776,7 @@ pub(crate) fn write_file(path: &str, bytes: &[u8]) -> Result<()> {
 #[cfg(not(target_arch = "wasm32"))]
 pub fn write_file_with(path: &str, fill: &mut dyn FnMut(&mut dyn std::io::Write) -> std::io::Result<()>) -> Result<()> {
     may_write(path)?;
-    vectorcraft_format::write_atomic_with(std::path::Path::new(path), |f| fill(f)).map_err(|e| EngineError::Other(format!("{path}: {e}")))
+    evovector_format::write_atomic_with(std::path::Path::new(path), |f| fill(f)).map_err(|e| EngineError::Other(format!("{path}: {e}")))
 }
 
 #[cfg(not(target_arch = "wasm32"))]
@@ -966,7 +966,7 @@ pub(crate) fn write_new_file(path: &str, _: &[u8]) -> Result<()> {
 /// File-name parts for artboards `boards` of `doc`: the artboard's name with unsafe characters as
 /// `-`, `Artboard-N` when unnamed, and `-2`, `-3`… after a name already used (compared without
 /// case: `Icon` and `icon` are one file on most desktop file systems).
-pub fn artboard_file_names(doc: &vectorcraft_doc::Document, boards: &[usize]) -> Vec<String> {
+pub fn artboard_file_names(doc: &evovector_doc::Document, boards: &[usize]) -> Vec<String> {
     unique_file_names(boards.iter().map(|&b| (doc.artboards.get(b).map_or("", |a| a.name.as_str()), format!("Artboard-{}", b + 1))))
 }
 
@@ -997,12 +997,12 @@ pub(crate) fn unique_file_names<'a>(names: impl IntoIterator<Item = (&'a str, St
 /// Write an export's files for the destination `path` → `{path, bytes, files?, linked?, …extra}`
 /// (`files`: every file when there are several; `linked`: the images it links to); with no path
 /// → the same with `dataBase64` and `{name, dataBase64}` rows, named after `name`.
-fn write_encoded(path: Option<&str>, name: &str, doc: &vectorcraft_doc::Document, enc: &Encoded, extra: Value) -> Result<Value> {
+fn write_encoded(path: Option<&str>, name: &str, doc: &evovector_doc::Document, enc: &Encoded, extra: Value) -> Result<Value> {
     let files = enc.named(doc, path.unwrap_or(name));
     let (main, linked) = files.split_at(enc.files.len());
     let row = |(name, bytes): &(String, std::borrow::Cow<[u8]>)| match path {
         Some(_) => json!(name),
-        None => json!({ "name": name, "dataBase64": vectorcraft_format::base64_encode(bytes) }),
+        None => json!({ "name": name, "dataBase64": evovector_format::base64_encode(bytes) }),
     };
     if path.is_some() {
         for (p, bytes) in &files {
@@ -1012,7 +1012,7 @@ fn write_encoded(path: Option<&str>, name: &str, doc: &vectorcraft_doc::Document
     let Some((first, bytes)) = main.first() else { return Err(EngineError::Other("the export wrote no file".into())) };
     let mut out = match path {
         Some(_) => json!({ "path": first, "bytes": bytes.len() }),
-        None => json!({ "dataBase64": vectorcraft_format::base64_encode(bytes), "bytes": bytes.len() }),
+        None => json!({ "dataBase64": evovector_format::base64_encode(bytes), "bytes": bytes.len() }),
     };
     if main.len() > 1 {
         out["files"] = main.iter().map(row).collect();
@@ -1032,7 +1032,7 @@ pub(crate) fn merge(mut a: Value, b: Value) -> Value {
 }
 
 /// A file name for bytes handed back without a path: the document's title with `ext`.
-pub(crate) fn default_name(doc: &vectorcraft_doc::Document, ext: &str) -> String {
+pub(crate) fn default_name(doc: &evovector_doc::Document, ext: &str) -> String {
     let stem = std::path::Path::new(&doc.title).file_stem().map(|s| s.to_string_lossy().into_owned()).filter(|s| !s.is_empty());
     format!("{}.{ext}", stem.as_deref().unwrap_or("Untitled"))
 }
@@ -1044,7 +1044,7 @@ pub(crate) fn write_or_return(path: Option<&str>, bytes: &[u8], extra: Value) ->
             write_file(path, bytes)?;
             json!({ "path": path, "bytes": bytes.len() })
         }
-        None => json!({ "dataBase64": vectorcraft_format::base64_encode(bytes), "bytes": bytes.len() }),
+        None => json!({ "dataBase64": evovector_format::base64_encode(bytes), "bytes": bytes.len() }),
     };
     Ok(merge(out, extra))
 }
