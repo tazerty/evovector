@@ -8,12 +8,31 @@ use egui::{Color32, Context, Id, Rect, TextureHandle, TextureOptions, Ui, pos2};
 /// 128 px: sharp at 44 pt on a 2× display, and the mipmaps keep 22 pt clean.
 const ICON_PNG: &[u8] = include_bytes!("../../../assets/evora/sinopia-pro-mark-128.png");
 
+/// The green channel of the mark's indigo tile, the channel where indigo and white stand furthest apart.
+const TILE_GREEN: f32 = 70.0;
+
+/// EVORA-SIN-48: the mark's tile in the member's colour. Its pixels are indigo, white or between the two; the
+/// green channel says how far each stands from white, and that share of the member's colour replaces it.
+fn tinted(rgba: &[u8], accent: Color32) -> Vec<u8> {
+    rgba.chunks_exact(4)
+        .flat_map(|px| {
+            let share = ((255.0 - f32::from(px[1])) / (255.0 - TILE_GREEN)).clamp(0.0, 1.0);
+            let channel = |c: u8| (255.0 + (f32::from(c) - 255.0) * share).round() as u8;
+            [channel(accent.r()), channel(accent.g()), channel(accent.b()), px[3]]
+        })
+        .collect()
+}
+
 /// The icon's pixels (one transparent pixel if it couldn't be decoded, which a test rules out).
 fn decode() -> egui::ColorImage {
     match image::load_from_memory_with_format(ICON_PNG, image::ImageFormat::Png) {
         Ok(img) => {
             let img = img.to_rgba8();
-            egui::ColorImage::from_rgba_unmultiplied([img.width() as usize, img.height() as usize], img.as_raw())
+            let size = [img.width() as usize, img.height() as usize];
+            match crate::theme::host_accent() {
+                Some(accent) => egui::ColorImage::from_rgba_unmultiplied(size, &tinted(img.as_raw(), accent)),
+                None => egui::ColorImage::from_rgba_unmultiplied(size, img.as_raw()),
+            }
         }
         Err(_) => egui::ColorImage::filled([1, 1], Color32::TRANSPARENT),
     }
@@ -21,7 +40,7 @@ fn decode() -> egui::ColorImage {
 
 /// The icon texture, uploaded on first use and kept in the context.
 fn texture(ctx: &Context) -> TextureHandle {
-    let id = Id::new("evovector-brand-mark");
+    let id = Id::new(("evovector-brand-mark", crate::theme::host_accent()));
     if let Some(tex) = ctx.data(|d| d.get_temp::<TextureHandle>(id)) {
         return tex;
     }
