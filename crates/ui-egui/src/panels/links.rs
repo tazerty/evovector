@@ -400,7 +400,7 @@ fn link_info(ui: &mut Ui, info: Option<&Value>, units: evovector_doc::Unit) {
     };
     let row = super::doc_info::row;
     row(ui, tl!("Name"), i["fileName"].as_str().or(i["name"].as_str()).unwrap_or_default().into());
-    row(ui, tl!("Format"), i["format"].as_str().unwrap_or_default().into());
+    row(ui, tl!("Format"), crate::i18n::rename(i["format"].as_str().unwrap_or_default()).into());
     row(ui, tl!("Color Space"), i["colorMode"].as_str().unwrap_or_default().into());
     if let Some(l) = i["location"].as_str() {
         row(ui, tl!("Location"), l.into());

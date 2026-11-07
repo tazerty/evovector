@@ -534,6 +534,9 @@ fn a_evovector_document_places_linked_and_edit_original_opens_it() {
     assert!(d.bool("link") && d.bool("__documents") && !d.bool("__others"), "Link on, for a document");
     // Link's tooltip says what it does for a document.
     assert!(crate::dialogs::place::link_tip(d).contains("editable copy"));
+    // Evora (EVORA-SIN-46): its line names the app, not the format's id.
+    let info = d.fields["__info"][0].as_str().unwrap();
+    assert!(info.starts_with("Sinopia Pro ("), "{info}");
     crate::dialogs::confirm(&mut app).unwrap();
     let st = app.session.active().unwrap();
     let id = st.selection.objects[0];
@@ -554,7 +557,7 @@ fn a_evovector_document_places_linked_and_edit_original_opens_it() {
     app.services.pick_open_multi = Some(Box::new(move || both.clone()));
     app.run("file.place", json!({})).unwrap();
     let d = app.ui.dialog.as_ref().unwrap();
-    assert!(crate::dialogs::place::link_tip(d).contains("EvoVector documents"));
+    assert!(crate::dialogs::place::link_tip(d).contains("Sinopia Pro documents"));
 }
 
 /// Tool key `key` as the Control bar's Apply (Enter) and Cancel (Escape) send it.

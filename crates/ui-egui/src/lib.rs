@@ -690,6 +690,8 @@ impl EvoVectorApp {
         {
             let u = u.to_string();
             self.open_url(&u);
+            // Evora (EVORA-SIN-46): the status bar doesn't say the address, which names the engine.
+            self.ui.status.clear();
         }
     }
 

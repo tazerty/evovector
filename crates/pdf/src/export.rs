@@ -195,7 +195,7 @@ impl Writer {
         };
 
         let mut pdf = krilla::Document::new_with(settings);
-        let mut meta = Metadata::new().creator("EvoVector".into()).producer("EvoVector".into());
+        let mut meta = Metadata::new().creator("Sinopia Pro".into()).producer("Sinopia Pro".into());
         if !title.is_empty() {
             meta = meta.title(title.to_string());
         }

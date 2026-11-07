@@ -33,7 +33,7 @@ fn heading(d: &Dialog) -> String {
         }
         .into();
     }
-    crate::i18n::fmt(tl!("{format} Options"), &[("format", fileio::format(&d.str("format")).map_or("", |f| f.label))])
+    crate::i18n::fmt(tl!("{format} Options"), &[("format", fileio::format(&d.str("format")).map_or("", |f| crate::i18n::rename(f.label)))])
 }
 
 /// `f`'s options with the values a save would use (`file.formatOptions`: as last saved in that
@@ -151,7 +151,7 @@ fn option_row(app: &EvoVectorApp, ui: &mut egui::Ui, d: &mut Dialog, o: &FormatO
     if o.ty == "boolean" {
         ui.label("");
         let on = value.as_bool().unwrap_or(false);
-        if widgets::check_tip(ui, label.trim_end_matches(':'), on, true, o.description) {
+        if widgets::check_tip(ui, label.trim_end_matches(':'), on, true, crate::i18n::rename(o.description)) {
             d.fields.insert(o.name.into(), json!(!on));
         }
         ui.end_row();
@@ -164,7 +164,7 @@ fn option_row(app: &EvoVectorApp, ui: &mut egui::Ui, d: &mut Dialog, o: &FormatO
         form::field_w(ui, d, o.name, &label, 240.0);
         return;
     }
-    ui.label(egui::RichText::new(&label).color(t.text_dim)).on_hover_text(o.description);
+    ui.label(egui::RichText::new(&label).color(t.text_dim)).on_hover_text(crate::i18n::rename(o.description));
     let artboards = app.session.active().filter(|_| o.name == "artboard").map(|st| &st.doc.artboards);
     if let Some(boards) = artboards {
         let i = value.as_u64().unwrap_or(0) as usize;
@@ -176,7 +176,7 @@ fn option_row(app: &EvoVectorApp, ui: &mut egui::Ui, d: &mut Dialog, o: &FormatO
         let integer = o.ty == "integer";
         let x = value.as_f64().unwrap_or(0.0);
         let field = ui.scope(|ui| widgets::range_field(ui, ("save-option", o.name), x, 0.0..=f64::MAX, "", if integer { 0 } else { 2 }, 80.0));
-        field.response.on_hover_text(o.description);
+        field.response.on_hover_text(crate::i18n::rename(o.description));
         if let Some(x) = field.inner {
             d.fields.insert(o.name.into(), if integer { json!(x as i64) } else { json!(x) });
         }

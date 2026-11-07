@@ -68,7 +68,7 @@ fn metadata_creator_and_title() {
     let mut d = doc(100.0, 100.0);
     d.title = "Poster".into();
     let s = uncompressed(&d);
-    assert!(s.contains("EvoVector"));
+    assert!(s.contains("Sinopia Pro"));
     assert!(s.contains("Poster"));
 }
 

@@ -116,8 +116,8 @@ pub fn system_title_bar(app: &EvoVectorApp) -> bool {
 pub fn window_title(app: &EvoVectorApp) -> String {
     app.session
         .active()
-        .map(|d| format!("{}{} \u{2014} EvoVector", if d.is_dirty() { "*" } else { "" }, d.title()))
-        .unwrap_or_else(|| "EvoVector".into())
+        .map(|d| format!("{}{} \u{2014} {}", if d.is_dirty() { "*" } else { "" }, d.title(), crate::i18n::SHOWN_NAME))
+        .unwrap_or_else(|| crate::i18n::SHOWN_NAME.into())
 }
 
 /// Keep the OS window title (and the taskbar / Alt-Tab entry) on the active file. Sends
@@ -1030,17 +1030,17 @@ mod tests {
 
     #[test]
     fn window_title_with_no_document_is_the_app_name() {
-        assert_eq!(super::window_title(&title_test_app(true)), "EvoVector");
+        assert_eq!(super::window_title(&title_test_app(true)), "Sinopia Pro");
     }
 
     #[test]
     fn window_title_follows_the_active_file() {
         let mut app = title_test_app(true);
         app.run("file.new", json!({"width": 100, "height": 100, "name": "foo.svg"})).unwrap();
-        assert_eq!(super::window_title(&app), "foo.svg \u{2014} EvoVector");
+        assert_eq!(super::window_title(&app), "foo.svg \u{2014} Sinopia Pro");
         // Unsaved changes gain a `*` prefix, like the `*` in the document tabs.
         app.run("shape.rectangle", json!({"x": 0, "y": 0, "width": 10, "height": 10})).unwrap();
-        assert_eq!(super::window_title(&app), "*foo.svg \u{2014} EvoVector");
+        assert_eq!(super::window_title(&app), "*foo.svg \u{2014} Sinopia Pro");
     }
 
     #[test]
@@ -1074,11 +1074,11 @@ mod tests {
         let ctx = egui::Context::default();
         crate::theme::install_fonts(&ctx);
         super::sync_window_title(&mut app, &ctx);
-        assert_eq!(app.last_window_title, "EvoVector");
+        assert_eq!(app.last_window_title, "Sinopia Pro");
         let mut out = ctx.run_ui(egui::RawInput::default(), |_| {});
         out.textures_delta.clear();
         let cmds = out.viewport_output.remove(&egui::ViewportId::ROOT).map(|v| v.commands).unwrap_or_default();
-        assert!(cmds.iter().any(|c| matches!(c, egui::ViewportCommand::Title(t) if t == "EvoVector")), "{cmds:?}");
+        assert!(cmds.iter().any(|c| matches!(c, egui::ViewportCommand::Title(t) if t == "Sinopia Pro")), "{cmds:?}");
         // Same document state again: the cached title stops a repeat command.
         super::sync_window_title(&mut app, &ctx);
         let mut out = ctx.run_ui(egui::RawInput::default(), |_| {});
@@ -1087,7 +1087,7 @@ mod tests {
         assert!(!cmds.iter().any(|c| matches!(c, egui::ViewportCommand::Title(_))), "repeat Title: {cmds:?}");
         app.run("file.new", json!({"width": 100, "height": 100, "name": "foo.svg"})).unwrap();
         super::sync_window_title(&mut app, &ctx);
-        assert_eq!(app.last_window_title, "foo.svg \u{2014} EvoVector");
+        assert_eq!(app.last_window_title, "foo.svg \u{2014} Sinopia Pro");
     }
 }
 

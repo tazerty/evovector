@@ -23,13 +23,20 @@
 //!   message itself stays English (the control channel, MCP and tests read it); `@msg` catalog
 //!   rows hold whole messages or templates such as `Couldn't open {name}: {e}`, and the values in
 //!   the placeholders are translated in turn (the reason after `: {e}` is often a message too).
+//! - Evora (EVORA-SIN-46): all of these show the app's name instead of the engine's ([`rename`],
+//!   after the lookup: the English keys keep the engine's name). A string drawn without them calls
+//!   [`rename`], or uses [`SHOWN_NAME`], itself.
 
 mod catalog;
+mod overrides;
+
+pub use overrides::{SHOWN_NAME, rename};
 
 use std::sync::OnceLock;
 use std::sync::atomic::{AtomicUsize, Ordering};
 
 use catalog::Catalog;
+use overrides::rename_owned;
 
 /// One supported UI language.
 pub struct LangInfo {
@@ -409,17 +416,17 @@ pub fn t(s: &str) -> &str {
 
 /// Translate an English UI string; unknown strings come back unchanged.
 pub fn tr(lang: Lang, s: &str) -> &str {
-    lang.catalog().plain(s).unwrap_or(s)
+    rename(lang.catalog().plain(s).unwrap_or(s))
 }
 
 /// Like [`tr`], for an English string that needs a disambiguating `context`.
 pub fn tr_ctx<'a>(lang: Lang, context: &str, s: &'a str) -> &'a str {
-    lang.catalog().contextual(context, s).unwrap_or_else(|| tr(lang, s))
+    rename(lang.catalog().contextual(context, s).unwrap_or_else(|| tr(lang, s)))
 }
 
 /// A string keyed by its command id, falling back to the translation of the English `label`.
 pub fn tr_id<'a>(lang: Lang, id: &str, label: &'a str) -> &'a str {
-    lang.catalog().id(id).unwrap_or_else(|| tr(lang, label))
+    rename(lang.catalog().id(id).unwrap_or_else(|| tr(lang, label)))
 }
 
 /// [`tr_id`] in the current language.
@@ -440,7 +447,7 @@ pub fn fmt(template: &str, args: &[(&str, &str)]) -> String {
 pub fn trn(lang: Lang, n: u64, one: &str, other: &str) -> String {
     let idx = (lang.0.plural)(n);
     let text = lang.catalog().plural(one, other, idx).unwrap_or(if n == 1 { one } else { other });
-    fmt(text, &[("n", &n.to_string())])
+    rename_owned(fmt(text, &[("n", &n.to_string())]))
 }
 
 /// An entry of a list that mixes interface labels with names (user, file or system data) as
@@ -457,7 +464,7 @@ const MESSAGE_DEPTH: usize = 3;
 /// Translate a status or error message for display (see the module docs). Unknown messages, and
 /// parts of them (file names, numbers, a reason with no entry), stay as they are.
 pub fn message(lang: Lang, s: &str) -> String {
-    message_at(lang, s, MESSAGE_DEPTH)
+    rename_owned(message_at(lang, s, MESSAGE_DEPTH))
 }
 
 fn message_at(lang: Lang, s: &str, depth: usize) -> String {

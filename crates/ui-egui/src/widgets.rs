@@ -634,11 +634,13 @@ pub fn dropdown(ui: &mut Ui, id: impl std::hash::Hash + std::fmt::Debug, current
 /// [`dropdown`] of names that are user, file or system data (font styles, artboards, presets the
 /// user saved, printers, profiles), shown as they are, never translated. For a list that mixes
 /// built-in labels with such names, translate the built-in ones (`tl!`) before passing them.
+/// Evora (EVORA-SIN-46): a built-in colour profile is among such names and carries the engine's
+/// name: it reads with the app's ([`crate::i18n::rename`]), and is still chosen under its own.
 pub fn dropdown_names(ui: &mut Ui, id: impl std::hash::Hash + std::fmt::Debug, current: &str, options: &[&str], width: f32) -> Option<usize> {
-    combo(ui, id, current, width, false, |ui| {
+    combo(ui, id, crate::i18n::rename(current), width, false, |ui| {
         let mut chosen = None;
         for (i, o) in options.iter().enumerate() {
-            if ui.add(egui::Button::selectable(*o == current, *o)).clicked() {
+            if ui.add(egui::Button::selectable(*o == current, crate::i18n::rename(o))).clicked() {
                 chosen = Some(i);
             }
         }

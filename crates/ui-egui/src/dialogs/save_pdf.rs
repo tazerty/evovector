@@ -769,7 +769,7 @@ fn summary(app: &mut EvoVectorApp, ui: &mut egui::Ui, d: &mut Dialog) {
         Ok(v) => v,
         Err(e) => {
             heading(ui, tl!("Error"));
-            ui.label(egui::RichText::new(format!("{e}")).color(t.text));
+            ui.label(egui::RichText::new(crate::i18n::message(crate::i18n::current(), &format!("{e}"))).color(t.text));
             return;
         }
     };
@@ -777,7 +777,7 @@ fn summary(app: &mut EvoVectorApp, ui: &mut egui::Ui, d: &mut Dialog) {
     let mut changed: Vec<&Value> = v["changed"].as_array().map(|a| a.iter().collect()).unwrap_or_default();
     changed.sort_by_key(|c| section_of(c["option"].as_str().unwrap_or_default()));
     if changed.is_empty() {
-        let base = if d.kind == PRESET_KIND { pdf::DEFAULT_PRESET } else { tl!("the preset") };
+        let base = if d.kind == PRESET_KIND { tl!(pdf::DEFAULT_PRESET) } else { tl!("the preset") };
         note(ui, &crate::i18n::fmt(tl!("Every option matches {base}."), &[("base", base)]));
     }
     option_rows(ui, changed, option_label);
@@ -792,7 +792,7 @@ pub(super) fn option_rows<'a>(ui: &mut egui::Ui, changed: impl IntoIterator<Item
         let value = match &c["value"] {
             Value::Bool(b) => if *b { tl!("On") } else { tl!("Off") }.to_string(),
             Value::String(s) if c["option"] == "marks.kind" => choice_label(crate::i18n::current(), "marks.kind", s).to_string(),
-            Value::String(s) => s.clone(),
+            Value::String(s) => crate::i18n::rename(s).to_string(),
             other => other.to_string(),
         };
         ui.label(egui::RichText::new(format!("{}: {value}", label(c["option"].as_str().unwrap_or_default()))).color(t.text));
@@ -806,7 +806,7 @@ pub(super) fn warning_rows(ui: &mut egui::Ui, warnings: &[Value]) {
         note(ui, tl!("None."));
     }
     for w in warnings {
-        ui.label(egui::RichText::new(format!("• {}", w.as_str().unwrap_or_default())).color(t.text));
+        ui.label(egui::RichText::new(format!("• {}", crate::i18n::rename(w.as_str().unwrap_or_default()))).color(t.text));
     }
 }
 

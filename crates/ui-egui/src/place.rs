@@ -191,7 +191,8 @@ fn summary(app: &mut EvoVectorApp, file: &Value, units: evovector_doc::Unit) -> 
     let Some(p) = source(app, file) else { return "not found".into() };
     let i = match app.session.execute("file.place.info", &p) {
         Ok(i) => i,
-        Err(e) => return e.to_string(),
+        // Evora (EVORA-SIN-46): the dialog draws this line as it is, and a reason can name the engine.
+        Err(e) => return crate::i18n::message(crate::i18n::current(), &e.to_string()),
     };
     let size = format!("{} × {}", units.format(i["width"].as_f64().unwrap_or(0.0)), units.format(i["height"].as_f64().unwrap_or(0.0)));
     match (i["pixelWidth"].as_u64(), i["pixelHeight"].as_u64()) {
@@ -199,7 +200,12 @@ fn summary(app: &mut EvoVectorApp, file: &Value, units: evovector_doc::Unit) -> 
             let ppi = i["ppi"][0].as_f64().unwrap_or(72.0);
             format!("{w} × {h} px, {} ppi, {} ({size})", fmt_ppi(ppi), i["colorMode"].as_str().unwrap_or("RGB"))
         }
-        _ => format!("{} ({size})", i["format"].as_str().unwrap_or_default().to_uppercase()),
+        _ => {
+            // Evora (EVORA-SIN-46): the native format's id is the engine's name.
+            let format = i["format"].as_str().unwrap_or_default();
+            let format = if format == "evovector" { crate::i18n::SHOWN_NAME.to_string() } else { format.to_uppercase() };
+            format!("{format} ({size})")
+        }
     }
 }
 

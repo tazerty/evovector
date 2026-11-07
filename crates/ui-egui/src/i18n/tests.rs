@@ -1195,14 +1195,17 @@ fn czech_render_site_follow_up() {
         ("All placeable files", "Všechny soubory pro umístění"),
         ("SVG Compressed", "Komprimované SVG"),
         ("PDF-compatible .ai", ".ai kompatibilní s PDF"),
-        ("EvoVector Template", "Šablona EvoVector"),
     ] {
         assert_eq!(tr_ctx(cs(), "file-filter", source), expected);
         assert_eq!(tr_ctx(Lang::EN, "file-filter", source), source);
     }
-    for source in ["SVG", "PNG", "EvoVector", "unregistered filter"] {
+    for source in ["SVG", "PNG", "unregistered filter"] {
         assert_eq!(tr_ctx(cs(), "file-filter", source), source);
     }
+    // Evora (EVORA-SIN-46): the app's name, whether the filter has a catalog entry or not.
+    assert_eq!(tr_ctx(cs(), "file-filter", "EvoVector Template"), "Šablona Sinopia Pro");
+    assert_eq!(tr_ctx(Lang::EN, "file-filter", "EvoVector Template"), "Sinopia Pro Template");
+    assert_eq!(tr_ctx(cs(), "file-filter", "EvoVector"), "Sinopia Pro");
     assert_eq!(tr_ctx(cs(), "diagnostics", "render"), "vykreslení");
     assert_eq!(tr_ctx(cs(), "diagnostics", "ui"), "rozhraní");
     assert_eq!(fmt(tr(cs(), "Preset {number}"), &[("number", "12")]), "Přednastavení 12");

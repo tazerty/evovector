@@ -458,7 +458,7 @@ pub fn run_command(app: &mut EvoVectorApp, id: &str, p: &Value) -> Option<Result
         "shortcuts.export" => {
             let v = export_json(&app.ui.shortcut_set, &app.ui.shortcut_overrides);
             let bytes = serde_json::to_vec_pretty(&v).unwrap_or_default();
-            let path = s("path").or_else(|| crate::picks::save(app, &crate::FilePick::named("EvoVector Shortcuts.json")));
+            let path = s("path").or_else(|| crate::picks::save(app, &crate::FilePick::named(crate::i18n::rename("EvoVector Shortcuts.json"))));
             match path {
                 Some(path) => match app.services.write.as_mut() {
                     Some(w) => w(&path, &bytes).map(|_| json!({"path": path})),
@@ -468,7 +468,7 @@ pub fn run_command(app: &mut EvoVectorApp, id: &str, p: &Value) -> Option<Result
                 None if app.file_dialog_open() => Err("cancelled".into()),
                 None => match app.services.download.as_mut() {
                     Some(dl) => {
-                        dl("EvoVector Shortcuts.json", &bytes);
+                        dl(crate::i18n::rename("EvoVector Shortcuts.json"), &bytes);
                         Ok(Value::Null)
                     }
                     None => Ok(v),
@@ -671,7 +671,7 @@ pub fn show(app: &mut EvoVectorApp, ctx: &egui::Context) {
         });
         let msg = d.str("__message");
         if !msg.is_empty() {
-            ui.label(egui::RichText::new(msg).color(t.accent_strong).size(11.5));
+            ui.label(egui::RichText::new(crate::i18n::rename(&msg)).color(t.accent_strong).size(11.5));
         }
         let n = all_conflicts(&ov).len();
         if n > 0 {
