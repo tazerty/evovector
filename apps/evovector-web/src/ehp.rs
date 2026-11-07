@@ -217,7 +217,7 @@ impl Bridge {
                     }
                 }
                 HostEvent::Theme { id, dark } => {
-                    // E2's brightness: the accent is Evora's indigo already.
+                    // E2's brightness; the bridge has already taken the accent (EVORA-SIN-47).
                     app.session.prefs.ui_brightness = String::from(if dark { "dark" } else { "light" });
                     app.canvas.key = None;
                     if let Some(id) = id {
@@ -483,6 +483,10 @@ impl Bridge {
             && prefs(&get(p, "prefs"))
             && limits_ok;
         let (true, Some(max_document)) = (ok, max_document) else { return };
+        // EVORA-SIN-47: the member's colour, before the app's first style.
+        if let Some(value) = get(p, "accent").as_string() {
+            evovector_ui_egui::theme::set_host_accent(&value);
+        }
         // §7.7 b, before the answer: every trace of this engine outside the account's namespace
         // goes. Hosted, the engine keeps nothing in the browser, so that is all of them: copies
         // earlier sessions (perhaps another account's) left in this origin.
@@ -595,6 +599,10 @@ impl Bridge {
             return;
         }
         let Some(dark) = theme(&get(p, "theme")) else { return };
+        // EVORA-SIN-47: the member's colour; the next frame restyles the interface with it.
+        if let Some(value) = get(p, "accent").as_string() {
+            evovector_ui_egui::theme::set_host_accent(&value);
+        }
         self.inner.borrow_mut().events.push(HostEvent::Theme { id: Some(id.to_string()), dark });
         self.wake();
     }

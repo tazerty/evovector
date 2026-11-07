@@ -80,6 +80,8 @@ pub fn restore(app: &mut EvoVectorApp) {
 #[derive(Clone, Copy, PartialEq)]
 struct Applied {
     brightness: Brightness,
+    /// Evora (EVORA-SIN-47): the member's colour, restyles the interface when it changes.
+    accent: Option<egui::Color32>,
     /// User Interface › Canvas Color, unless it matches the interface brightness.
     canvas: Option<egui::Color32>,
     threads: i32,
@@ -110,6 +112,7 @@ pub fn apply_runtime(app: &mut EvoVectorApp, ctx: &egui::Context) {
     }
     let want = Applied {
         brightness: app.ui.brightness,
+        accent: theme::host_accent(),
         canvas: canvas_color(&p.canvas_color),
         threads: p.render_threads,
         tool_tips: p.show_tool_tips,

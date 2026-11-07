@@ -6,6 +6,7 @@
 //! Hungarian and Chinese catalogs and of the font list's disclosure triangles). The host picks
 //! Light or Dark (`?theme=`, apps/evovector-web).
 
+use std::cell::Cell;
 use std::sync::Arc;
 
 use egui::{Color32, CornerRadius, FontData, FontDefinitions, FontFamily, FontId, Stroke, TextStyle, Visuals};
@@ -101,8 +102,53 @@ pub struct Tokens {
     pub axis_z: Color32,
 }
 
+/// Evora's indigo, the colour the tokens below are written in.
+const INDIGO: Color32 = Color32::from_rgb(0x4f, 0x46, 0xe5);
+/// How far `accent_strong` and `flyout_active` stand from the accent, as #4338CA and #818CF8 from the indigo.
+const STRONG_SHADE: f32 = 0.15;
+const FLYOUT_TINT: f32 = 0.35;
+
+thread_local! {
+    /// Evora (EVORA-SIN-47): the member's colour the host sent, `None` for the indigo.
+    static HOST_ACCENT: Cell<Option<Color32>> = const { Cell::new(None) };
+}
+
+/// Evora (EVORA-SIN-47): the host's accent (`#rrggbb`, checked by the bridge) for every later
+/// [`Tokens::for_brightness`]. The indigo keeps the written tokens to the byte.
+pub fn set_host_accent(value: &str) {
+    let accent = u32::from_str_radix(value.trim_start_matches('#'), 16)
+        .ok()
+        .map(|s| Color32::from_rgb((s >> 16) as u8, (s >> 8) as u8, s as u8))
+        .filter(|c| *c != INDIGO);
+    HOST_ACCENT.with(|a| a.set(accent));
+}
+
+/// The member's colour in use, `None` for the indigo.
+pub fn host_accent() -> Option<Color32> {
+    HOST_ACCENT.with(Cell::get)
+}
+
+fn mix(from: Color32, to: Color32, amount: f32) -> Color32 {
+    let channel = |a: u8, b: u8| (f32::from(a) + (f32::from(b) - f32::from(a)) * amount).round() as u8;
+    Color32::from_rgb(channel(from.r(), to.r()), channel(from.g(), to.g()), channel(from.b(), to.b()))
+}
+
 impl Tokens {
+    /// The tokens of a brightness level, with the member's colour when the host sent one.
     pub fn for_brightness(b: Brightness) -> Self {
+        let written = Self::written(b);
+        match host_accent() {
+            Some(accent) => Tokens {
+                accent,
+                accent_strong: mix(accent, Color32::BLACK, STRONG_SHADE),
+                flyout_active: mix(accent, Color32::WHITE, FLYOUT_TINT),
+                ..written
+            },
+            None => written,
+        }
+    }
+
+    fn written(b: Brightness) -> Self {
         let hex = |s: u32| Color32::from_rgb((s >> 16) as u8, (s >> 8) as u8, s as u8);
         let base = Tokens {
             dark: true,
@@ -349,5 +395,33 @@ mod tests {
             assert_eq!(Brightness::parse(b.label()), Some(b));
         }
         assert!(!Tokens::for_brightness(Brightness::Light).dark);
+    }
+}
+
+#[cfg(test)]
+mod host_accent_tests {
+    use super::*;
+
+    #[test]
+    fn the_indigo_keeps_the_written_tokens() {
+        set_host_accent("#4F46E5");
+        let t = Tokens::for_brightness(Brightness::Light);
+        assert_eq!(t.accent, INDIGO);
+        assert_eq!(t.accent_strong, Color32::from_rgb(0x43, 0x38, 0xca));
+        assert_eq!(t.flyout_active, Color32::from_rgb(0x81, 0x8c, 0xf8));
+    }
+
+    #[test]
+    fn the_members_colour_replaces_the_indigo_family_in_every_brightness() {
+        set_host_accent("#016f31");
+        let green = Color32::from_rgb(0x01, 0x6f, 0x31);
+        for b in Brightness::ALL {
+            let t = Tokens::for_brightness(b);
+            assert_eq!(t.accent, green);
+            assert_ne!(t.accent_strong, Color32::from_rgb(0x43, 0x38, 0xca));
+            assert_ne!(t.flyout_active, Color32::from_rgb(0x81, 0x8c, 0xf8));
+        }
+        set_host_accent("#4f46e5");
+        assert_eq!(host_accent(), None);
     }
 }
